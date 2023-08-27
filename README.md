@@ -10,16 +10,16 @@
 - Remove a programme from a course
 - Generate relevant reports
 
-## Teaching Assignment Subsystem
-- Assign tutor to course
-- Assign tutorial groups to tutor
-- Assign a tutor to a tutorial group
-- Search courses under a tutor
-- Search tutors for a course
-- List all tutors for a course
-- List courses under a tutor
+## Tutor Management Subsystem
+- Add a new tutor
+- Remove a tutor
+- Find tutor
+- Amend tutor details
+- List all tutors
 - Filter tutors based on criteria
 - Generate relevant reports
+
+
 
 ### Business Rules
 - Many courses are offered in the semester.
