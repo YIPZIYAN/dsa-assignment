@@ -4,15 +4,15 @@
  */
 package control;
 
-import boundary.TeachingAssignmentUI;
+import boundary.TutorManagementUI;
 
 /**
  *
  * @author Yip Zi Yan
  */
-public class TeachingAssignment {
+public class TutorManagement {
     
-    TeachingAssignmentUI teachingUI = new TeachingAssignmentUI();
+    TutorManagementUI teachingUI = new TutorManagementUI();
 
 
     
@@ -22,7 +22,7 @@ public class TeachingAssignment {
     }
 
     public static void main(String[] args) {
-        TeachingAssignment teachingControl = new TeachingAssignment();
+        TutorManagement teachingControl = new TutorManagement();
         teachingControl.startUI();
     }
 }

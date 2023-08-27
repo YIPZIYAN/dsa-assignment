@@ -10,7 +10,7 @@ import utility.*;
  *
  * @author Yip Zi Yan
  */
-public class TeachingAssignmentUI {
+public class TutorManagementUI {
 
     CustomScanner cScan = new CustomScanner();
 
