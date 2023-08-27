@@ -24,6 +24,5 @@
 ### Business Rules
 - Many courses are offered in the semester.
 - A course is taken by many programmes.
-- A course is taught by many tutors.
-- A tutor handles many tutorial groups.
+- The semester involves many tutors.
 
