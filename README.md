@@ -1,4 +1,4 @@
-### Data Structure & Algorithm Assignment
+# Data Structure & Algorithm Assignment
 
 ## Course Management Subsystem
 - Add a new course
@@ -21,6 +21,6 @@
 - Filter tutors based on criteria
 - Generate relevant reports
 
-# Business Rules
+### Business Rules
 Many courses are offered in the semester.
 A course is taken by many programmes.
