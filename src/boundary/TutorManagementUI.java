@@ -14,26 +14,22 @@ public class TutorManagementUI {
 
     CustomScanner cScan = new CustomScanner();
 
-
-
-    
-    
     public int getMenuChoice() {
 
+        GeneralUtil.clearScreen();
         System.out.println("Teaching Assignemnt System");
         System.out.println("--------------------------");
-        System.out.println("1. Assign tutor to course\n"
-                + "2. Assign tutorial groups to tutor\n"
-                + "3. Assign a tutor to a tutorial group\n"
-                + "4. Search courses under a tutor\n"
-                + "5. Search tutors for a course\n"
-                + "6. List all tutors for a course\n"
-                + "7. List courses under a tutor\n"
-                + "8. Filter tutors based on criteria\n"
-                + "9. Generate relevant reports\n");
-        System.out.println("0. Quit");
-        
-        int choice = cScan.inputInt("Enter Selection",0,9);
+        System.out.println("1. Tutor List\n"
+                + "2. Add Tutor\n"
+                + "3. Find Tutor\n"
+                + "4. Edit Tutor Details\n"
+                + "5. Remove Tutor\n"
+                + "6. Filter Tutor\n"
+                + "7. Generate Report\n"
+                + "0. Quit");
+        System.out.println("--------------------------");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 9);
         return choice;
     }
 }

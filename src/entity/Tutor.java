@@ -18,7 +18,6 @@ public class Tutor {
     private String gender;
     private String email;
     private static int totalTutor = 0;
-    private ArrayList<TutorialGroup> handleGroup;
     private String status; // Part-time, Full-time, Retired
 
     public Tutor() {
@@ -48,10 +47,6 @@ public class Tutor {
         return totalTutor;
     }
 
-    public ArrayList<TutorialGroup> getHandleGroup() {
-        return handleGroup;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -70,10 +65,6 @@ public class Tutor {
 
     public void setTotalTutor(int totalTutor) {
         this.totalTutor = totalTutor;
-    }
-
-    public void setHandleGroup(ArrayList<TutorialGroup> handleGroup) {
-        this.handleGroup = handleGroup;
     }
 
     public void setStatus(String status) {
