@@ -4,10 +4,25 @@
  */
 package control;
 
+import boundary.TeachingAssignmentUI;
+
 /**
  *
  * @author Yip Zi Yan
  */
 public class TeachingAssignment {
     
+    TeachingAssignmentUI teachingUI = new TeachingAssignmentUI();
+
+
+    
+    public void startUI(){
+        int choice = teachingUI.getMenuChoice();
+
+    }
+
+    public static void main(String[] args) {
+        TeachingAssignment teachingControl = new TeachingAssignment();
+        teachingControl.startUI();
+    }
 }
