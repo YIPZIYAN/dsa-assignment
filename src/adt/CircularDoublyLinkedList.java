@@ -9,59 +9,107 @@ package adt;
  * @author Yip Zi Yan
  */
 public class CircularDoublyLinkedList<T> implements ListInterface<T> {
-    
-    private class Node{
-        
+
+    private Node startNode;
+    private int numberOfEntries;
+
+    public CircularDoublyLinkedList() {
+        clear();
     }
 
     @Override
     public boolean add(T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (newEntry != null) {
+            Node newNode = new Node(newEntry);
+            if (!isEmpty()) {
+                startNode.prev.next = newNode;
+                newNode.prev = startNode.prev;
+                newNode.next = startNode;
+                startNode.prev = newNode;
+            } else {
+                newNode.next = newNode.prev = newNode;
+                startNode = newNode;
+            }
+            numberOfEntries++;
+        }
+
+        return false;
     }
 
     @Override
-    public boolean add(int newPosition, T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean add(int index, T newEntry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public T remove(int givenPosition) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public T remove(int index) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean remove(T anEntry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        numberOfEntries = 0;
     }
 
     @Override
-    public boolean replace(int givenPosition, T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean replace(int index, T newEntry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public T getEntry(int givenPosition) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public T getEntry(int index) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean contains(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public int getNumberOfEntries() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean isFull() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public int indexOf(T anEntry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private class Node {
+
+        T data;
+        Node prev;
+        Node next;
+
+        public Node() {
+        }
+
+        public Node(T data) {
+            this.data = data;
+        }
+
+        public Node(T data, Node prev, Node next) {
+            this.data = data;
+            this.prev = prev;
+            this.next = next;
+        }
+
+    }
+
 }
