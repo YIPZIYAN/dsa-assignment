@@ -4,6 +4,8 @@
  */
 package adt;
 
+import java.util.Iterator;
+
 /**
  *
  * @author Yip Zi Yan
@@ -55,9 +57,9 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public void clear() {
         if (!isEmpty()) {
             startNode = startNode.prev = startNode.prev.next = null;
-        numberOfEntries = 0;
+            numberOfEntries = 0;
         }
-        
+
     }
 
     @Override
@@ -92,7 +94,45 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public int indexOf(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int index = -1;
+
+        return index;
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        return new LinkedIterator();
+    }
+
+    private class LinkedIterator implements Iterator<T> {
+
+        private Node currentNode;
+
+        public LinkedIterator() {
+            if (!isEmpty()) {
+                currentNode = startNode;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentNode != null;
+        }
+
+        @Override
+        public T next() {
+            T currentElement = null;
+            if (hasNext()) {
+                currentElement = currentNode.data;
+                if (currentNode == startNode.prev) {
+                    currentNode = null;
+                } else {
+                    currentNode = currentNode.next;
+                }
+            }
+            return currentElement;
+        }
+
     }
 
     private class Node {
@@ -124,8 +164,9 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             do {
                 str += currentNode.data + " ";
                 currentNode = currentNode.next;
-            } while (currentNode != startNode.prev);
+            } while (currentNode != startNode);
         }
         return "CircularDoublyLinkedQueue\n" + str;
     }
+
 }

@@ -6,6 +6,7 @@ package control;
 
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
+import java.util.Iterator;
 
 /**
  *
@@ -17,14 +18,22 @@ public class TestCircularDoublyLinkedList {
         ListInterface<Integer> list = new CircularDoublyLinkedList<>();
 
         list.add(12);
+        System.out.println(list);
         list.add(13);
+        System.out.println(list);
         list.add(14);
+        System.out.println(list);
         list.add(15);
-
-        System.out.println(list);
-        list.clear();
         System.out.println(list);
 
+        System.out.println(list);
+
+        int sum = 0;
+        Iterator<Integer> it = list.getIterator();
+        while (it.hasNext()) {
+            sum += it.next();
+        }
+        System.out.println(sum);
 
     }
 }
