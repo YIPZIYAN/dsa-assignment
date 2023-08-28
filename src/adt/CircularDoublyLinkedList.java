@@ -14,7 +14,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     private int numberOfEntries;
 
     public CircularDoublyLinkedList() {
-        clear();
+        startNode = null;
     }
 
     @Override
@@ -53,7 +53,11 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public void clear() {
+        if (!isEmpty()) {
+            startNode = startNode.prev = startNode.prev.next = null;
         numberOfEntries = 0;
+        }
+        
     }
 
     @Override
@@ -73,16 +77,16 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public int getNumberOfEntries() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return numberOfEntries;
     }
 
     @Override
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return startNode == null;
     }
 
     @Override
-    public boolean isFull() {
+    public boolean isFull() { //no need
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -112,4 +116,16 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     }
 
+    @Override
+    public String toString() {
+        String str = "";
+        if (!isEmpty()) {
+            Node currentNode = startNode;
+            do {
+                str += currentNode.data + " ";
+                currentNode = currentNode.next;
+            } while (currentNode != startNode.prev);
+        }
+        return "CircularDoublyLinkedQueue\n" + str;
+    }
 }

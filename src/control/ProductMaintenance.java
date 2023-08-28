@@ -1,6 +1,6 @@
 package control;
 
-import adt.*;
+import adt.exampleAdt.*;
 import boundary.ProductMaintenanceUI;
 import dao.ProductDAO;
 import entity.*;

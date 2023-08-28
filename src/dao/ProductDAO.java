@@ -1,6 +1,6 @@
 package dao;
 
-import adt.*;
+import adt.exampleAdt.*;
 import entity.Product;
 import java.io.*;
 

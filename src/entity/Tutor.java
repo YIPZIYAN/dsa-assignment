@@ -4,7 +4,7 @@
  */
 package entity;
 
-import adt.ArrayList;
+import adt.exampleAdt.ArrayList;
 import java.util.Objects;
 
 /**

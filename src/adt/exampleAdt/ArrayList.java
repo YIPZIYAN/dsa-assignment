@@ -1,4 +1,4 @@
-package adt;
+package adt.exampleAdt;
 
 /**
  * @author Frank M. Carrano
