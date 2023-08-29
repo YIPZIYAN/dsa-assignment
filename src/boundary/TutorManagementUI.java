@@ -80,6 +80,7 @@ public class TutorManagementUI {
     }
 
     public void displayAllTutor(String outputStr) {
+        GeneralUtil.clearScreen();
         System.out.println("Tutor List");
         System.out.println("===================================================");
         System.out.printf("%6s %12s %12s %12s %s\n", "ID", "Name", "Gender", "Email", "Status");

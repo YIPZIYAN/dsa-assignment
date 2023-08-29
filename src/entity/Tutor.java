@@ -116,7 +116,11 @@ public class Tutor {
     @Override
     public String toString() {
 
-        return String.format("%5s %12s %8c %18s %12s", tutorId, tutorName, gender, email, status);
+        return String.format("%5s %12s %8s %18s %12s",
+                tutorId, tutorName,
+                gender == 'M' ? "Male" : "Female",
+                email,
+                status.equals("PT") ? "Part-Time" : "Full-Time");
     }
 
 }
