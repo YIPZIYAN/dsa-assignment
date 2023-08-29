@@ -5,6 +5,8 @@
 package control;
 
 import boundary.TutorManagementUI;
+import entity.Tutor;
+import utility.GeneralUtil;
 import utility.MessageUI;
 
 /**
@@ -13,16 +15,16 @@ import utility.MessageUI;
  */
 public class TutorManagement {
 
-    TutorManagementUI teachingUI = new TutorManagementUI();
+    TutorManagementUI tutorUI = new TutorManagementUI();
 
     public void startUI() {
         
         int choice;
         do {
-            choice = teachingUI.getMenuChoice();
+            choice = tutorUI.getMenuChoice();
             switch (choice) {
-                case 1:
-                    
+                case 2:
+                    addNewTutor();
                     break;
                 case 0:
                     MessageUI.displayExitMessage();
@@ -34,5 +36,16 @@ public class TutorManagement {
     public static void main(String[] args) {
         TutorManagement teachingControl = new TutorManagement();
         teachingControl.startUI();
+    }
+
+    private void addNewTutor() {
+        Tutor newTutor = tutorUI.addTutor();
+        
+        if (newTutor == null) {
+            return;
+        }
+        
+        System.out.println(newTutor);
+        GeneralUtil.systemPause();
     }
 }

@@ -4,6 +4,8 @@
  */
 package boundary;
 
+import entity.Tutor;
+import java.util.Scanner;
 import utility.*;
 
 /**
@@ -30,6 +32,50 @@ public class TutorManagementUI {
         System.out.println("--------------------------");
 
         int choice = cScan.inputInt("Enter Selection > ", 0, 9);
+
         return choice;
+    }
+
+    public Tutor addTutor() {
+        GeneralUtil.clearScreen();
+
+        // var to store data
+        String name, email, status;
+        char gender;
+
+        // constraint
+        char[] checkGender = {'M', 'F'};
+
+        name = cScan.inputString("Enter Tutor Name  > ");
+
+        displayGenderSelection();
+        gender = cScan.inputChar("Enter Tutor Gender > ", "Please enter [M] or [F] only.", checkGender);
+
+        displayStatusSelection();
+        status = cScan.inputString("Enter Status > ");
+
+        if (cScan.confimation()) {
+            return new Tutor(name, gender, status);
+        }
+        
+        return null;
+    }
+
+    private void displayStatusSelection() {
+        System.out.println("\n     Status     ");
+        System.out.println("================");
+        System.out.println(" FT   Full-time ");
+        System.out.println(" PT   Part-time ");
+        System.out.println("================");
+        System.out.println("Enter [FT] or [PT]");
+    }
+
+    private void displayGenderSelection() {
+        System.out.println("\n     Gender     ");
+        System.out.println("================");
+        System.out.println(" M    Male      ");
+        System.out.println(" F    Female    ");
+        System.out.println("================");
+        System.out.println("Enter [M] or [F]");
     }
 }

@@ -24,7 +24,7 @@ public class GeneralUtil {
             robot.keyRelease(KeyEvent.VK_CONTROL);
             robot.keyRelease(KeyEvent.VK_L);
         } catch (AWTException ex) {
-        }
+        } 
     }
 
     public static void systemPause() {
