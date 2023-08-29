@@ -81,12 +81,33 @@ public class TestCircularDoublyLinkedList {
         System.out.println(list.add(6, 33)); //true
         System.out.println(list);
 
+        System.out.println("\nGet index");
+        System.out.println(list.indexOf(12));
+
+        System.out.println("\nContains");
+        System.out.println(list.contains(1));
+        System.out.println(list.contains(12));
+        System.out.println(list.contains(13));
+
+        System.out.println("\nGet entry");
+        System.out.println(list.getEntry(0));
+        System.out.println(list.getEntry(2));
+        
+        System.out.println("\nReplace");
+        list.replace(3, 99);
+        System.out.println(list);
+
         int sum = 0;
         Iterator<Integer> it = list.getIterator();
         while (it.hasNext()) {
             sum += it.next();
         }
         System.out.println(sum);
+
+        list.clear();
+        System.out.println("Get entry");
+        System.out.println(list.getEntry(0));
+        System.out.println(list.getEntry(2));
 
     }
 }

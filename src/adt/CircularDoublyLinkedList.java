@@ -44,29 +44,31 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public boolean add(int index, T newEntry) {
         if (index < 0 || index > numberOfEntries || newEntry == null) {
             return false;
-        } else if (isEmpty() || index == numberOfEntries) {
-            return add(newEntry);
-        } else {
-            Node newNode = new Node(newEntry);
-            if (index == 0) {
-                newNode.next = startNode;
-                newNode.prev = startNode.prev;
-                startNode.prev.next = newNode;
-                startNode.prev = newNode;
-                startNode = newNode;
-            } else {
-                Node currentNode = startNode;
-                for (int i = 0; i < index - 1; i++) {
-                    currentNode = currentNode.next;
-                }
-                newNode.next = currentNode.next;
-                newNode.prev = currentNode;
-                currentNode.next.prev = newNode;
-                currentNode.next = newNode;
-            }
-            numberOfEntries++;
-            return true;
         }
+
+        if (isEmpty() || index == numberOfEntries) {
+            return add(newEntry);
+        }
+
+        Node newNode = new Node(newEntry);
+        if (index == 0) {
+            newNode.next = startNode;
+            newNode.prev = startNode.prev;
+            startNode.prev.next = newNode;
+            startNode.prev = newNode;
+            startNode = newNode;
+        } else {
+            Node currentNode = startNode;
+            for (int i = 0; i < index - 1; i++) {
+                currentNode = currentNode.next;
+            }
+            newNode.next = currentNode.next;
+            newNode.prev = currentNode;
+            currentNode.next.prev = newNode;
+            currentNode.next = newNode;
+        }
+        numberOfEntries++;
+        return true;
 
     }
 
@@ -118,17 +120,37 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     @Override
     public boolean replace(int index, T newEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        Node currentNode = startNode;
+
+        if (index >= 0 && index < numberOfEntries) {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            currentNode.data = newEntry;
+            return true;
+        }
+        return false;
     }
 
     @Override
     public T getEntry(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        T data = null;
+        Node currentNode = startNode;
+
+        if (index >= 0 && index < numberOfEntries) {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            data = currentNode.data;
+        }
+
+        return data;
     }
 
     @Override
     public boolean contains(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return indexOf(anEntry) == -1 ? false : true;
     }
 
     @Override
