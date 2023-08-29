@@ -102,7 +102,7 @@ public class Course {
 
     @Override
     public String toString() {
-        return String.format("%5s %12s %8s %18s %12s", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
+        return String.format("%-12s%-50s%-13d%-11s%-8.2f", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
     }
     
     
