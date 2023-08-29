@@ -44,11 +44,9 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public boolean add(int index, T newEntry) {
         if (index < 0 || index > numberOfEntries || newEntry == null) {
             return false;
-        }
-        else if (isEmpty() || index == numberOfEntries) {
+        } else if (isEmpty() || index == numberOfEntries) {
             return add(newEntry);
-        }
-        else {
+        } else {
             Node newNode = new Node(newEntry);
             if (index == 0) {
                 newNode.next = startNode;
@@ -56,8 +54,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
                 startNode.prev.next = newNode;
                 startNode.prev = newNode;
                 startNode = newNode;
-            }
-            else {
+            } else {
                 Node currentNode = startNode;
                 for (int i = 0; i < index - 1; i++) {
                     currentNode = currentNode.next;
@@ -73,26 +70,22 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     }
 
-
-
     @Override
     public boolean remove(T anEntry) {
-        if(!isEmpty()) {
+        if (!isEmpty()) {
             Node currentNode = startNode;
             do {
                 if (currentNode.data.equals(anEntry)) {
                     if (currentNode == startNode) {
-                        if(numberOfEntries == 1) {
+                        if (numberOfEntries == 1) {
                             currentNode.prev = currentNode.next = null;
                             startNode = null;
-                        }
-                        else {
+                        } else {
                             startNode = currentNode.next;
                             currentNode.prev.next = startNode;
                             startNode.prev = currentNode.prev;
                         }
-                    }
-                    else{
+                    } else {
                         currentNode.prev.next = currentNode.next;
                         currentNode.next.prev = currentNode.prev;
                     }
@@ -101,9 +94,9 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
                 }
                 currentNode = currentNode.next;
             } while (currentNode != startNode);
-            
+
         }
-        
+
         return false;
     }
 
@@ -113,11 +106,10 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             Node currentNode = startNode;
             do {
                 Node nextNode = currentNode.next;
-                currentNode.next = currentNode.prev = null;
+                currentNode.next = null;
                 currentNode = nextNode;
             } while (currentNode != startNode);
-            currentNode = null; //is this needed?
-            startNode = null;
+            startNode = currentNode.prev = null;
         }
 
         numberOfEntries = 0;
@@ -158,17 +150,17 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     public int indexOf(T anEntry) {
         Node currentNode = startNode;
         int index = 0;
-        
-        if(!isEmpty()) {
+
+        if (!isEmpty()) {
             do {
-                if(currentNode.data.equals(anEntry)) {
+                if (currentNode.data.equals(anEntry)) {
                     return index;
                 }
                 currentNode = currentNode.next;
                 index++;
             } while (currentNode != startNode);
         }
-        
+
         return -1;
     }
 
