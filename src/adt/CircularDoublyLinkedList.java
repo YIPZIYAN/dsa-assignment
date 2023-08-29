@@ -11,15 +11,15 @@ import java.util.Iterator;
  * @author Yip Zi Yan
  */
 public class CircularDoublyLinkedList<T> implements ListInterface<T> {
-
+    
     private Node startNode;
     private int numberOfEntries;
-
+    
     public CircularDoublyLinkedList() {
         startNode = null;
         numberOfEntries = 0;
     }
-
+    
     @Override
     public boolean add(T newEntry) {
         if (newEntry != null) {
@@ -36,40 +36,42 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             numberOfEntries++;
             return true;
         }
-
+        
         return false;
     }
-
+    
     @Override
     public boolean add(int index, T newEntry) {
         if (index < 0 || index > numberOfEntries || newEntry == null) {
             return false;
-        } else if (isEmpty() || index == numberOfEntries) {
-            return add(newEntry);
-        } else {
-            Node newNode = new Node(newEntry);
-            if (index == 0) {
-                newNode.next = startNode;
-                newNode.prev = startNode.prev;
-                startNode.prev.next = newNode;
-                startNode.prev = newNode;
-                startNode = newNode;
-            } else {
-                Node currentNode = startNode;
-                for (int i = 0; i < index - 1; i++) {
-                    currentNode = currentNode.next;
-                }
-                newNode.next = currentNode.next;
-                newNode.prev = currentNode;
-                currentNode.next.prev = newNode;
-                currentNode.next = newNode;
-            }
-            numberOfEntries++;
-            return true;
         }
-
+        
+        if (isEmpty() || index == numberOfEntries) {
+            return add(newEntry);
+        }
+        
+        Node newNode = new Node(newEntry);
+        if (index == 0) {
+            newNode.next = startNode;
+            newNode.prev = startNode.prev;
+            startNode.prev.next = newNode;
+            startNode.prev = newNode;
+            startNode = newNode;
+        } else {
+            Node currentNode = startNode;
+            for (int i = 0; i < index - 1; i++) {
+                currentNode = currentNode.next;
+            }
+            newNode.next = currentNode.next;
+            newNode.prev = currentNode;
+            currentNode.next.prev = newNode;
+            currentNode.next = newNode;
+        }
+        numberOfEntries++;
+        return true;
+        
     }
-
+    
     @Override
     public boolean remove(T anEntry) {
         if (!isEmpty()) {
@@ -94,12 +96,12 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
                 }
                 currentNode = currentNode.next;
             } while (currentNode != startNode);
-
+            
         }
-
+        
         return false;
     }
-
+    
     @Override
     public void clear() {
         if (!isEmpty()) {
@@ -111,46 +113,56 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             } while (currentNode != startNode);
             startNode = currentNode.prev = null;
         }
-
+        
         numberOfEntries = 0;
-
+        
     }
-
+    
     @Override
     public boolean replace(int index, T newEntry) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public T getEntry(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        T data = null;
+        Node currentNode = startNode;
+        
+        if (index >= 0 && index < numberOfEntries) {
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            data = currentNode.data;
+        }
+        
+        return data;
     }
-
+    
     @Override
     public boolean contains(T anEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return indexOf(anEntry) == -1 ? false : true;
     }
-
+    
     @Override
     public int getNumberOfEntries() {
         return numberOfEntries;
     }
-
+    
     @Override
     public boolean isEmpty() {
         return startNode == null;
     }
-
+    
     @Override
     public boolean isFull() { //no need
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public int indexOf(T anEntry) {
         Node currentNode = startNode;
         int index = 0;
-
+        
         if (!isEmpty()) {
             do {
                 if (currentNode.data.equals(anEntry)) {
@@ -160,30 +172,30 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
                 index++;
             } while (currentNode != startNode);
         }
-
+        
         return -1;
     }
-
+    
     @Override
     public Iterator<T> getIterator() {
         return new LinkedIterator();
     }
-
+    
     private class LinkedIterator implements Iterator<T> {
-
+        
         private Node currentNode;
-
+        
         public LinkedIterator() {
             if (!isEmpty()) {
                 currentNode = startNode;
             }
         }
-
+        
         @Override
         public boolean hasNext() {
             return currentNode != null;
         }
-
+        
         @Override
         public T next() {
             T currentElement = null;
@@ -197,30 +209,30 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
             }
             return currentElement;
         }
-
+        
     }
-
+    
     private class Node {
-
+        
         T data;
         Node prev;
         Node next;
-
+        
         public Node() {
         }
-
+        
         public Node(T data) {
             this.data = data;
         }
-
+        
         public Node(T data, Node prev, Node next) {
             this.data = data;
             this.prev = prev;
             this.next = next;
         }
-
+        
     }
-
+    
     @Override
     public String toString() {
         String str = "";
@@ -233,5 +245,5 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
         }
         return "CircularDoublyLinkedList: " + str;
     }
-
+    
 }

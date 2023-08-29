@@ -80,6 +80,18 @@ public class TestCircularDoublyLinkedList {
         System.out.println(list);
         System.out.println(list.add(6, 33)); //true
         System.out.println(list);
+        
+        System.out.println("Get index");
+        System.out.println(list.indexOf(12));
+        
+        System.out.println("Contains");
+        System.out.println(list.contains(1));
+        System.out.println(list.contains(12));
+        System.out.println(list.contains(13));
+        
+        System.out.println("Get entry");
+        System.out.println(list.getEntry(0));
+        System.out.println(list.getEntry(2));
 
         int sum = 0;
         Iterator<Integer> it = list.getIterator();
