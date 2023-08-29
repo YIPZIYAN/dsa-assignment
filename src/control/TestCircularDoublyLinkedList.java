@@ -17,15 +17,68 @@ public class TestCircularDoublyLinkedList {
     public static void main(String[] args) {
         ListInterface<Integer> list = new CircularDoublyLinkedList<>();
 
-        list.add(12);
+        System.out.println("Add to the list");
+        System.out.println(list.add(12));
         System.out.println(list);
-        list.add(13);
+        System.out.println(list.add(13));
         System.out.println(list);
-        list.add(14);
+        System.out.println(list.add(14));
         System.out.println(list);
-        list.add(15);
+        System.out.println(list.add(15));
         System.out.println(list);
 
+        System.out.println("");
+
+        System.out.println("Remove from the list");
+        System.out.println(list.remove(15));
+        System.out.println(list);
+        System.out.println(list.remove(13));
+        System.out.println(list);
+        System.out.println(list.remove(1)); //false
+        System.out.println(list);
+        System.out.println(list.remove(12));
+        System.out.println(list);
+        System.out.println(list.remove(14));
+        System.out.println(list);
+
+        System.out.println("");
+
+        System.out.println("Add to the list");
+        System.out.println(list.add(12));
+        System.out.println(list);
+        System.out.println(list.add(13));
+        System.out.println(list);
+        System.out.println(list.add(14));
+        System.out.println(list);
+        System.out.println(list.add(15));
+        System.out.println(list);
+
+        System.out.println("");
+
+        System.out.println("Clear the list");
+        list.clear();
+        System.out.println(list);
+
+        System.out.println("");
+
+        System.out.println("Add to specific location the list");
+        System.out.println(list.add(1, 12)); //false
+        System.out.println(list);
+        System.out.println(list.add(0, 12));
+        System.out.println(list);
+        System.out.println(list.add(1, 13));
+        System.out.println(list);
+        System.out.println(list.add(2, 14));
+        System.out.println(list);
+        System.out.println(list.add(3, 15));
+        System.out.println(list);
+        System.out.println(list.add(5, 99)); //false
+        System.out.println(list);
+        System.out.println(list.add(2, 22)); //true
+        System.out.println(list);
+        System.out.println(list.add(2, 44)); //true
+        System.out.println(list);
+        System.out.println(list.add(6, 33)); //true
         System.out.println(list);
 
         int sum = 0;
