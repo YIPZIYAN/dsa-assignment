@@ -39,12 +39,11 @@ public class CourseManagementUI {
 
     public void listAllCourses(String outputStr) {
         GeneralUtil.clearScreen();
-        
+
         System.out.println("List of Courses: \n"
                 + "No Course Code Name                                              Credit Hours Department Fees\n"
                 + outputStr);
-        
-        
+
         GeneralUtil.systemPause();
     }
 
@@ -53,26 +52,26 @@ public class CourseManagementUI {
 
         System.out.println("Add Course");
         System.out.println("----------");
-        
+
         // var to store data
         String courseCode, courseName, courseDepartment;
         int courseCreditHours;
         double courseFees;
 
-        boolean error = false;
+        boolean error;
         do {
+            error = false;
             courseCode = cScan.inputCourseCode("Enter Course Code > ", "Invalid course code format.");
             for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-                if(courseList.getEntry(i).getCourseCode().equals(courseCode)) {
+                if (courseList.getEntry(i).getCourseCode().equals(courseCode)) {
                     error = true;
                     break;
                 }
             }
-            if(error) {
+            if (error) {
                 System.err.println("The course code is already exist.");
             }
         } while (error);
-        
 
         courseName = cScan.inputString("Enter Course Name > ");
 
