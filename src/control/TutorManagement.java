@@ -4,7 +4,10 @@
  */
 package control;
 
+import adt.CircularDoublyLinkedList;
+import adt.ListInterface;
 import boundary.TutorManagementUI;
+import dao.Seeder;
 import entity.Tutor;
 import utility.GeneralUtil;
 import utility.MessageUI;
@@ -16,13 +19,18 @@ import utility.MessageUI;
 public class TutorManagement {
 
     TutorManagementUI tutorUI = new TutorManagementUI();
+    ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
+    Seeder seeder = new Seeder(); //testing
 
     public void startUI() {
-        
+
         int choice;
         do {
             choice = tutorUI.getMenuChoice();
             switch (choice) {
+                case 1:
+                    getAllTutor();
+                    break;
                 case 2:
                     addNewTutor();
                     break;
@@ -40,12 +48,21 @@ public class TutorManagement {
 
     private void addNewTutor() {
         Tutor newTutor = tutorUI.addTutor();
-        
+
         if (newTutor == null) {
             return;
         }
-        
+
         System.out.println(newTutor);
-        GeneralUtil.systemPause();
+        seeder.getTutorList().add(newTutor);
+
+    }
+
+    private void getAllTutor() {
+        String outputStr = "";
+        for (int i = 0; i < seeder.getTutorList().getNumberOfEntries(); i++) {
+            outputStr += seeder.getTutorList().getEntry(i) + "\n";
+        }
+        tutorUI.displayAllTutor(outputStr);
     }
 }

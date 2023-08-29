@@ -57,7 +57,7 @@ public class TutorManagementUI {
         if (cScan.confimation()) {
             return new Tutor(name, gender, status);
         }
-        
+
         return null;
     }
 
@@ -77,5 +77,14 @@ public class TutorManagementUI {
         System.out.println(" F    Female    ");
         System.out.println("================");
         System.out.println("Enter [M] or [F]");
+    }
+
+    public void displayAllTutor(String outputStr) {
+        System.out.println("Tutor List");
+        System.out.println("===================================================");
+        System.out.printf("%6s %12s %12s %12s %s\n", "ID", "Name", "Gender", "Email", "Status");
+        System.out.println("===================================================");
+        System.out.println(outputStr);
+        GeneralUtil.systemPause();
     }
 }
