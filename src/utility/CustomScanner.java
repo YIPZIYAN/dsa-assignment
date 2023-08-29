@@ -102,8 +102,21 @@ public class CustomScanner {
     }
 
     public char inputChar(String str) {
-        System.out.print(str);
-        return scan.nextLine().charAt(0);
+        char ch = 'X';
+        boolean error;
+
+        do {
+            System.out.print(str);
+            error = false;
+            try {
+                ch = scan.nextLine().charAt(0);
+            } catch (Exception e) {
+                System.err.println("Please enter your input.");
+                error = true;
+            }
+        } while (error);
+
+        return ch;
     }
 
     public char inputChar(String str, String errorMsg, char[] checkChar) {

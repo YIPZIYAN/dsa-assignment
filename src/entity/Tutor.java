@@ -27,13 +27,13 @@ public class Tutor {
 
         this.tutorId = String.format("T%04d", ++totalTutor);
         this.tutorName = tutorName;
-        this.gender = gender;
-        this.status = status;
+        this.gender = Character.toUpperCase(gender);
+        this.status = status.toUpperCase();
 
         //auto create email
-        if (status == "PT") {
-            this.email = String.format("P%s@tarumt.edu.my",
-                    this.tutorId);
+        if (this.status == "PT") {
+            this.email = String.format("p%s@tarumt.edu.my",
+                    this.tutorId.substring(1));
         } else {
             this.email = String.format("%s@tarumt.edu.my",
                     this.tutorName
@@ -116,7 +116,11 @@ public class Tutor {
     @Override
     public String toString() {
 
-        return String.format("%5s %12s %8c %18s %12s", tutorId, tutorName, gender, email, status);
+        return String.format("%5s %12s %8s %18s %12s",
+                tutorId, tutorName,
+                gender == 'M' ? "Male" : "Female",
+                email,
+                status.equals("PT") ? "Part-Time" : "Full-Time");
     }
 
 }
