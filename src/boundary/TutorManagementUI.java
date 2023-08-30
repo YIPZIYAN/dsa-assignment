@@ -5,7 +5,6 @@
 package boundary;
 
 import entity.Tutor;
-import java.util.Scanner;
 import utility.*;
 
 /**
@@ -19,7 +18,7 @@ public class TutorManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("Teaching Assignemnt System");
+        System.out.println("Tutor Management System");
         System.out.println("--------------------------");
         System.out.println("1. Tutor List\n"
                 + "2. Add Tutor\n"
@@ -36,15 +35,37 @@ public class TutorManagementUI {
         return choice;
     }
 
-    public Tutor addTutor() {
+    public boolean addTutorMenu() {
         GeneralUtil.clearScreen();
+        displayAddTutorHeader();
+        System.out.println("Your are required to enter:");
+        System.out.println("1. Tutor Name");
+        System.out.println("2. Tutor Gender");
+        System.out.println("3. Tutor Status (Part-Time/Full-Time)");
+        return cScan.confimation("\nStart Now? [Y|N] > ");
+    }
+
+    private void displayAddTutorHeader() {
+        System.out.println("          Add New Tutor          ");
+        System.out.println("=================================");
+    }
+
+    public Tutor addTutor() {
+
+        if (!addTutorMenu()) {
+            return null;
+        }
+
+        GeneralUtil.clearScreen();
+        displayAddTutorHeader();
 
         // var to store data
-        String name, email, status;
-        char gender;
+        String name, email;
+        char gender, status;
 
         // constraint
         char[] checkGender = {'M', 'F'};
+        char[] checkStatus = {'F', 'P'};
 
         name = cScan.inputString("Enter Tutor Name  > ");
 
@@ -52,22 +73,31 @@ public class TutorManagementUI {
         gender = cScan.inputChar("Enter Tutor Gender > ", "Please enter [M] or [F] only.", checkGender);
 
         displayStatusSelection();
-        status = cScan.inputString("Enter Status > ");
+        status = cScan.inputChar("Enter Status > ", "Please enter [F] or [P] only.", checkStatus);
 
-        if (cScan.confimation()) {
-            return new Tutor(name, gender, status);
+        Tutor pendingTutor = new Tutor(name, gender, status);
+        displayNewTutor(pendingTutor);
+
+        if (cScan.confimation("\n[Confirmation]\nAre You Sure? [Y|N] > ")) {
+            System.out.println("New Tutor Successfully Added.");
+            return pendingTutor;
+
         }
 
         return null;
+    }
+    
+    public boolean contAction(String str){
+        return cScan.confimation(str);
     }
 
     private void displayStatusSelection() {
         System.out.println("\n     Status     ");
         System.out.println("================");
-        System.out.println(" FT   Full-time ");
-        System.out.println(" PT   Part-time ");
+        System.out.println(" F    Full-time ");
+        System.out.println(" P    Part-time ");
         System.out.println("================");
-        System.out.println("Enter [FT] or [PT]");
+        System.out.println("Enter [F] or [P]");
     }
 
     private void displayGenderSelection() {
@@ -79,13 +109,23 @@ public class TutorManagementUI {
         System.out.println("Enter [M] or [F]");
     }
 
-    public void displayAllTutor(String outputStr) {
+    public void displayAllTutor(String outputStr, int total) {
         GeneralUtil.clearScreen();
-        System.out.println("Tutor List");
-        System.out.println("===================================================");
-        System.out.printf("%6s %12s %12s %12s %s\n", "ID", "Name", "Gender", "Email", "Status");
-        System.out.println("===================================================");
+        System.out.printf("\n%50s\n", "Tutor List");
+        System.out.println("=========================================================================================");
+        System.out.printf("%-8s %-26s %-10s %-32s %s\n", "ID", "Name", "Gender", "Email", "Status");
+        System.out.println("=========================================================================================");
         System.out.println(outputStr);
+        System.out.printf("%s\n\n", "Total Number of Tutor(s) = " + total);
         GeneralUtil.systemPause();
+    }
+
+    private void displayNewTutor(Tutor pendingTutor) {
+        GeneralUtil.clearScreen();
+        displayAddTutorHeader();
+        System.out.println("Name                   : " + pendingTutor.getTutorName());
+        System.out.println("Gender                 : " + pendingTutor.getGenderStr());
+        System.out.println("Email (auto-generated) : " + pendingTutor.getEmail());
+        System.out.println("Status                 : " + pendingTutor.getStatusStr());
     }
 }

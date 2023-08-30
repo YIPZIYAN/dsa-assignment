@@ -23,12 +23,13 @@ public class Tutor {
     public Tutor() {
     }
 
-    public Tutor(String tutorName, char gender, String status) {
+    public Tutor(String tutorName, char gender, char status) {
 
         this.tutorId = String.format("T%04d", ++totalTutor);
         this.tutorName = tutorName;
         this.gender = Character.toUpperCase(gender);
-        this.status = status.toUpperCase();
+        this.status = Character.toUpperCase(status)
+                == 'P' ? "PT" : "FT";
 
         //auto create email
         if (this.status == "PT") {
@@ -116,11 +117,17 @@ public class Tutor {
     @Override
     public String toString() {
 
-        return String.format("%5s %12s %8s %18s %12s",
-                tutorId, tutorName,
-                gender == 'M' ? "Male" : "Female",
-                email,
-                status.equals("PT") ? "Part-Time" : "Full-Time");
+        return String.format("%-8s %-26s %-10s %-32s %s",
+                tutorId, tutorName, getGenderStr(),
+                email, getStatusStr());
+    }
+
+    public String getStatusStr() {
+        return status.equals("PT") ? "Part-Time" : "Full-Time";
+    }
+
+    public String getGenderStr() {
+        return gender == 'M' ? "Male" : "Female";
     }
 
 }

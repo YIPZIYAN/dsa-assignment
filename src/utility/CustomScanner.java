@@ -177,9 +177,9 @@ public class CustomScanner {
         return output;
     }
 
-    public boolean confimation() {
+    public boolean confimation(String str) {
         char[] checkCh = {'Y', 'N'};
-        char ch = inputChar("\n[Confirmation]\n [Y = yes N = no]\nAre You Sure? > ",
+        char ch = inputChar(str,
                 "Please enter [Y] or [N].", checkCh);
         if (Character.toUpperCase(ch) == 'Y') {
             return true;

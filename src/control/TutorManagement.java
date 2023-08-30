@@ -9,7 +9,6 @@ import adt.ListInterface;
 import boundary.TutorManagementUI;
 import dao.Seeder;
 import entity.Tutor;
-import utility.GeneralUtil;
 import utility.MessageUI;
 
 /**
@@ -47,14 +46,15 @@ public class TutorManagement {
     }
 
     private void addNewTutor() {
-        Tutor newTutor = tutorUI.addTutor();
+        do {
+            Tutor newTutor = tutorUI.addTutor();
 
-        if (newTutor == null) {
-            return;
-        }
+            if (newTutor == null) {
+                return;
+            }
+            seeder.getTutorList().add(newTutor);
 
-        System.out.println(newTutor);
-        seeder.getTutorList().add(newTutor);
+        } while (tutorUI.contAction("Anymore To Add? [Y|N] > "));
 
     }
 
@@ -63,6 +63,6 @@ public class TutorManagement {
         for (int i = 0; i < seeder.getTutorList().getNumberOfEntries(); i++) {
             outputStr += seeder.getTutorList().getEntry(i) + "\n";
         }
-        tutorUI.displayAllTutor(outputStr);
+        tutorUI.displayAllTutor(outputStr, seeder.getTutorList().getNumberOfEntries());
     }
 }
