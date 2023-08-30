@@ -34,6 +34,9 @@ public class TutorManagement {
                 case 2:
                     addNewTutor();
                     break;
+                case 3:
+                    searchTutorUI();
+                    break;
                 case 0:
                     MessageUI.displayExitMessage();
             }
@@ -47,6 +50,10 @@ public class TutorManagement {
     }
 
     private void addNewTutor() {
+        if (!tutorUI.addTutorMenu()) {
+            return;
+        }
+
         do {
             Tutor newTutor = tutorUI.addTutor();
 
@@ -61,13 +68,70 @@ public class TutorManagement {
 
     private void getAllTutor() {
         String outputStr = "";
+        int number = 0;
 
         Iterator<Tutor> it = seeder.getTutorList().getIterator();
         while (it.hasNext()) {
-            outputStr += it.next() + "\n";
+            outputStr += String.format("%2d.  ", ++number)
+                    + it.next() + "\n";
+
+        }
+        tutorUI.displayAllTutor(outputStr);
+    }
+
+    private void searchTutorUI() {
+        int choice;
+        do {
+            choice = tutorUI.findTutorMenu();
+            switch (choice) {
+                case 1:
+                    searchTutorByName("name",
+                            "Search Tutor Name > ");
+                    break;
+                case 2:
+                    searchTutorByName("email",
+                            "Search Tutor Email > ");
+                    break;
+                case 3:
+                    searchTutorByName("id",
+                            "Search Tutor ID > ");
+                    break;
+            }
+        } while (choice != 0);
+    }
+
+    private void searchTutorByName(String attribute, String queryQuestrion) {
+        String query = tutorUI.getTutorNameQuery(queryQuestrion).toLowerCase();
+        String outputStr = "";
+        Iterator<Tutor> it = seeder.getTutorList().getIterator();
+        int number = 0;
+
+        while (it.hasNext()) {
+            Tutor matchTutor = it.next();
+            switch (attribute) {
+                case "name":
+                    if (matchTutor.getTutorName().toLowerCase().contains(query)) {
+                        outputStr += String.format("%2d.  ", ++number)
+                                + matchTutor + "\n";
+                    }
+                    break;
+                case "email":
+                    if (matchTutor.getEmail().toLowerCase().contains(query)) {
+                        outputStr += String.format("%2d.  ", ++number)
+                                + matchTutor + "\n";
+                    }
+                    break;
+                case "id":
+                    if (matchTutor.getTutorId().toLowerCase().equals(query)) {
+                        outputStr += String.format("%2d.  ", ++number)
+                                + matchTutor + "\n";
+                    }
+                    break;
+            }
 
         }
 
-        tutorUI.displayAllTutor(outputStr, seeder.getTutorList().getNumberOfEntries());
+        tutorUI.displayFindResult(outputStr);
+
     }
 }

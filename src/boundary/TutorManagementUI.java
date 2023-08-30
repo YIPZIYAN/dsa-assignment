@@ -52,10 +52,6 @@ public class TutorManagementUI {
 
     public Tutor addTutor() {
 
-        if (!addTutorMenu()) {
-            return null;
-        }
-
         GeneralUtil.clearScreen();
         displayAddTutorHeader();
 
@@ -112,15 +108,19 @@ public class TutorManagementUI {
         System.out.println("Enter [M] or [F]");
     }
 
-    public void displayAllTutor(String outputStr, int total) {
+    public void displayAllTutor(String outputStr) {
         GeneralUtil.clearScreen();
         System.out.printf("\n%50s\n", "Tutor List");
-        System.out.println("=========================================================================================");
-        System.out.printf("%-8s %-26s %-10s %-32s %s\n", "ID", "Name", "Gender", "Email", "Status");
-        System.out.println("=========================================================================================");
+        displayTutorTableHeader();
         System.out.println(outputStr);
-        System.out.printf("%s\n\n", "Total Number of Tutor(s) = " + total);
+//        System.out.printf("%s\n\n", "Total Number of Tutor(s) = " + total);
         GeneralUtil.systemPause();
+    }
+
+    public void displayTutorTableHeader() {
+        System.out.println("==============================================================================================");
+        System.out.printf("%-4s %-8s %-26s %-10s %-32s %s\n", "No.","ID", "Name", "Gender", "Email", "Status");
+        System.out.println("==============================================================================================");
     }
 
     private void displayTutorDetails(Tutor pendingTutor) {
@@ -129,4 +129,45 @@ public class TutorManagementUI {
         System.out.println("Email (auto-generated) : " + pendingTutor.getEmail());
         System.out.println("Status                 : " + pendingTutor.getStatusStr());
     }
+
+    public int findTutorMenu() {
+        GeneralUtil.clearScreen();
+        findTutorHeader();
+        System.out.println("1. Find By Name\n"
+                + "2. Find By Email\n"
+                + "3. Find By Tutor ID\n"
+                + "0. Quit");
+        System.out.println("==========================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+
+        return choice;
+    }
+
+    public void findTutorHeader() {
+        System.out.println("        Find Tutor        ");
+        System.out.println("==========================");
+    }
+
+    public String getTutorNameQuery(String queryQuestion) {
+        GeneralUtil.clearScreen();
+        findTutorHeader();
+        return cScan.inputString(queryQuestion);
+    }
+
+    public void displayFindResult(String str) {
+        GeneralUtil.clearScreen();
+        
+        System.out.printf("%50s\n","Search Result");
+        displayTutorTableHeader();
+        if (str.equals("")) {
+            MessageUI.displayNoResultMessage();
+        } else {
+            System.out.println(str);
+        }
+        GeneralUtil.systemPause();
+    }
+    
+    
+
 }

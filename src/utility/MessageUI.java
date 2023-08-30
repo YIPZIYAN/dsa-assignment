@@ -23,4 +23,8 @@ public class MessageUI {
         System.out.println(CYAN + "Beyond Education!\n" + RESET);
     }
 
+    public static void displayNoResultMessage() {
+        System.out.println(CYAN + "\nNo Result Found." + RESET);
+    }
+
 }
