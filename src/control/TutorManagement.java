@@ -9,6 +9,7 @@ import adt.ListInterface;
 import boundary.TutorManagementUI;
 import dao.Seeder;
 import entity.Tutor;
+import java.util.Iterator;
 import utility.MessageUI;
 
 /**
@@ -60,9 +61,13 @@ public class TutorManagement {
 
     private void getAllTutor() {
         String outputStr = "";
-        for (int i = 0; i < seeder.getTutorList().getNumberOfEntries(); i++) {
-            outputStr += seeder.getTutorList().getEntry(i) + "\n";
+
+        Iterator<Tutor> it = seeder.getTutorList().getIterator();
+        while (it.hasNext()) {
+            outputStr += it.next() + "\n";
+
         }
+
         tutorUI.displayAllTutor(outputStr, seeder.getTutorList().getNumberOfEntries());
     }
 }
