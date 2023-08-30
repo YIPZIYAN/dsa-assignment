@@ -76,7 +76,10 @@ public class TutorManagementUI {
         status = cScan.inputChar("Enter Status > ", "Please enter [F] or [P] only.", checkStatus);
 
         Tutor pendingTutor = new Tutor(name, gender, status);
-        displayNewTutor(pendingTutor);
+
+        GeneralUtil.clearScreen();
+        displayAddTutorHeader();
+        displayTutorDetails(pendingTutor);
 
         if (cScan.confimation("\n[Confirmation]\nAre You Sure? [Y|N] > ")) {
             System.out.println("New Tutor Successfully Added.");
@@ -86,8 +89,8 @@ public class TutorManagementUI {
 
         return null;
     }
-    
-    public boolean contAction(String str){
+
+    public boolean contAction(String str) {
         return cScan.confimation(str);
     }
 
@@ -120,9 +123,7 @@ public class TutorManagementUI {
         GeneralUtil.systemPause();
     }
 
-    private void displayNewTutor(Tutor pendingTutor) {
-        GeneralUtil.clearScreen();
-        displayAddTutorHeader();
+    private void displayTutorDetails(Tutor pendingTutor) {
         System.out.println("Name                   : " + pendingTutor.getTutorName());
         System.out.println("Gender                 : " + pendingTutor.getGenderStr());
         System.out.println("Email (auto-generated) : " + pendingTutor.getEmail());
