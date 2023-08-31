@@ -49,6 +49,9 @@ public class CourseManagement {
                 case 2:
                     addNewCourse();
                     break;
+                case 4:
+                    editCourseDetails();
+                    break;
                 case 5:
                     removeCourse();
                     break;
@@ -94,6 +97,23 @@ public class CourseManagement {
         GeneralUtil.systemPause();
     }
 
+    private void editCourseDetails() {
+        Course newCourse = (Course) courseUI.editCourse(courseList);
+
+        if (newCourse == null) {
+            return;
+        }
+
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            if (newCourse.getCourseCode().equals(courseList.getEntry(i).getCourseCode())) {
+                courseList.setEntry(i, newCourse);
+                productDAO.saveToFileCourse(courseList);
+                GeneralUtil.systemPause();
+                return;
+            }
+        }
+    }
+
     private void removeCourse() {
         Course courseFound = courseUI.removeCourse(courseList);
         if (courseFound == null) {
@@ -125,15 +145,15 @@ public class CourseManagement {
         GeneralUtil.systemPause();
 
     }
-    
+
     private void removeProgrammeFromCourse() {
         Object[] obj = courseUI.removeProgrammeFromCourse(courseList);
-        if(obj == null) {
+        if (obj == null) {
             return;
         }
         Course courseFound = (Course) obj[0];
         ListInterface<Programme> programmeRemoved = (ListInterface<Programme>) obj[1];
-        
+
         for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
             if (courseList.getEntry(i).equals(courseFound)) {
                 for (int j = 0; j < programmeRemoved.getNumberOfEntries(); j++) {

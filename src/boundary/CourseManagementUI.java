@@ -89,6 +89,150 @@ public class CourseManagementUI {
         return null;
     }
 
+    public Course editCourse(ListInterface<Course> courseList) {
+        GeneralUtil.clearScreen();
+
+        String courseCode;
+
+        System.out.println("Edit Course");
+        System.out.println("-----------");
+        boolean cont;
+        do {
+            cont = false;
+            char[] checkChar = {'Y', 'N'};
+            char c;
+            courseCode = cScan.inputString("Enter Course Code > ");
+            Course courseFound = courseIsExist(courseList, courseCode);
+            if (courseFound == null) {
+                System.err.println("Course not found.");
+                c = cScan.inputChar("Continue to edit? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                if (c == 'Y' || c == 'y') {
+                    cont = true;
+                    System.out.println("");
+                }
+            } else {
+                boolean loop;
+                boolean isEdited = false;
+                do {
+                    loop = false;
+                    displayCourseInformation(courseFound);
+                    displayOriProgrammeInCourse(courseFound);
+                    int choice = getEditChoice();
+                    boolean again;
+                    switch (choice) {
+                        case 0:
+                            return null;
+                        case 1:
+                            do {
+                                System.out.println("");
+                                again = false;
+                                String editCourseCode = cScan.inputCourseCode("Enter new course code > ", "Invalid course code format. [Eg: AACS1234]");
+                                if (editCourseCode.equals(courseFound.getCourseCode())) {
+                                    System.err.println("New course code cannot same with original course code.");
+                                    c = cScan.inputChar("Try again? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        again = true;
+                                    }
+                                } else if (courseIsExist(courseList, editCourseCode) != null) {
+                                    System.err.println("The course code is already exist.");
+                                    c = cScan.inputChar("Try again? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        again = true;
+                                    }
+                                } else {
+                                    c = cScan.inputChar("Are you sure to edit the course code? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        isEdited = true;
+                                        courseFound.setCourseCode(editCourseCode);
+                                        courseFound.setCourseCreditHours(getCreditHour(editCourseCode));
+                                    }
+                                }
+                            } while (again);
+
+                            break;
+                        case 2:
+                            do {
+                                System.out.println("");
+                                again = false;
+                                String editCourseName = cScan.inputString("Enter new course name > ");
+                                if (editCourseName.equals(courseFound.getCourseName())) {
+                                    System.err.println("New course name cannot same with original course name.");
+                                    c = cScan.inputChar("Try again? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        again = true;
+                                    }
+                                } else {
+                                    c = cScan.inputChar("Are you sure to edit the course name? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        isEdited = true;
+                                        courseFound.setCourseName(editCourseName);
+                                    }
+                                }
+                            } while (again);
+
+                            break;
+                        case 3:
+                            do {
+                                System.out.println("");
+                                again = false;
+                                double editCourseFees = cScan.inputDouble("Enter Course Fees > ", 0.00, 9999.99);
+                                if (editCourseFees == courseFound.getCourseFees()) {
+                                    System.err.println("New course fees cannot same with original course fees.");
+                                    c = cScan.inputChar("Try again? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        again = true;
+                                    }
+                                } else {
+                                    c = cScan.inputChar("Are you sure to edit the course fees? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        isEdited = true;
+                                        courseFound.setCourseFees(editCourseFees);
+                                    }
+                                }
+                            } while (again);
+                            break;
+                        case 4:
+                            do {
+                                again = false;
+                                displayCourseDeptSelection();
+                                String editCourseDept = getCourseDept(cScan.inputInt("Select Course Department > ", 1, 8));
+                                if (editCourseDept.equals(courseFound.getCourseDepartment())) {
+                                    System.err.println("New course department cannot same with original course department.");
+                                    c = cScan.inputChar("Try again? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        again = true;
+                                        GeneralUtil.clearScreen();
+                                        displayCourseInformation(courseFound);
+                                        displayOriProgrammeInCourse(courseFound);
+                                    }
+                                } else {
+                                    c = cScan.inputChar("Are you sure to edit the course department? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                                    if (c == 'y' || c == 'Y') {
+                                        isEdited = true;
+                                        courseFound.setCourseDepartment(editCourseDept);
+                                    }
+                                }
+                            } while (again);
+                            break;
+                    }
+                    c = cScan.inputChar("Anymore details to edit? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                    if (c == 'y' || c == 'Y') {
+                        loop = true;
+                        GeneralUtil.clearScreen();
+                    } else {
+                        if (isEdited) {
+                            return courseFound;
+                        } else {
+                            return null;
+                        }
+                    }
+                } while (loop);
+
+            }
+        } while (cont);
+        return null;
+    }
+
     public Course removeCourse(ListInterface<Course> courseList) {
         GeneralUtil.clearScreen();
 
@@ -307,6 +451,21 @@ public class CourseManagementUI {
             }
         }
         return null;
+    }
+
+    private int getEditChoice() {
+        String outputStr = "";
+        outputStr
+                += "Edit Choice\n"
+                + "===========\n"
+                + "1. Course Code\n"
+                + "2. Course Name\n"
+                + "3. Course Fees\n"
+                + "4. Course Department\n"
+                + "0. Back\n";
+        System.out.println(outputStr);
+        int choice = cScan.inputInt("Select edit choice > ", 0, 4);
+        return choice;
     }
 
     private void displayCourseInformation(Course courseFound) {
