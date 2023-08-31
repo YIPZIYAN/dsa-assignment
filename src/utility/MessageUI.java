@@ -27,4 +27,8 @@ public class MessageUI {
         System.out.println(CYAN + "\nNo Result Found." + RESET);
     }
 
+    public static void displayInfoMessage(String str) {
+        System.out.println(YELLOW + str + RESET);
+    }
+
 }

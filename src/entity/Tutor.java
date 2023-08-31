@@ -4,7 +4,6 @@
  */
 package entity;
 
-import adt.exampleAdt.ArrayList;
 import java.util.Objects;
 
 /**
@@ -17,7 +16,7 @@ public class Tutor {
     private String tutorName;
     private char gender; // M or F
     private String email; // auto generate
-    private String status; // PT, FT, RT
+    private String status; // [P]art[T]ime, [F]ull[T]ime, [R]e[T]ired, [R]e[S]ign
     private static int totalTutor = 0;
 
     public Tutor() {
@@ -31,7 +30,11 @@ public class Tutor {
         this.status = Character.toUpperCase(status)
                 == 'P' ? "PT" : "FT";
 
-        //auto create email
+        generateEmail();
+
+    }
+
+    private void generateEmail() {
         if (this.status == "PT") {
             this.email = String.format("p%s@tarumt.edu.my",
                     this.tutorId.substring(1));
@@ -41,7 +44,6 @@ public class Tutor {
                             .replaceAll("\\s", "")
                             .toLowerCase());
         }
-
     }
 
     public char getGender() {
@@ -78,18 +80,26 @@ public class Tutor {
 
     public void setTutorName(String tutorName) {
         this.tutorName = tutorName;
+        generateEmail();
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setTotalTutor(int totalTutor) {
-        this.totalTutor = totalTutor;
+    public static void setTotalTutor(int totalTutor) {
+        Tutor.totalTutor = totalTutor;
     }
 
     public void setStatus(String status) {
         this.status = status;
+        if (isWorking()) {
+            generateEmail();
+        }
+    }
+
+    private boolean isWorking() {
+        return this.status == "PT" || this.status == "FT";
     }
 
     @Override
@@ -123,11 +133,32 @@ public class Tutor {
     }
 
     public String getStatusStr() {
-        return status.equals("PT") ? "Part-Time" : "Full-Time";
+        String status;
+        switch (this.status) {
+            case "FT":
+                status = "Full-Time";
+                break;
+            case "PT":
+                status = "Part-Time";
+                break;
+            case "RS":
+                status = "Resigned";
+                break;
+            case "RT":
+                status = "Retired";
+                break;
+            default:
+                status = "Unknown";
+        }
+        return status;
     }
 
     public String getGenderStr() {
         return gender == 'M' ? "Male" : "Female";
+    }
+
+    public boolean isFemale() {
+        return gender == 'F' ? true : false;
     }
 
 }
