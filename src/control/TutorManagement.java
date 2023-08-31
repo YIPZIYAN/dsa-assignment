@@ -7,6 +7,7 @@ package control;
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import boundary.TutorManagementUI;
+import dao.DAO;
 import dao.Seeder;
 import entity.Tutor;
 import java.util.Iterator;
@@ -17,13 +18,23 @@ import utility.MessageUI;
  * @author Yip Zi Yan
  */
 public class TutorManagement {
-
+    
+    private final String fileName = "tutor.dat";
+    DAO tutorDAO = new DAO(fileName);
     TutorManagementUI tutorUI = new TutorManagementUI();
     ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
+    
     Seeder seeder = new Seeder(); //testing
 
+    public TutorManagement() {
+        tutorDAO.saveToFile(seeder.getTutorList());
+       
+        
+        tutorList = tutorDAO.retrieveFromFile();
+    }
+    
     public void startUI() {
-
+        
         int choice;
         do {
             choice = tutorUI.getMenuChoice();
@@ -44,47 +55,47 @@ public class TutorManagement {
                     MessageUI.displayExitMessage();
             }
         } while (choice != 0);
-
+        
     }
-
+    
     public static void main(String[] args) {
         TutorManagement teachingControl = new TutorManagement();
         teachingControl.startUI();
     }
-
+    
     private void addNewTutor() {
         if (!tutorUI.addTutorMenu()) {
             return;
         }
-
+        
         do {
             Tutor newTutor = tutorUI.addTutor();
-
+            
             if (newTutor != null) {
                 seeder.getTutorList().add(newTutor);
             }
-
+            
         } while (tutorUI.contAction("Anymore To Add? [Y|N] > "));
-
+        
     }
-
+    
     private void displayTutorList() {
         tutorUI.displayAllTutor(getAllTutor(), true);
     }
-
+    
     private String getAllTutor() {
         String outputStr = "";
         int number = 0;
-
+        
         Iterator<Tutor> it = seeder.getTutorList().getIterator();
         while (it.hasNext()) {
             outputStr += String.format("%2d.  ", ++number)
                     + it.next() + "\n";
-
+            
         }
         return outputStr;
     }
-
+    
     private void searchTutorUI() {
         int choice;
         do {
@@ -105,14 +116,14 @@ public class TutorManagement {
             }
         } while (choice != 0);
     }
-
+    
     private void searchTutorBy(String attribute, String queryQuestion) {
         String query = tutorUI.getTutorQuery(queryQuestion, "find")
                 .toLowerCase();
         String outputStr = "";
         Iterator<Tutor> it = seeder.getTutorList().getIterator();
         int number = 0;
-
+        
         while (it.hasNext()) {
             Tutor matchTutor = it.next();
             switch (attribute) {
@@ -135,13 +146,13 @@ public class TutorManagement {
                     }
                     break;
             }
-
+            
         }
-
+        
         tutorUI.displayFindResult(outputStr);
-
+        
     }
-
+    
     private void updateTutorUI() {
         int choice;
         do {
@@ -154,26 +165,26 @@ public class TutorManagement {
                 case 2:
                     updateTutor("id", "Enter Tutor ID > ");
                     break;
-
+                
             }
         } while (choice != 0);
     }
-
+    
     private void updateTutor(String searchBy, String queryQuestion) {
         String query = tutorUI.getTutorQuery(queryQuestion, "update")
                 .toLowerCase();
         Tutor updateTutor = null;
         Iterator<Tutor> it = seeder.getTutorList().getIterator();
-
+        
         switch (searchBy) {
             case "id":
                 while (it.hasNext()) {
                     Tutor matchTutor = it.next();
-
+                    
                     if (matchTutor.getTutorId().toLowerCase().equals(query)) {
                         updateTutor = matchTutor;
                     }
-
+                    
                 }
                 break;
             case "num":
@@ -184,11 +195,11 @@ public class TutorManagement {
             }
             break;
         }
-
+        
         updateSelectedField(updateTutor);
-
+        
     }
-
+    
     private void updateSelectedField(Tutor updateTutor) {
         int choice;
         do {
@@ -196,7 +207,7 @@ public class TutorManagement {
             if (updateTutor == null) {
                 return;
             }
-
+            
             choice = tutorUI.selectAttributeToUpdate(updateTutor);
             switch (choice) {
                 case 1:
@@ -211,35 +222,35 @@ public class TutorManagement {
             }
         } while (choice != 0);
     }
-
+    
     private void updateTutorName(Tutor updateTutor) {
         String newName = tutorUI.updateTutorName();
         if (newName == null) {
             return;
         }
-
+        
         updateTutor.setTutorName(newName);
     }
-
+    
     private void updateTutorGender(Tutor updateTutor) {
         boolean confirmToChange = tutorUI.updateTutorGender(updateTutor.isFemale());
         if (!confirmToChange) {
             return;
         }
-
+        
         if (updateTutor.isFemale()) {
             updateTutor.setGender('M');
         } else {
             updateTutor.setGender('F');
         }
     }
-
+    
     private void updateTutorStatus(Tutor updateTutor) {
         String newStatus = tutorUI.updateTutorStatus(updateTutor.getStatus());
         if (newStatus == null) {
             return;
         }
-
+        
         updateTutor.setStatus(newStatus);
     }
 }
