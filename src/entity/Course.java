@@ -1,22 +1,19 @@
+
 package entity;
 
-import adt.CircularDoublyLinkedList;
-import adt.ListInterface;
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Goh Chun Yen
  */
-public class Course implements Serializable {
-
+public class Course {
+    
     private String courseCode;
     private String courseName;
     private int courseCreditHours;
     private String courseDepartment;
     private double courseFees;
-    private ListInterface<Programme> programmes = new CircularDoublyLinkedList<>();
     private static int totalCourse = 0;
 
     public Course() {
@@ -50,10 +47,6 @@ public class Course implements Serializable {
         return courseFees;
     }
 
-    public ListInterface<Programme> getProgrammes() {
-        return programmes;
-    }
-
     public static int getTotalCourse() {
         return totalCourse;
     }
@@ -76,10 +69,6 @@ public class Course implements Serializable {
 
     public void setCourseFees(double courseFees) {
         this.courseFees = courseFees;
-    }
-
-    public void setProgrammes(ListInterface<Programme> programmes) {
-        this.programmes = programmes;
     }
 
     public static void setTotalCourse(int totalCourse) {
@@ -113,17 +102,9 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        String outputStr = String.format("%-12s%-45s%-13d%-11s%-8.2f", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
-        if (programmes.isEmpty()) {
-            return outputStr;
-        }
-        
-        outputStr += "\n    Programme List: ";
-        for (int i = 0; i < programmes.getNumberOfEntries(); i++) {
-            outputStr +=  String.format("\n\t%-4s%-35s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
-        }
-        return outputStr;
-               
+        return String.format("%-12s%-50s%-13d%-11s%-8.2f", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
     }
-
+    
+    
+    
 }

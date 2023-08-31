@@ -22,6 +22,7 @@ public class CustomScanner {
             courseCode = inputString(str);
             if (courseCode == null || courseCode.length() != 8) {
                 error = true;
+                System.out.println(error);
                 System.err.println("Course code must be 8 characters long.");
             } else {
                 if (!courseCode.substring(0, 4).equals("MPU-")) {

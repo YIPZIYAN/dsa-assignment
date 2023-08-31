@@ -8,8 +8,7 @@ package control;
 import boundary.CourseManagementUI;
 import utility.MessageUI;
 import adt.*;
-import dao.*;
-import entity.*;
+import entity.Course;
 import utility.GeneralUtil;
 
 /**
@@ -19,23 +18,7 @@ import utility.GeneralUtil;
 public class CourseManagement {
 
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
-    private ProductDAO productDAO = new ProductDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();
-    private static ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
-    private static Programme[] programmes = {
-        new Programme("RSD", "Bachelor of Computer Science in Data Science", "Bachelor Degree"),
-        new Programme("DCS", "Diploma in Computer Science", "Diploma"),
-        new Programme("RAC", "Bachelor of Accounting", "Bachelor Degree"),
-        new Programme("REE", "Bachelor of Electronics Engineering Technology", "Bachelor Degree"),
-        new Programme("RFS", "Bachelor of Science in Food Science", "Bachelor Degree"),
-        new Programme("RRE", "Bachelor of Real Estate Management", "Bachelor Degree"),
-        new Programme("RMS", "Bachelor of Communication in Media Studies", "Bachelor Degree"),
-        new Programme("FIS", "Foundation in Science", "Foundation")
-    };
-
-    public CourseManagement() {
-        courseList = productDAO.retrieveFromFileCourse();
-    }
 
     public void startUI() {
 
@@ -44,41 +27,16 @@ public class CourseManagement {
             choice = courseUI.getMenuChoice();
             switch (choice) {
                 case 1:
-                    getAllCourses();
+                    courseUI.listAllCourses(getAllCourses());
                     break;
                 case 2:
                     addNewCourse();
-                    break;
-                case 5:
-                    removeCourse();
-                    break;
-                case 6:
-                    addProgrammeToCourse();
-                    break;
-                case 7:
-                    removeProgrammeFromCourse();
                     break;
                 case 0:
                     MessageUI.displayExitMessage();
             }
         } while (choice != 0);
 
-    }
-
-    public void getAllCourses() {
-        String outputStr = "";
-
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-
-            if (i + 1 < 10) {
-                outputStr += i + 1 + ".  ";
-            } else {
-                outputStr += i + 1 + ". ";
-            }
-            outputStr += courseList.getEntry(i) + "\n\n";
-        }
-
-        courseUI.listAllCourses(outputStr);
     }
 
     private void addNewCourse() {
@@ -90,73 +48,22 @@ public class CourseManagement {
         }
 
         courseList.add(newCourse);
-        productDAO.saveToFileCourse(courseList);
+        //System.out.println(newCourse);
         GeneralUtil.systemPause();
     }
 
-    private void removeCourse() {
-        Course courseFound = courseUI.removeCourse(courseList);
-        if (courseFound == null) {
-            return;
-        }
-        courseList.remove(courseFound);
-        productDAO.saveToFileCourse(courseList);
-        GeneralUtil.systemPause();
-    }
-
-    private void addProgrammeToCourse() {
-        Object[] obj = courseUI.addProgrammeToCourse(courseList, programmeList, getProgrammeList());
-
-        if (obj == null) {
-            return;
-        }
-
-        Course courseFound = (Course) obj[0];
-        ListInterface<Programme> programmeAdded = (ListInterface<Programme>) obj[1];
-
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            if (courseList.getEntry(i).equals(courseFound)) {
-                for (int j = 0; j < programmeAdded.getNumberOfEntries(); j++) {
-                    courseList.getEntry(i).getProgrammes().add(programmeAdded.getEntry(j));
-                }
-            }
-        }
-        productDAO.saveToFileCourse(courseList);
-        GeneralUtil.systemPause();
-
-    }
-    
-    private void removeProgrammeFromCourse() {
-        Object[] obj = courseUI.removeProgrammeFromCourse(courseList);
-        if(obj == null) {
-            return;
-        }
-        Course courseFound = (Course) obj[0];
-        ListInterface<Programme> programmeRemoved = (ListInterface<Programme>) obj[1];
+    public String getAllCourses() {
+        String outputStr = "";
         
         for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            if (courseList.getEntry(i).equals(courseFound)) {
-                for (int j = 0; j < programmeRemoved.getNumberOfEntries(); j++) {
-                    courseList.getEntry(i).getProgrammes().remove(programmeRemoved.getEntry(j));
-                }
-            }
+            outputStr += i + 1 + ". ";
+            outputStr += courseList.getEntry(i) + "\n";
         }
-        productDAO.saveToFileCourse(courseList);
-        GeneralUtil.systemPause();
-    }
-
-    private String getProgrammeList() {
-        String outputStr = "";
-        for (int i = 0; i < programmeList.getNumberOfEntries(); i++) {
-            outputStr += programmeList.getEntry(i) + "\n";
-        }
-
+        
         return outputStr;
-
     }
 
     public static void main(String[] args) {
-        programmeList.addAll(programmes);
         CourseManagement courseControl = new CourseManagement();
         courseControl.startUI();
     }

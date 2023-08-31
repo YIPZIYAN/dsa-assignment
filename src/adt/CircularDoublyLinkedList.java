@@ -4,14 +4,13 @@
  */
 package adt;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  *
  * @author Yip Zi Yan
  */
-public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializable {
+public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     private Node startNode;
     private int numberOfEntries;
@@ -192,17 +191,6 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return new LinkedIterator();
     }
 
-    @Override
-    public boolean addAll(T[] entries) {
-        if(entries == null || entries.length == 0) {
-            return false;
-        }
-        for (T entry : entries) {
-            add(entry);
-        }
-        return true;
-    }
-
     private class LinkedIterator implements Iterator<T> {
 
         private Node currentNode;
@@ -234,7 +222,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     }
 
-    private class Node implements Serializable{
+    private class Node {
 
         T data;
         Node prev;
