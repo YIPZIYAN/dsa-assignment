@@ -17,7 +17,7 @@ public class ProductMaintenance {
   private ProductMaintenanceUI productUI = new ProductMaintenanceUI();
 
   public ProductMaintenance() {
-    productList = productDAO.retrieveFromFile();
+    //productList = productDAO.retrieveFromFile();
   }
   
    public void runProductMaintenance() {
@@ -44,7 +44,7 @@ public class ProductMaintenance {
   public void addNewProduct() {
     Product newProduct = productUI.inputProductDetails();
     productList.add(newProduct);
-    productDAO.saveToFile(productList);
+    //productDAO.saveToFile(productList);
   }
 
   public String getAllProducts() {
