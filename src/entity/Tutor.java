@@ -4,13 +4,14 @@
  */
 package entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Yip Zi Yan
  */
-public class Tutor {
+public class Tutor implements Serializable {
 
     private String tutorId; // auto generate
     private String tutorName;

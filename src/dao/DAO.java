@@ -13,7 +13,7 @@ import java.io.*;
  *
  * @author Yip Zi Yan
  */
-public class DAO<T> {
+public class DAO<T>{
 
     private String fileName;
 
