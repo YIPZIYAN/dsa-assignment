@@ -120,7 +120,7 @@ public class Course implements Serializable {
         
         outputStr += "\n    Programme List: ";
         for (int i = 0; i < programmes.getNumberOfEntries(); i++) {
-            outputStr +=  String.format("\n\t%-4s%-35s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
+            outputStr +=  String.format("\n\t%-4s%-50s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
         }
         return outputStr;
                

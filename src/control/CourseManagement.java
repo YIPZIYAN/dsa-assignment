@@ -49,6 +49,9 @@ public class CourseManagement {
                 case 2:
                     addNewCourse();
                     break;
+                case 3:
+                    findCourse();
+                    break;
                 case 4:
                     editCourseDetails();
                     break;
@@ -95,6 +98,10 @@ public class CourseManagement {
         courseList.add(newCourse);
         productDAO.saveToFileCourse(courseList);
         GeneralUtil.systemPause();
+    }
+    
+    private void findCourse() {
+        courseUI.findCourse(courseList, programmeList, getProgrammeList());
     }
 
     private void editCourseDetails() {

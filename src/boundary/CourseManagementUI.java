@@ -89,6 +89,238 @@ public class CourseManagementUI {
         return null;
     }
 
+    public void findCourse(ListInterface<Course> courseList, ListInterface<Programme> programmeList, String programmeListOutput) {
+        GeneralUtil.clearScreen();
+
+        ListInterface<Course> searchResults;
+
+        boolean cont;
+        do {
+            cont = false;
+            char[] checkChar = {'Y', 'N'};
+            char c;
+            int choice = getFindChoice();
+            switch (choice) {
+                case 1:
+                    boolean loop;
+                    do {
+                        loop = false;
+                        searchResults = searchByCourseCode(courseList, cScan.inputString("Enter Course Code > "));
+                        if (!searchResults.isEmpty()) {
+                            displaySearchResults(searchResults);
+                        } else {
+                            System.err.println("No results found.");
+                        }
+                        c = cScan.inputChar("Continue to find by course code? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                        if (c == 'y' || c == 'Y') {
+                            loop = true;
+                            GeneralUtil.clearScreen();
+                        }
+                    } while (loop);
+
+                    break;
+
+                case 2:
+                    do {
+                        loop = false;
+                        searchResults = searchByCourseName(courseList, cScan.inputString("Enter Course Name > "));
+                        if (!searchResults.isEmpty()) {
+                            displaySearchResults(searchResults);
+                        } else {
+                            System.err.println("No results found.");
+                        }
+                        c = cScan.inputChar("Continue to find by course name? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                        if (c == 'y' || c == 'Y') {
+                            loop = true;
+                            GeneralUtil.clearScreen();
+                        }
+                    } while (loop);
+
+                    break;
+
+                case 3:
+                    do {
+                        loop = false;
+                        double min, max;
+                        min = cScan.inputDouble("Enter minimum course fees > ", 0.0, 9999.99);
+                        max = cScan.inputDouble("Enter maximum course fees > ", min, 9999.99);
+                        searchResults = searchByCourseFees(courseList, min, max);
+                        if (!searchResults.isEmpty()) {
+                            displaySearchResults(searchResults);
+                        } else {
+                            System.err.println("No results found.");
+                        }
+                        c = cScan.inputChar("Continue to find by course fees? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                        if (c == 'y' || c == 'Y') {
+                            loop = true;
+                            GeneralUtil.clearScreen();
+                        }
+                    } while (loop);
+
+                    break;
+
+                case 4:
+                    do {
+                        loop = false;
+                        displayCourseDeptSelection();
+                        searchResults = searchByCourseDept(courseList, getCourseDept(cScan.inputInt("Select Course Department > ", 1, 8)));
+                        if (!searchResults.isEmpty()) {
+                            displaySearchResults(searchResults);
+                        } else {
+                            System.err.println("No results found.");
+                        }
+                        c = cScan.inputChar("Continue to find by course department? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                        if (c == 'y' || c == 'Y') {
+                            loop = true;
+                            GeneralUtil.clearScreen();
+                        }
+                    } while (loop);
+
+                    break;
+
+                case 5:
+                    do {
+                        loop = false;
+                        displayProgrammeList(programmeListOutput);
+                        String programmeCode = cScan.inputString("Enter programme code > ");
+                        searchResults = searchByProgrammeCode(courseList, programmeCode);
+                        if (!searchResults.isEmpty()) {
+                            displaySearchResultsForProgrammeCode(searchResults, programmeCode);
+                        } else {
+                            System.err.println("No results found.");
+                        }
+                        c = cScan.inputChar("Continue to find by course department? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+                        if (c == 'y' || c == 'Y') {
+                            loop = true;
+                            GeneralUtil.clearScreen();
+                        }
+                    } while (loop);
+
+                    break;
+
+                case 0:
+                    return;
+
+            }
+
+            c = cScan.inputChar("Continue to find course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
+            if (c == 'y' || c == 'Y') {
+                cont = true;
+                GeneralUtil.clearScreen();
+            } else {
+                return;
+            }
+        } while (cont);
+
+    }
+
+    private void displaySearchResults(ListInterface<Course> searchResults) {
+        String outputStr = "";
+
+        for (int i = 0; i < searchResults.getNumberOfEntries(); i++) {
+
+            if (i + 1 < 10) {
+                outputStr += i + 1 + ".  ";
+            } else {
+                outputStr += i + 1 + ". ";
+            }
+            outputStr += searchResults.getEntry(i) + "\n\n";
+        }
+
+        System.out.println("Search Results: \n"
+                + "============================================================================================\n"
+                + "No  Course Code Name                                         Credit Hours Department Fees\n"
+                + "============================================================================================\n"
+                + outputStr);
+    }
+
+    private void displaySearchResultsForProgrammeCode(ListInterface<Course> searchResults, String programmeCode) {
+        String outputStr = "";
+
+        boolean isPrinted = false;
+        for (int i = 0; i < searchResults.getNumberOfEntries(); i++) {
+            if (!isPrinted) {
+                for (int j = 0; j < searchResults.getEntry(i).getProgrammes().getNumberOfEntries(); j++) {
+                    if (programmeCode.equals(searchResults.getEntry(i).getProgrammes().getEntry(j).getProgrammeCode())) {
+                        outputStr += String.format("%-15s%-50s%-12s%-45s\n", programmeCode, searchResults.getEntry(i).getProgrammes().getEntry(j).getProgrammeName(), searchResults.getEntry(i).getCourseCode(), searchResults.getEntry(i).getCourseName());
+                        isPrinted = true;
+                    }
+                }
+            }
+            if (i != 0) {
+                outputStr += String.format("%-65s%-12s%-45s\n", " ",searchResults.getEntry(i).getCourseCode(), searchResults.getEntry(i).getCourseName());
+            }
+
+        }
+        System.out.println(
+                "Search Results\n"
+                + "==========================================================================================================================");
+        System.out.printf("%-15s%-50s%-12s%-45s\n", "Programme Code", "Programme Name", "Course Code", "Course Name");
+        System.out.println("==========================================================================================================================\n" + outputStr);
+
+    }
+
+    private ListInterface<Course> searchByCourseCode(ListInterface<Course> courseList, String courseCode) {
+        ListInterface<Course> searchResults = new CircularDoublyLinkedList<>();
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            if (courseList.getEntry(i).getCourseCode().contains(courseCode)) {
+                searchResults.add(courseList.getEntry(i));
+            }
+        }
+
+        return searchResults;
+    }
+
+    private ListInterface<Course> searchByCourseName(ListInterface<Course> courseList, String courseName) {
+        ListInterface<Course> searchResults = new CircularDoublyLinkedList<>();
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            if (courseList.getEntry(i).getCourseName().contains(courseName)) {
+                searchResults.add(courseList.getEntry(i));
+            }
+        }
+
+        return searchResults;
+    }
+
+    private ListInterface<Course> searchByCourseFees(ListInterface<Course> courseList, double min, double max) {
+        ListInterface<Course> searchResults = new CircularDoublyLinkedList<>();
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            if (courseList.getEntry(i).getCourseFees() >= min && courseList.getEntry(i).getCourseFees() <= max) {
+                searchResults.add(courseList.getEntry(i));
+            }
+        }
+
+        return searchResults;
+    }
+
+    private ListInterface<Course> searchByCourseDept(ListInterface<Course> courseList, String courseDept) {
+        ListInterface<Course> searchResults = new CircularDoublyLinkedList<>();
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            if (courseList.getEntry(i).getCourseDepartment().equals(courseDept)) {
+                searchResults.add(courseList.getEntry(i));
+            }
+        }
+
+        return searchResults;
+    }
+
+    private ListInterface<Course> searchByProgrammeCode(ListInterface<Course> courseList, String programmeCode) {
+        ListInterface<Course> searchResults = new CircularDoublyLinkedList<>();
+        boolean isExist;
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            isExist = false;
+            for (int j = 0; j < courseList.getEntry(i).getProgrammes().getNumberOfEntries(); j++) {
+                if (courseList.getEntry(i).getProgrammes().getEntry(j).getProgrammeCode().equals(programmeCode)) {
+                    isExist = true;
+                }
+            }
+            if (isExist) {
+                searchResults.add(courseList.getEntry(i));
+            }
+        }
+        return searchResults;
+    }
+
     public Course editCourse(ListInterface<Course> courseList) {
         GeneralUtil.clearScreen();
 
@@ -451,6 +683,22 @@ public class CourseManagementUI {
             }
         }
         return null;
+    }
+
+    private int getFindChoice() {
+        String outputStr = "";
+        outputStr
+                += "Find Course\n"
+                + "-----------\n"
+                + "1. By Course Code\n"
+                + "2. By Course Name\n"
+                + "3. By Course Fees\n"
+                + "4. By Course Department\n"
+                + "5. By Course Programmes\n"
+                + "0. Back\n";
+        System.out.println(outputStr);
+        int choice = cScan.inputInt("Select edit choice > ", 0, 5);
+        return choice;
     }
 
     private int getEditChoice() {
