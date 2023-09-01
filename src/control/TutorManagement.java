@@ -8,10 +8,9 @@ import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import boundary.TutorManagementUI;
 import dao.DAO;
-import dao.Seeder;
+import dao.TutorSeeder;
 import entity.Tutor;
 import java.util.Iterator;
-import utility.GeneralUtil;
 import utility.MessageUI;
 
 /**
@@ -25,9 +24,10 @@ public class TutorManagement {
     TutorManagementUI tutorUI = new TutorManagementUI();
     ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
 
-    Seeder seeder = new Seeder();
+    TutorSeeder seeder = new TutorSeeder();
 
     public TutorManagement() {
+//        tutorDAO.saveToFile(seeder.getTutorList()); 
         tutorList = tutorDAO.retrieveFromFile();
         Tutor.setTotalTutor(tutorList.getNumberOfEntries());
     }

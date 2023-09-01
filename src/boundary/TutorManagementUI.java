@@ -308,7 +308,7 @@ public class TutorManagementUI {
 
     public void removedClosure() {
         MessageUI.displayInfoMessage("Removed successfully."
-                + "\nPlease note that system will return back to previous screen since this tuytor had been removed.");
+                + "\nPlease note that system will return back to previous screen since this tutor had been removed.");
         GeneralUtil.systemPause();
     }
 }
