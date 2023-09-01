@@ -8,7 +8,6 @@ package boundary;
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.*;
-import java.time.format.FormatStyle;
 import utility.*;
 
 /**
@@ -25,7 +24,7 @@ public class CourseManagementUI {
         System.out.println("Course Management");
         System.out.println("-------------------------------");
         System.out.println(
-                "1. Course List\n"
+                  "1. Course List\n"
                 + "2. Add Course\n"
                 + "3. Find Course\n"
                 + "4. Edit Course Details\n"

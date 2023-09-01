@@ -22,6 +22,7 @@ public class CourseManagement {
     private ProductDAO productDAO = new ProductDAO();
     private CourseManagementUI courseUI = new CourseManagementUI();
     private static ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
+    
     private static Programme[] programmes = {
         new Programme("RSD", "Bachelor of Computer Science in Data Science", "Bachelor Degree"),
         new Programme("DCS", "Diploma in Computer Science", "Diploma"),
