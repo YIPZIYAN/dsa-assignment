@@ -25,14 +25,13 @@ public class TutorManagementUI {
         System.out.println("1. Tutor List\n"
                 + "2. Add Tutor\n"
                 + "3. Find Tutor\n"
-                + "4. Edit Tutor Details\n"
-                + "5. Remove Tutor\n"
-                + "6. Filter Tutor\n"
-                + "7. Generate Report\n"
+                + "4. Edit / Remove Tutor Details\n"
+                + "5. Filter Tutor\n"
+                + "6. Generate Report\n"
                 + "0. Quit");
         System.out.println("--------------------------");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 9);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 6);
 
         return choice;
     }
@@ -218,9 +217,10 @@ public class TutorManagementUI {
         System.out.println(selectedTutor.getGender() == 'M'
                 ? "Female" : "Male");
         System.out.println("3. Change Status");
+        System.out.println("4. REMOVE Tutor");
         System.out.println("0. Exit");
         MessageUI.displayInfoMessage("Please note that the email will change when the name is edited \nor the status is updated from full-time to part-time, or vice versa");
-        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 4);
 
         return choice;
     }
@@ -300,5 +300,15 @@ public class TutorManagementUI {
                 return "RS";
         }
         return "RT";
+    }
+
+    public boolean removeTutor() {
+        return cScan.confimation("Are You Sure To REMOVE This Tutor? [Y|N] > ");
+    }
+
+    public void removedClosure() {
+        MessageUI.displayInfoMessage("Removed successfully."
+                + "\nPlease note that system will return back to previous screen since this tuytor had been removed.");
+        GeneralUtil.systemPause();
     }
 }
