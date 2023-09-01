@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 /**
  *
- * @author Yip Zi Yan
+ * @author Yip Zi Yan & Goh Chun Yen
  */
 public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializable {
 
@@ -165,8 +165,8 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public boolean isFull() { //no need
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean isFull() { //linked list can grow infinitely
+        return false;
     }
 
     @Override
@@ -194,7 +194,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public boolean addAll(T[] entries) {
-        if(entries == null || entries.length == 0) {
+        if (entries == null || entries.length == 0) {
             return false;
         }
         for (T entry : entries) {
@@ -205,14 +205,14 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public boolean setEntry(int index, T newEntry) {
-        if(index < 0 || index >= numberOfEntries) {
+        if (index < 0 || index >= numberOfEntries) {
             return false;
         }
         Node currentNode = startNode;
         for (int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
-        
+
         currentNode.data = newEntry;
         return true;
     }
@@ -248,7 +248,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     }
 
-    private class Node implements Serializable{
+    private class Node implements Serializable {
 
         T data;
         Node prev;
