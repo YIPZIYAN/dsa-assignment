@@ -19,7 +19,7 @@ import utility.GeneralUtil;
 public class CourseManagement {
 
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
-    private ProductDAO productDAO = new ProductDAO();
+    private DAO dAO = new DAO("course.dat");
     private CourseManagementUI courseUI = new CourseManagementUI();
     private static ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
     
@@ -35,7 +35,7 @@ public class CourseManagement {
     };
 
     public CourseManagement() {
-        courseList = productDAO.retrieveFromFileCourse();
+        courseList = dAO.retrieveFromFile();
     }
 
     public void startUI() {
@@ -97,7 +97,7 @@ public class CourseManagement {
         }
 
         courseList.add(newCourse);
-        productDAO.saveToFileCourse(courseList);
+        dAO.saveToFile(courseList);
         GeneralUtil.systemPause();
     }
     
@@ -115,7 +115,7 @@ public class CourseManagement {
         for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
             if (newCourse.getCourseCode().equals(courseList.getEntry(i).getCourseCode())) {
                 courseList.setEntry(i, newCourse);
-                productDAO.saveToFileCourse(courseList);
+                dAO.saveToFile(courseList);
                 GeneralUtil.systemPause();
                 return;
             }
@@ -128,7 +128,7 @@ public class CourseManagement {
             return;
         }
         courseList.remove(courseFound);
-        productDAO.saveToFileCourse(courseList);
+        dAO.saveToFile(courseList);
         GeneralUtil.systemPause();
     }
 
@@ -149,7 +149,7 @@ public class CourseManagement {
                 }
             }
         }
-        productDAO.saveToFileCourse(courseList);
+        dAO.saveToFile(courseList);
         GeneralUtil.systemPause();
 
     }
@@ -169,7 +169,7 @@ public class CourseManagement {
                 }
             }
         }
-        productDAO.saveToFileCourse(courseList);
+        dAO.saveToFile(courseList);
         GeneralUtil.systemPause();
     }
 
