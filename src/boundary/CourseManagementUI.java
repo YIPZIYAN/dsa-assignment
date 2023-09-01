@@ -5,6 +5,7 @@
  */
 package boundary;
 
+import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.*;
 import utility.*;
@@ -41,8 +42,10 @@ public class CourseManagementUI {
     public void listAllCourses(String outputStr) {
         GeneralUtil.clearScreen();
 
-        System.out.println("List of Courses: \n"
-                + "No Course Code Name                                              Credit Hours Department Fees\n"
+        System.out.println("Course List: \n"
+                + "============================================================================================\n"
+                + "No  Course Code Name                                         Credit Hours Department Fees\n"
+                + "============================================================================================\n"
                 + outputStr);
 
         GeneralUtil.systemPause();
@@ -59,17 +62,13 @@ public class CourseManagementUI {
         int courseCreditHours;
         double courseFees;
 
-        boolean error = false;
+        boolean error;
         do {
-            courseCode = cScan.inputCourseCode("Enter Course Code > ", "Invalid course code format.");
-            for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-                if (courseList.getEntry(i).getCourseCode().equals(courseCode)) {
-                    error = true;
-                    break;
-                }
-            }
-            if (error) {
+            error = false;
+            courseCode = cScan.inputCourseCode("Enter Course Code > ", "Invalid course code format. [Eg: AACS1234]");
+            if (courseIsExist(courseList, courseCode) != null) {
                 System.err.println("The course code is already exist.");
+                error = true;
             }
         } while (error);
 
@@ -82,7 +81,7 @@ public class CourseManagementUI {
         displayCourseDeptSelection();
         courseDepartment = getCourseDept(cScan.inputInt("Select Course Department > ", 1, 8));
 
-        if (cScan.confimation("\\n[Confirmation]\\n [Y = yes N = no]\\nAre You Sure? > ")) {
+        if (cScan.confimation("\n[Confirmation]\nAre You Sure? [Y|N] > ")) {
             return new Course(courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
         }
 
