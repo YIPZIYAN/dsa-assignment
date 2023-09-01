@@ -192,6 +192,31 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return new LinkedIterator();
     }
 
+    @Override
+    public boolean addAll(T[] entries) {
+        if(entries == null || entries.length == 0) {
+            return false;
+        }
+        for (T entry : entries) {
+            add(entry);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean setEntry(int index, T newEntry) {
+        if(index < 0 || index >= numberOfEntries) {
+            return false;
+        }
+        Node currentNode = startNode;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+        
+        currentNode.data = newEntry;
+        return true;
+    }
+
     private class LinkedIterator implements Iterator<T> {
 
         private Node currentNode;
