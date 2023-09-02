@@ -217,6 +217,16 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return true;
     }
 
+    @Override
+    public T getFirstEntry() {
+        return startNode.data;
+    }
+
+    @Override
+    public T getLastEntry() {
+        return startNode.prev.data;
+    }
+
     private class LinkedIterator implements Iterator<T> {
 
         private Node currentNode;
