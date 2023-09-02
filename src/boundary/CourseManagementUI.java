@@ -278,224 +278,54 @@ public class CourseManagementUI {
 
     }
 
-    public Object[] addProgrammeToCourse(ListInterface<Course> courseList, ListInterface<Programme> programmeList, String programmeListOutput) {
+    //6. ADD PROGRAMME TO COURSE
+    public String addProgrammeToCourse() {
         GeneralUtil.clearScreen();
+        System.out.println("Add Programme To Course");
+        System.out.println("-----------------------");
+        return cScan.inputString("Enter Course Code > ");
 
-        String courseCode;
-
-        System.out.println("Add Programme");
-        System.out.println("-------------");
-
-        boolean cont;
-        do {
-            cont = false;
-            char[] checkChar = {'Y', 'N'};
-            char c;
-            courseCode = cScan.inputString("Enter Course Code > ");
-            Course courseFound = new Course();
-            //Course courseFound = courseIsExist(courseList, courseCode);
-            if (courseFound == null) {
-                System.err.println("Course not found.");
-                c = cScan.inputChar("Continue to add programme? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                if (c == 'Y' || c == 'y') {
-                    cont = true;
-                    System.out.println("");
-                }
-            } else {
-                boolean loop;
-                ListInterface<Programme> programmeAdded = new CircularDoublyLinkedList<>();
-
-                do {
-                    loop = false;
-                    displayCourseInformation(courseFound);
-                    displayAddedProgrammeInCourse(courseFound, programmeAdded);
-                    //displayProgrammeList(programmeListOutput);
-
-                    String programmeCode = cScan.inputString("Enter programme code to add > ");
-
-                    int isCodeValid = -1;
-                    for (int i = 0; i < programmeList.getNumberOfEntries(); i++) {
-                        if (programmeCode.equals(programmeList.getEntry(i).getProgrammeCode())) {
-                            isCodeValid = i;
-                        }
-                    }
-                    if (isCodeValid != -1) {
-                        boolean isProgrammeExist = false;
-
-                        if (!courseFound.getProgrammes().isEmpty()) {
-                            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-
-                                if (programmeCode.equals(courseFound.getProgrammes().getEntry(i).getProgrammeCode())) {
-
-                                    isProgrammeExist = true;
-                                }
-                            }
-                        }
-                        if (!programmeAdded.isEmpty()) {
-                            for (int i = 0; i < programmeAdded.getNumberOfEntries(); i++) {
-                                if (programmeCode.equals(programmeAdded.getEntry(i).getProgrammeCode())) {
-                                    isProgrammeExist = true;
-                                }
-                            }
-                        }
-
-                        if (isProgrammeExist) {
-                            System.err.println("Programme already in the current course.");
-                        } else {
-                            c = cScan.inputChar("Are you sure to add the programme to the course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                            if (c == 'Y' || c == 'y') {
-                                programmeAdded.add(programmeList.getEntry(isCodeValid));
-                                System.out.println("Programme has successfully added in the course.");
-                            }
-                        }
-                    } else {
-                        System.err.println("No such programme.");
-                    }
-
-                    c = cScan.inputChar("Anymore programme add to the current course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                    if (c == 'Y' || c == 'y') {
-                        loop = true;
-                        GeneralUtil.clearScreen();
-                    } else {
-                        Object[] obj = {courseFound, programmeAdded};
-                        return obj;
-                    }
-                } while (loop);
-            }
-
-        } while (cont);
-
-        return null;
     }
 
-    public Object[] removeProgrammeFromCourse(ListInterface<Course> courseList) {
+    public void displayAddProgrammeMsg(boolean isSuccess) {
+        if (isSuccess) {
+            System.out.println("Programme has successfully added in the course.");
+        } else {
+            System.err.println("Programme already in the current course.");
+        }
+    }
+
+    //7. REMOVE PROGRAMME FROM COURSE
+    public String removeProgrammeFromCourse() {
         GeneralUtil.clearScreen();
+        System.out.println("Remove Programme From Course");
+        System.out.println("----------------------------");
+        return cScan.inputString("Enter Course Code > ");
 
-        String courseCode;
-
-        System.out.println("Remove Programme");
-        System.out.println("----------------");
-
-        boolean cont;
-        do {
-            cont = false;
-            char[] checkChar = {'Y', 'N'};
-            char c;
-            courseCode = cScan.inputString("Enter Course Code > ");
-            Course courseFound = new Course();
-            //Course courseFound = courseIsExist(courseList, courseCode);
-            if (courseFound == null) {
-                System.err.println("Course not found.");
-                c = cScan.inputChar("Continue to remove programme? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                if (c == 'Y' || c == 'y') {
-                    cont = true;
-                    System.out.println("");
-                }
-            } else {
-                boolean loop;
-                ListInterface<Programme> programmeRemoved = new CircularDoublyLinkedList<>();
-
-                do {
-                    loop = false;
-                    displayCourseInformation(courseFound);
-                    displayRemovedProgrammeInCourse(courseFound, programmeRemoved);
-                    if (!courseFound.getProgrammes().isEmpty() && (courseFound.getProgrammes().getNumberOfEntries() != programmeRemoved.getNumberOfEntries())) {
-                        String programmeCode = cScan.inputString("Enter programme code to remove > ");
-                        boolean programmeNotFound = false;
-
-                        if (!programmeRemoved.isEmpty()) {
-
-                            for (int i = 0; i < programmeRemoved.getNumberOfEntries(); i++) {
-                                if (programmeCode.equals(programmeRemoved.getEntry(i).getProgrammeCode())) {
-                                    programmeNotFound = true;
-                                }
-                            }
-                        }
-
-                        if (programmeNotFound == false) {
-                            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-                                if (programmeCode.equals(courseFound.getProgrammes().getEntry(i).getProgrammeCode())) {
-
-                                    c = cScan.inputChar("Are you sure to remove the programme from the course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-
-                                    if (c == 'Y' || c == 'y') {
-                                        programmeRemoved.add(courseFound.getProgrammes().getEntry(i));
-                                        System.out.println("The programme has successfully removed from the course.");
-                                    }
-                                    programmeNotFound = false;
-                                    break;
-                                } else {
-                                    programmeNotFound = true;
-
-                                }
-                            }
-                        }
-
-                        if (programmeNotFound) {
-                            System.err.println("No such programme in the course.");
-                        }
-                    } else {
-                        System.out.println("The course do not have any programme.");
-                    }
-                    c = cScan.inputChar("Anymore programme to remove from the current course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                    if (c == 'Y' || c == 'y') {
-                        loop = true;
-                        GeneralUtil.clearScreen();
-                    } else {
-                        Object[] obj = {courseFound, programmeRemoved};
-                        return obj;
-                    }
-
-                } while (loop);
-            }
-        } while (cont);
-
-        return null;
     }
-
-    private void displayAddedProgrammeInCourse(Course courseFound, ListInterface<Programme> programmeAdded) {
-        String outputStr = "";
-        if (!courseFound.getProgrammes().isEmpty()) {
-            outputStr += "Programmes       : \n";
-            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-                outputStr += String.format("\t%-4s%-35s\n", courseFound.getProgrammes().getEntry(i).getProgrammeCode(), courseFound.getProgrammes().getEntry(i).getProgrammeName());
-            }
-        }
-        if (!programmeAdded.isEmpty()) {
-            for (int i = 0; i < programmeAdded.getNumberOfEntries(); i++) {
-                outputStr += String.format("\t%-4s%-35s\n", programmeAdded.getEntry(i).getProgrammeCode(), programmeAdded.getEntry(i).getProgrammeName());
-            }
-        }
-        System.out.println(outputStr);
-    }
-
-    private void displayRemovedProgrammeInCourse(Course courseFound, ListInterface<Programme> programmeRemoved) {
-        String outputStr = "";
-
-        if (!courseFound.getProgrammes().isEmpty() && (courseFound.getProgrammes().getNumberOfEntries() != programmeRemoved.getNumberOfEntries())) {
-
-            outputStr += "Programmes       : \n";
-
-            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-                boolean isRemoved = false;
-                if (!programmeRemoved.isEmpty()) {
-                    for (int j = 0; j < programmeRemoved.getNumberOfEntries(); j++) {
-                        if (courseFound.getProgrammes().getEntry(i).getProgrammeCode().equals(programmeRemoved.getEntry(j).getProgrammeCode())) {
-                            isRemoved = true;
-                        }
-                    }
-                }
-                if (!isRemoved) {
-                    outputStr += String.format("\t%-4s%-35s\n", courseFound.getProgrammes().getEntry(i).getProgrammeCode(), courseFound.getProgrammes().getEntry(i).getProgrammeName());
-                }
-            }
-        }
-        System.out.println(outputStr);
-    }
-
     
+    public String getRemoveProgrammeCode() {
+        return cScan.inputString("Enter Programme Code > ");
+    }
+
+    public void displayRmvProgrammeMsg(int situation) {
+        switch (situation) {
+            case 1:
+                System.out.println("Programme has successfully removed from the course.");
+                break;
+            case 2:
+                System.err.println("Programme not found in the current course.");
+                break;
+            case 3:
+                System.err.println("The course do not have any programme.");
+                break;
+               
+        }
+
+    }
+
     //OTHERS FUNCTION
-    private String getProgrammeCode(ListInterface<Programme> programmeList) {
+    public String getProgrammeCode(ListInterface<Programme> programmeList) {
         String outputStr = "";
         Iterator<Programme> it = programmeList.getIterator();
         while (it.hasNext()) {
@@ -517,9 +347,11 @@ public class CourseManagementUI {
                 if (input.equals(iter.next().getProgrammeCode())) {
                     return input;
                 } else {
-                    System.err.println("Programme code invalid. Please try again.");
                     loop = true;
                 }
+            }
+            if (loop) {
+                System.err.println("Programme code invalid. Please try again.");
             }
         } while (loop);
 

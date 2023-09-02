@@ -24,14 +24,19 @@ public class CourseManagement {
     private CourseManagementUI courseUI = new CourseManagementUI();
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
+    ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
-    
     public CourseManagement() {
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }
 
-    public void startUI() {
+    public static void main(String[] args) {
+        CourseManagement courseControl = new CourseManagement();
+        courseControl.startUI();
+    }
+
+    private void startUI() {
 
         int choice;
         do {
@@ -65,7 +70,7 @@ public class CourseManagement {
 
     }
 
-    public void getAllCourses() {
+    private void getAllCourses() {
         String outputStr = "";
 
         Iterator<Course> it = courseList.getIterator();
@@ -79,8 +84,6 @@ public class CourseManagement {
     }
 
     private void addNewCourse() {
-        //pass courseList to compare repeat courseCode
-
         do {
 
             String newCourseCode = courseUI.getNewCourseCode();
@@ -139,7 +142,7 @@ public class CourseManagement {
 
                 case 6:
                     do {
-                        searchResults = findStringResults(courseUI.findByProgramme(pSeeder.getProgrammeList()), choice);
+                        searchResults = findStringResults(courseUI.findByProgramme(programmeList), choice);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by programme? [Y|N] > "));
 
@@ -225,25 +228,22 @@ public class CourseManagement {
         return searchResults;
     }
 
-    private boolean courseIsExist(String input) {
-        Iterator<Course> it = courseList.getIterator();
-        while (it.hasNext()) {
-            if (it.next().getCourseCode().equals(input)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    private String getAllSearchResults(ListInterface<Course> searchResults) {
+        String outputStr = "";
 
-    private Course getCourse(String courseCode) {
-        Iterator<Course> it = courseList.getIterator();
-        while (it.hasNext()) {
-            Course course = it.next();
-            if (course.getCourseCode().equals(courseCode)) {
-                return course;
-            }
+        if (searchResults.isEmpty()) {
+            return null;
         }
-        return null;
+
+        Iterator<Course> it = searchResults.getIterator();
+        int i = 0;
+
+        while (it.hasNext()) {
+            outputStr += String.format("%2d. ", ++i) + it.next() + "\n\n";
+        }
+
+        return outputStr;
+
     }
 
     private void editCourse() {
@@ -336,7 +336,7 @@ public class CourseManagement {
         } while (courseUI.repeatAction("Anymore course to edit? [Y|N] > "));
 
     }
-    
+
     private void removeCourse() {
         do {
             String courseCode = courseUI.removeCourse();
@@ -344,86 +344,139 @@ public class CourseManagement {
                 Course courseFound = getCourse(courseCode);
                 courseUI.displayCourseInformation(courseFound);
                 courseUI.displayOriProgrammeInCourse(courseFound);
-                if(courseUI.repeatAction("Are you sure to remove the course? [Y|N] > ")) {
+                if (courseUI.repeatAction("Are you sure to remove the course? [Y|N] > ")) {
                     courseUI.displayRmvMsg(true);
                     courseList.remove(courseFound);
-                     dAO.saveToFile(courseList);
+                    dAO.saveToFile(courseList);
                 }
-            }else {
+            } else {
                 courseUI.displayRmvMsg(false);
             }
-            
+
         } while (courseUI.repeatAction("Anymore course to remove? [Y|N] > "));
-        
+
     }
 
     private void addProgrammeToCourse() {
-        Object[] obj = courseUI.addProgrammeToCourse(courseList, pSeeder.getProgrammeList(), getProgrammeList());
+        do {
+            String courseCode = courseUI.addProgrammeToCourse();
+            if (courseIsExist(courseCode)) {
+                Course courseFound = getCourse(courseCode);
+                boolean isRepeat;
+                do {
+                    courseUI.displayCourseInformation(courseFound);
+                    courseUI.displayOriProgrammeInCourse(courseFound);
+                    String programmeCode = courseUI.getProgrammeCode(programmeList);
+                    Iterator<Programme> it = courseFound.getProgrammes().getIterator();
+                    boolean isExist = false;
+                    while (it.hasNext()) {
+                        if (it.next().getProgrammeCode().equals(programmeCode)) {
+                            isExist = true;
+                        }
+                    }
+                    if (!isExist) {
+                        if (courseUI.repeatAction("Are you sure to add the programme to course? [Y|N] > ")) {
 
-        if (obj == null) {
-            return;
-        }
+                            for (int i = 0; i < programmeList.getNumberOfEntries(); i++) {
+                                if (programmeList.getEntry(i).getProgrammeCode().equals(programmeCode)) {
+                                    courseFound.getProgrammes().add(programmeList.getEntry(i));
+                                    dAO.saveToFile(courseList);
+                                    break;
+                                }
+                            }
 
-        Course courseFound = (Course) obj[0];
-        ListInterface<Programme> programmeAdded = (ListInterface<Programme>) obj[1];
+                            courseUI.displayAddProgrammeMsg(true);
+                        }
+                    } else {
+                        courseUI.displayAddProgrammeMsg(false);
+                    }
 
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            if (courseList.getEntry(i).equals(courseFound)) {
-                for (int j = 0; j < programmeAdded.getNumberOfEntries(); j++) {
-                    courseList.getEntry(i).getProgrammes().add(programmeAdded.getEntry(j));
-                }
+                    isRepeat = courseUI.repeatAction("Anymore programme to add? [Y|N] > ");
+                    if (isRepeat) {
+                        GeneralUtil.clearScreen();
+                    }
+                } while (isRepeat);
+
+            } else {
+                courseUI.displayRmvMsg(false); //same output so use the function
             }
-        }
-        dAO.saveToFile(courseList);
-        GeneralUtil.systemPause();
+        } while (courseUI.repeatAction("Anymore course to add programme? [Y|N] > "));
 
     }
 
     private void removeProgrammeFromCourse() {
-        Object[] obj = courseUI.removeProgrammeFromCourse(courseList);
-        if (obj == null) {
-            return;
-        }
-        Course courseFound = (Course) obj[0];
-        ListInterface<Programme> programmeRemoved = (ListInterface<Programme>) obj[1];
+        do {
+            String courseCode = courseUI.removeProgrammeFromCourse();
+            if (courseIsExist(courseCode)) {
+                Course courseFound = getCourse(courseCode);
+                boolean isRepeat;
+                do {
+                    isRepeat = false;
+                    courseUI.displayCourseInformation(courseFound);
+                    courseUI.displayOriProgrammeInCourse(courseFound);
 
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            if (courseList.getEntry(i).equals(courseFound)) {
-                for (int j = 0; j < programmeRemoved.getNumberOfEntries(); j++) {
-                    courseList.getEntry(i).getProgrammes().remove(programmeRemoved.getEntry(j));
-                }
+                    if (!courseFound.getProgrammes().isEmpty()) {
+                        String programmeCode = courseUI.getRemoveProgrammeCode();
+                        Iterator<Programme> it = courseFound.getProgrammes().getIterator();
+                        boolean isExist = false;
+                        while (it.hasNext()) {
+                            if (it.next().getProgrammeCode().equals(programmeCode)) {
+                                isExist = true;
+                            }
+                        }
+                        if (isExist) {
+                            if (courseUI.repeatAction("Are you sure to remove the programme from the course? [Y|N] > ")) {
+
+                                for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
+                                    if (courseFound.getProgrammes().getEntry(i).getProgrammeCode().equals(programmeCode)) {
+                                        courseFound.getProgrammes().remove(courseFound.getProgrammes().getEntry(i));
+                                        dAO.saveToFile(courseList);
+                                        break;
+                                    }
+                                }
+
+                                courseUI.displayRmvProgrammeMsg(1); //remove successfully
+                            }
+                        } else {
+                            courseUI.displayRmvProgrammeMsg(2); //programme code not in the course
+                        }
+
+                        isRepeat = courseUI.repeatAction("Anymore programme to remove? [Y|N] > ");
+                        if (isRepeat) {
+                            GeneralUtil.clearScreen();
+                        }
+                    } else {
+                        courseUI.displayRmvProgrammeMsg(3); //course don't have any programme
+                    }
+
+                } while (isRepeat);
+
+            } else {
+                courseUI.displayRmvMsg(false); //same output so use the function
+            }
+        } while (courseUI.repeatAction("Anymore course to remove programme? [Y|N] > "));
+
+    }
+
+    private boolean courseIsExist(String input) {
+        Iterator<Course> it = courseList.getIterator();
+        while (it.hasNext()) {
+            if (it.next().getCourseCode().equals(input)) {
+                return true;
             }
         }
-        dAO.saveToFile(courseList);
-        GeneralUtil.systemPause();
+        return false;
     }
 
-    private String getProgrammeList() {
-        String outputStr = "";
-
-        return outputStr;
-    }
-
-    private String getAllSearchResults(ListInterface<Course> searchResults) {
-        String outputStr = "";
-
-        if (searchResults.isEmpty()) {
-            return null;
-        }
-
-        Iterator<Course> it = searchResults.getIterator();
-        int i = 0;
-
+    private Course getCourse(String courseCode) {
+        Iterator<Course> it = courseList.getIterator();
         while (it.hasNext()) {
-            outputStr += String.format("%2d. ", ++i) + it.next() + "\n\n";
+            Course course = it.next();
+            if (course.getCourseCode().equals(courseCode)) {
+                return course;
+            }
         }
-
-        return outputStr;
-
+        return null;
     }
 
-    public static void main(String[] args) {
-        CourseManagement courseControl = new CourseManagement();
-        courseControl.startUI();
-    }
 }

@@ -26,7 +26,6 @@ public class ProgrammeSeeder {
         programmeList.add(new Programme("RRE", "Bachelor of Real Estate Management", "Bachelor Degree"));
         programmeList.add(new Programme("RMS", "Bachelor of Communication in Media Studies", "Bachelor Degree"));
         programmeList.add(new Programme("FIS", "Foundation in Science", "Foundation"));
-        programmeList.add(new Programme("DCS", "Diploma in Computer Science", "Diploma"));
 
     }
 
