@@ -7,6 +7,7 @@ package control;
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import java.util.Iterator;
+import utility.Paginator;
 
 /**
  *
@@ -104,10 +105,15 @@ public class TestCircularDoublyLinkedList {
         }
         System.out.println(sum);
 
-        list.clear();
-        System.out.println("Get entry");
-        System.out.println(list.getEntry(0));
-        System.out.println(list.getEntry(2));
+//        list.clear();
+//        System.out.println("Get entry");
+//        System.out.println(list.getEntry(0));
+//        System.out.println(list.getEntry(2));
 
+        
+        Paginator page = new Paginator(list,3);
+        System.out.println(page.pages);
+        
+ 
     }
 }

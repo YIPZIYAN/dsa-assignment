@@ -11,6 +11,7 @@ import dao.DAO;
 import dao.TutorSeeder;
 import entity.Tutor;
 import java.util.Iterator;
+import utility.GeneralUtil;
 import utility.MessageUI;
 
 /**
@@ -27,7 +28,7 @@ public class TutorManagement {
     TutorSeeder seeder = new TutorSeeder();
 
     public TutorManagement() {
-//        tutorDAO.saveToFile(seeder.getTutorList()); 
+        tutorDAO.saveToFile(seeder.getTutorList());
         tutorList = tutorDAO.retrieveFromFile();
         Tutor.setTotalTutor(tutorList.getNumberOfEntries());
     }
@@ -50,6 +51,8 @@ public class TutorManagement {
                 case 4:
                     updateTutorUI();
                     break;
+                case 5:
+                    filterTutorUI();
                 case 0:
                     MessageUI.displayExitMessage();
             }
@@ -66,9 +69,19 @@ public class TutorManagement {
         if (!tutorUI.addTutorMenu()) {
             return;
         }
+        int currentId;
+
+        try {
+            currentId = Integer.parseInt(tutorList.getLastEntry()
+                    .getTutorId().substring(1)) + 1;
+        } catch (Exception e) {
+            System.out.println("Something went wrong.");
+            GeneralUtil.systemPause();
+            return;
+        }
 
         do {
-            Tutor newTutor = tutorUI.addTutor();
+            Tutor newTutor = tutorUI.addTutor(currentId);
 
             if (newTutor != null) {
                 tutorList.add(newTutor);
@@ -128,7 +141,7 @@ public class TutorManagement {
             Tutor matchTutor = it.next();
             switch (attribute) {
                 case "name":
-                    if (matchTutor.getTutorName().toLowerCase().contains(query)) {
+                    if (matchTutor.getTutorName().toLowerCase().startsWith(query)) {
                         outputStr += String.format("%2d.  ", ++number)
                                 + matchTutor + "\n";
                     }
@@ -276,5 +289,20 @@ public class TutorManagement {
             tutorDAO.saveToFile(tutorList);
         }
         return isDeleted;
+    }
+
+    private void filterTutorUI() {
+        int choice;
+        do {
+            tutorUI.displayAllTutor(getAllTutor(), false);
+            choice = tutorUI.filterTutorMenu();
+            switch (choice) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+
+            }
+        } while (choice != 0);
     }
 }

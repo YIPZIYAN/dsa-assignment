@@ -120,4 +120,11 @@ public interface ListInterface<T> {
     public boolean setEntry(int index, T newEntry);
 
     public Iterator<T> getIterator();
+
+    public T getFirstEntry();
+
+    public T getLastEntry();
+    
+    public ListInterface<T> subList(int beginIndex, int endIndex);
+
 }

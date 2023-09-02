@@ -5,6 +5,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 
 /**
@@ -26,6 +27,18 @@ public class Tutor implements Serializable {
     public Tutor(String tutorName, char gender, char status) {
 
         this.tutorId = String.format("T%04d", ++totalTutor);
+        this.tutorName = tutorName;
+        this.gender = Character.toUpperCase(gender);
+        this.status = Character.toUpperCase(status)
+                == 'P' ? "PT" : "FT";
+
+        generateEmail();
+
+    }
+
+    public Tutor(String tutorName, char gender, char status, int currentNumber) {
+
+        this.tutorId = String.format("T%04d", currentNumber);
         this.tutorName = tutorName;
         this.gender = Character.toUpperCase(gender);
         this.status = Character.toUpperCase(status)

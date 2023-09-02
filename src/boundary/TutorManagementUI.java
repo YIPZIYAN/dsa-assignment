@@ -51,7 +51,7 @@ public class TutorManagementUI {
         System.out.println("=================================");
     }
 
-    public Tutor addTutor() {
+    public Tutor addTutor(int currentId) {
 
         GeneralUtil.clearScreen();
         displayAddTutorHeader();
@@ -72,7 +72,7 @@ public class TutorManagementUI {
         displayStatusSelection();
         status = cScan.inputChar("Enter Status > ", "Please enter [F] or [P] only.", checkStatus);
 
-        Tutor pendingTutor = new Tutor(name, gender, status);
+        Tutor pendingTutor = new Tutor(name, gender, status, currentId);
 
         GeneralUtil.clearScreen();
         displayAddTutorHeader();
@@ -310,5 +310,23 @@ public class TutorManagementUI {
         MessageUI.displayInfoMessage("Removed successfully."
                 + "\nPlease note that system will return back to previous screen since this tutor had been removed.");
         GeneralUtil.systemPause();
+    }
+
+    public void filterTutorHeader() {
+        System.out.println("       Filter Tutor       ");
+        System.out.println("==========================");
+    }
+
+    public int filterTutorMenu() {
+        filterTutorHeader();
+        System.out.println("1. Filter By Status\n"
+                + "2. Find By Email\n"
+                + "3. Find By Tutor ID\n"
+                + "0. Quit");
+        System.out.println("==========================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+
+        return choice;
     }
 }
