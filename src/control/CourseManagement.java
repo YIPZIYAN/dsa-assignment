@@ -409,13 +409,13 @@ public class CourseManagement {
             String courseCode = courseUI.removeProgrammeFromCourse();
             if (courseIsExist(courseCode)) {
                 Course courseFound = getCourse(courseCode);
+
                 boolean isRepeat;
                 do {
                     isRepeat = false;
                     courseUI.displayCourseInformation(courseFound);
-                    courseUI.displayOriProgrammeInCourse(courseFound);
-
                     if (!courseFound.getProgrammes().isEmpty()) {
+                        courseUI.displayOriProgrammeInCourse(courseFound);
                         String programmeCode = courseUI.getRemoveProgrammeCode();
                         Iterator<Programme> it = courseFound.getProgrammes().getIterator();
                         boolean isExist = false;
