@@ -19,13 +19,14 @@ public class CourseManagementUI {
 
     CustomScanner cScan = new CustomScanner();
 
+    //COURSE MENU
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
         System.out.println("Course Management");
         System.out.println("-------------------------------");
         System.out.println(
-                  "1. Course List\n"
+                "1. Course List\n"
                 + "2. Add Course\n"
                 + "3. Find Course\n"
                 + "4. Edit Course Details\n"
@@ -40,6 +41,7 @@ public class CourseManagementUI {
         return choice;
     }
 
+    //1. COURSE LIST
     public void listAllCourses(String outputStr) {
         GeneralUtil.clearScreen();
 
@@ -52,6 +54,7 @@ public class CourseManagementUI {
         GeneralUtil.systemPause();
     }
 
+    //2. ADD COURSE
     public String getNewCourseCode() {
         GeneralUtil.clearScreen();
 
@@ -93,6 +96,25 @@ public class CourseManagementUI {
         }
 
         return null;
+    }
+
+    //3. FIND COURSE
+    public int findCourse() {
+        GeneralUtil.clearScreen();
+        String outputStr = "";
+        outputStr
+                += "Find Course\n"
+                + "-----------\n"
+                + "1. By Course Code\n"
+                + "2. By Course Name\n"
+                + "3. By Credit Hours\n"
+                + "4. By Course Fees\n"
+                + "5. By Course Department\n"
+                + "6. By Course Programmes\n"
+                + "0. Back\n";
+        System.out.println(outputStr);
+        int choice = cScan.inputInt("Select edit choice > ", 0, 5);
+        return choice;
     }
 
     public String findByCourseCode() {
@@ -154,11 +176,34 @@ public class CourseManagementUI {
 
     }
 
+    //4. EDIT COURSE
     public String editCourseMenu() {
         GeneralUtil.clearScreen();
         System.out.println("Edit Course");
         System.out.println("-----------");
         return cScan.inputString("Enter Course Code > ");
+    }
+
+    public int getEditChoice(boolean courseIsExist, Course course) {
+        if (courseIsExist) {
+            displayCourseInformation(course);
+            displayOriProgrammeInCourse(course);
+            String outputStr = "";
+            outputStr
+                    += "Edit Choice\n"
+                    + "===========\n"
+                    + "1. Course Code\n"
+                    + "2. Course Name\n"
+                    + "3. Course Fees\n"
+                    + "4. Course Department\n"
+                    + "0. Back\n";
+            System.out.println(outputStr);
+            int choice = cScan.inputInt("Select edit choice > ", 0, 4);
+            return choice;
+        } else {
+            System.err.println("Course not found.");
+        }
+        return -1;
     }
 
     public String getEditString(int choice) {
@@ -178,7 +223,7 @@ public class CourseManagementUI {
         return cScan.inputDouble("Enter new course fees > ", 0.00, 9999.99);
     }
 
-    public void displaySucMsg(int choice) {
+    public void displayEditSucMsg(int choice) {
         switch (choice) {
             case 1:
                 System.out.println("Course code has been successfully edited.");
@@ -195,7 +240,7 @@ public class CourseManagementUI {
         }
     }
 
-    public boolean displayErrMsg(int choice) {
+    public boolean displayEditErrMsg(int choice) {
 
         switch (choice) {
             case 1:
@@ -216,43 +261,21 @@ public class CourseManagementUI {
 
     }
 
-    public Course removeCourse(ListInterface<Course> courseList) {
+    //5. REMOVE COURSE
+    public String removeCourse() {
         GeneralUtil.clearScreen();
-
-        String courseCode;
-
         System.out.println("Remove Course");
         System.out.println("-------------");
-        boolean cont;
-        do {
-            cont = false;
-            char[] checkChar = {'Y', 'N'};
-            char c;
-            courseCode = cScan.inputString("Enter Course Code > ");
-            Course courseFound = new Course();
-            //Course courseFound = courseIsExist(courseList, courseCode);
-            if (courseFound == null) {
-                System.err.println("Course not found.");
-                c = cScan.inputChar("Continue to remove? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                if (c == 'Y' || c == 'y') {
-                    cont = true;
-                    System.out.println("");
-                }
-            } else {
-                displayCourseInformation(courseFound);
-                displayOriProgrammeInCourse(courseFound);
-                c = cScan.inputChar("Are you sure to remove the course? [Y = yes N = no] > ", "Please enter [Y] or [N] only.", checkChar);
-                if (c == 'Y' || c == 'y') {
-                    System.out.println("Course has been removed successfully.");
+        return cScan.inputString("Enter Course Code > ");
+    }
 
-                    return courseFound;
-                }
+    public void displayRmvMsg(boolean isExist) {
+        if (isExist) {
+            System.out.println("The course has been successfully removed.");
+        } else {
+            System.err.println("Course not found.");
+        }
 
-            }
-
-        } while (cont);
-
-        return null;
     }
 
     public Object[] addProgrammeToCourse(ListInterface<Course> courseList, ListInterface<Programme> programmeList, String programmeListOutput) {
@@ -430,70 +453,6 @@ public class CourseManagementUI {
         return null;
     }
 
-    public int findCourse() {
-        GeneralUtil.clearScreen();
-        String outputStr = "";
-        outputStr
-                += "Find Course\n"
-                + "-----------\n"
-                + "1. By Course Code\n"
-                + "2. By Course Name\n"
-                + "3. By Credit Hours\n"
-                + "4. By Course Fees\n"
-                + "5. By Course Department\n"
-                + "6. By Course Programmes\n"
-                + "0. Back\n";
-        System.out.println(outputStr);
-        int choice = cScan.inputInt("Select edit choice > ", 0, 5);
-        return choice;
-    }
-
-    public int getEditChoice(boolean courseIsExist, Course course) {
-        if (courseIsExist) {
-            displayCourseInformation(course);
-            displayOriProgrammeInCourse(course);
-            String outputStr = "";
-            outputStr
-                    += "Edit Choice\n"
-                    + "===========\n"
-                    + "1. Course Code\n"
-                    + "2. Course Name\n"
-                    + "3. Course Fees\n"
-                    + "4. Course Department\n"
-                    + "0. Back\n";
-            System.out.println(outputStr);
-            int choice = cScan.inputInt("Select edit choice > ", 0, 4);
-            return choice;
-        } else {
-            System.err.println("Course not found.");
-        }
-        return -1;
-    }
-
-    private void displayCourseInformation(Course courseFound) {
-        String outputStr = "";
-        outputStr += "Course Information\n"
-                + "==================\n"
-                + "Course Code      : " + courseFound.getCourseCode() + "\n"
-                + "Course Name      : " + courseFound.getCourseName() + "\n"
-                + "Credit Hours     : " + courseFound.getCourseCreditHours() + "\n"
-                + "Course Department: " + courseFound.getCourseDepartment() + "\n"
-                + "Course Fees      : " + String.format("%.2f", courseFound.getCourseFees());
-
-        System.out.println(outputStr);
-    }
-
-    private void displayOriProgrammeInCourse(Course courseFound) {
-        String outputStr = "";
-        if (!courseFound.getProgrammes().isEmpty()) {
-            outputStr += "Programmes       : \n";
-            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-                outputStr += String.format("\t%-4s%-35s\n", courseFound.getProgrammes().getEntry(i).getProgrammeCode(), courseFound.getProgrammes().getEntry(i).getProgrammeName());
-            }
-        }
-        System.out.println(outputStr);
-    }
-
     private void displayAddedProgrammeInCourse(Course courseFound, ListInterface<Programme> programmeAdded) {
         String outputStr = "";
         if (!courseFound.getProgrammes().isEmpty()) {
@@ -534,6 +493,8 @@ public class CourseManagementUI {
         System.out.println(outputStr);
     }
 
+    
+    //OTHERS FUNCTION
     private String getProgrammeCode(ListInterface<Programme> programmeList) {
         String outputStr = "";
         Iterator<Programme> it = programmeList.getIterator();
@@ -615,6 +576,30 @@ public class CourseManagementUI {
             default:
                 return null;
         }
+    }
+
+    public void displayCourseInformation(Course courseFound) {
+        String outputStr = "";
+        outputStr += "Course Information\n"
+                + "==================\n"
+                + "Course Code      : " + courseFound.getCourseCode() + "\n"
+                + "Course Name      : " + courseFound.getCourseName() + "\n"
+                + "Credit Hours     : " + courseFound.getCourseCreditHours() + "\n"
+                + "Course Department: " + courseFound.getCourseDepartment() + "\n"
+                + "Course Fees      : " + String.format("%.2f", courseFound.getCourseFees());
+
+        System.out.println(outputStr);
+    }
+
+    public void displayOriProgrammeInCourse(Course courseFound) {
+        String outputStr = "";
+        if (!courseFound.getProgrammes().isEmpty()) {
+            outputStr += "Programmes       : \n";
+            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
+                outputStr += String.format("\t%-4s%-35s\n", courseFound.getProgrammes().getEntry(i).getProgrammeCode(), courseFound.getProgrammes().getEntry(i).getProgrammeName());
+            }
+        }
+        System.out.println(outputStr);
     }
 
     public boolean repeatAction(String msg) {

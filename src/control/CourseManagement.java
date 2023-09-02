@@ -22,21 +22,13 @@ public class CourseManagement {
     private ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
     private DAO dAO = new DAO("courses.dat");
     private CourseManagementUI courseUI = new CourseManagementUI();
-    private static ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
 
-    private static Programme[] programmes = {
-        new Programme("RSD", "Bachelor of Computer Science in Data Science", "Bachelor Degree"),
-        new Programme("DCS", "Diploma in Computer Science", "Diploma"),
-        new Programme("RAC", "Bachelor of Accounting", "Bachelor Degree"),
-        new Programme("REE", "Bachelor of Electronics Engineering Technology", "Bachelor Degree"),
-        new Programme("RFS", "Bachelor of Science in Food Science", "Bachelor Degree"),
-        new Programme("RRE", "Bachelor of Real Estate Management", "Bachelor Degree"),
-        new Programme("RMS", "Bachelor of Communication in Media Studies", "Bachelor Degree"),
-        new Programme("FIS", "Foundation in Science", "Foundation")
-    };
+    ProgrammeSeeder pSeeder = new ProgrammeSeeder();
 
+    
     public CourseManagement() {
         courseList = dAO.retrieveFromFile();
+        Course.setTotalCourse(courseList.getNumberOfEntries());
     }
 
     public void startUI() {
@@ -116,21 +108,21 @@ public class CourseManagement {
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course code? [Y|N] > "));
                     break;
-                    
+
                 case 2:
                     do {
                         searchResults = findStringResults(courseUI.findByCourseName(), choice);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course name? [Y|N] > "));
                     break;
-                    
+
                 case 3:
                     do {
                         searchResults = findIntResults(courseUI.findByCreditHours());
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course credit hours? [Y|N] > "));
                     break;
-                    
+
                 case 4:
                     do {
                         searchResults = findDoubleResults(courseUI.findByCourseFees());
@@ -138,7 +130,7 @@ public class CourseManagement {
                     } while (courseUI.repeatAction("Continue to find by course fees? [Y|N] > "));
                     break;
                 case 5:
-                    
+
                     do {
                         searchResults = findStringResults(courseUI.findByCourseDept(), choice);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
@@ -147,7 +139,7 @@ public class CourseManagement {
 
                 case 6:
                     do {
-                        searchResults = findStringResults(courseUI.findByProgramme(programmeList), choice);
+                        searchResults = findStringResults(courseUI.findByProgramme(pSeeder.getProgrammeList()), choice);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by programme? [Y|N] > "));
 
@@ -274,11 +266,11 @@ public class CourseManagement {
                         loop = false;
                         String editCourseCode = courseUI.getEditString(choice);
 
-                        if (courseIsExist(editCourseCode) || editCourseCode.equals(courseCode)) {
-                            loop = courseUI.displayErrMsg(choice);
+                        if (courseIsExist(editCourseCode) || editCourseCode.equals(curCourse.getCourseCode())) {
+                            loop = courseUI.displayEditErrMsg(choice);
                         } else {
                             if (courseUI.repeatAction("Are you sure to edit the course code? [Y|N] > ")) {
-                                courseUI.displaySucMsg(choice);
+                                courseUI.displayEditSucMsg(choice);
                                 curCourse.setCourseCode(editCourseCode);
                                 dAO.saveToFile(courseList);
                             }
@@ -291,20 +283,52 @@ public class CourseManagement {
                         loop = false;
                         String editCourseName = courseUI.getEditString(choice);
 
-                        if (editCourseName.equals(editCourseName)) {
-                            loop = courseUI.displayErrMsg(choice);
+                        if (editCourseName.equals(curCourse.getCourseName())) {
+                            loop = courseUI.displayEditErrMsg(choice);
                         } else {
                             if (courseUI.repeatAction("Are you sure to edit the course name? [Y|N] > ")) {
-                                courseUI.displaySucMsg(choice);
+                                courseUI.displayEditSucMsg(choice);
                                 curCourse.setCourseName(editCourseName);
                                 dAO.saveToFile(courseList);
                             }
                         }
                     } while (loop);
                     break;
-                    
+
                 case 3:
-                    
+                    do {
+                        loop = false;
+                        double editCourseFees = courseUI.getEditDouble();
+
+                        if (editCourseFees == curCourse.getCourseFees()) {
+                            loop = courseUI.displayEditErrMsg(choice);
+                        } else {
+                            if (courseUI.repeatAction("Are you sure to edit the course fees? [Y|N] > ")) {
+                                courseUI.displayEditSucMsg(choice);
+                                curCourse.setCourseFees(editCourseFees);
+                                dAO.saveToFile(courseList);
+                            }
+                        }
+                    } while (loop);
+                    break;
+
+                case 4:
+                    do {
+                        loop = false;
+                        String editCourseDept = courseUI.getEditString(choice);
+
+                        if (editCourseDept.equals(curCourse.getCourseDepartment())) {
+                            loop = courseUI.displayEditErrMsg(choice);
+                        } else {
+                            if (courseUI.repeatAction("Are you sure to edit the course department? [Y|N] > ")) {
+                                courseUI.displayEditSucMsg(choice);
+                                curCourse.setCourseName(editCourseDept);
+                                dAO.saveToFile(courseList);
+                            }
+                        }
+                    } while (loop);
+                    break;
+
                 case -1:
                     break;
             }
@@ -312,21 +336,29 @@ public class CourseManagement {
         } while (courseUI.repeatAction("Anymore course to edit? [Y|N] > "));
 
     }
-
-
-
+    
     private void removeCourse() {
-        Course courseFound = courseUI.removeCourse(courseList);
-        if (courseFound == null) {
-            return;
-        }
-        courseList.remove(courseFound);
-        dAO.saveToFile(courseList);
-        GeneralUtil.systemPause();
+        do {
+            String courseCode = courseUI.removeCourse();
+            if (courseIsExist(courseCode)) {
+                Course courseFound = getCourse(courseCode);
+                courseUI.displayCourseInformation(courseFound);
+                courseUI.displayOriProgrammeInCourse(courseFound);
+                if(courseUI.repeatAction("Are you sure to remove the course? [Y|N] > ")) {
+                    courseUI.displayRmvMsg(true);
+                    courseList.remove(courseFound);
+                     dAO.saveToFile(courseList);
+                }
+            }else {
+                courseUI.displayRmvMsg(false);
+            }
+            
+        } while (courseUI.repeatAction("Anymore course to remove? [Y|N] > "));
+        
     }
 
     private void addProgrammeToCourse() {
-        Object[] obj = courseUI.addProgrammeToCourse(courseList, programmeList, getProgrammeList());
+        Object[] obj = courseUI.addProgrammeToCourse(courseList, pSeeder.getProgrammeList(), getProgrammeList());
 
         if (obj == null) {
             return;
@@ -391,7 +423,6 @@ public class CourseManagement {
     }
 
     public static void main(String[] args) {
-        programmeList.addAll(programmes);
         CourseManagement courseControl = new CourseManagement();
         courseControl.startUI();
     }
