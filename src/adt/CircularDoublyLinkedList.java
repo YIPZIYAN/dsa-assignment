@@ -4,13 +4,14 @@
  */
 package adt;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
  *
- * @author Yip Zi Yan
+ * @author Yip Zi Yan & Goh Chun Yen
  */
-public class CircularDoublyLinkedList<T> implements ListInterface<T> {
+public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializable {
 
     private Node startNode;
     private int numberOfEntries;
@@ -164,8 +165,8 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     }
 
     @Override
-    public boolean isFull() { //no need
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean isFull() { //linked list can grow infinitely
+        return false;
     }
 
     @Override
@@ -189,6 +190,31 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
     @Override
     public Iterator<T> getIterator() {
         return new LinkedIterator();
+    }
+
+    @Override
+    public boolean addAll(T[] entries) {
+        if (entries == null || entries.length == 0) {
+            return false;
+        }
+        for (T entry : entries) {
+            add(entry);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean setEntry(int index, T newEntry) {
+        if (index < 0 || index >= numberOfEntries) {
+            return false;
+        }
+        Node currentNode = startNode;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
+        }
+
+        currentNode.data = newEntry;
+        return true;
     }
 
     private class LinkedIterator implements Iterator<T> {
@@ -222,7 +248,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T> {
 
     }
 
-    private class Node {
+    private class Node implements Serializable {
 
         T data;
         Node prev;

@@ -4,43 +4,47 @@
  */
 package entity;
 
-import adt.exampleAdt.ArrayList;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Yip Zi Yan
  */
-public class Tutor {
+public class Tutor implements Serializable {
 
     private String tutorId; // auto generate
     private String tutorName;
     private char gender; // M or F
     private String email; // auto generate
-    private String status; // PT, FT, RT
+    private String status; // [P]art[T]ime, [F]ull[T]ime, [R]e[T]ired, [R]e[S]ign
     private static int totalTutor = 0;
 
     public Tutor() {
     }
 
-    public Tutor(String tutorName, char gender, String status) {
+    public Tutor(String tutorName, char gender, char status) {
 
         this.tutorId = String.format("T%04d", ++totalTutor);
         this.tutorName = tutorName;
-        this.gender = gender;
-        this.status = status;
+        this.gender = Character.toUpperCase(gender);
+        this.status = Character.toUpperCase(status)
+                == 'P' ? "PT" : "FT";
 
-        //auto create email
-        if (status == "PT") {
-            this.email = String.format("P%s@tarumt.edu.my",
-                    this.tutorId);
+        generateEmail();
+
+    }
+
+    private void generateEmail() {
+        if (this.status == "PT") {
+            this.email = String.format("p%s@tarumt.edu.my",
+                    this.tutorId.substring(1));
         } else {
             this.email = String.format("%s@tarumt.edu.my",
                     this.tutorName
                             .replaceAll("\\s", "")
                             .toLowerCase());
         }
-
     }
 
     public char getGender() {
@@ -77,18 +81,26 @@ public class Tutor {
 
     public void setTutorName(String tutorName) {
         this.tutorName = tutorName;
+        generateEmail();
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setTotalTutor(int totalTutor) {
-        this.totalTutor = totalTutor;
+    public static void setTotalTutor(int totalTutor) {
+        Tutor.totalTutor = totalTutor;
     }
 
     public void setStatus(String status) {
         this.status = status;
+        if (isWorking()) {
+            generateEmail();
+        }
+    }
+
+    private boolean isWorking() {
+        return this.status == "PT" || this.status == "FT";
     }
 
     @Override
@@ -116,7 +128,38 @@ public class Tutor {
     @Override
     public String toString() {
 
-        return String.format("%5s %12s %8c %18s %12s", tutorId, tutorName, gender, email, status);
+        return String.format("%-8s %-26s %-10s %-32s %s",
+                tutorId, tutorName, getGenderStr(),
+                email, getStatusStr());
+    }
+
+    public String getStatusStr() {
+        String status;
+        switch (this.status) {
+            case "FT":
+                status = "Full-Time";
+                break;
+            case "PT":
+                status = "Part-Time";
+                break;
+            case "RS":
+                status = "Resigned";
+                break;
+            case "RT":
+                status = "Retired";
+                break;
+            default:
+                status = "Unknown";
+        }
+        return status;
+    }
+
+    public String getGenderStr() {
+        return gender == 'M' ? "Male" : "Female";
+    }
+
+    public boolean isFemale() {
+        return gender == 'F' ? true : false;
     }
 
 }
