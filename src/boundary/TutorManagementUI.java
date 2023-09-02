@@ -313,31 +313,39 @@ public class TutorManagementUI {
     }
 
     public void filterTutorHeader() {
-        System.out.println("       Filter Tutor       ");
+        System.out.println("  Filter Tutor By Status  ");
         System.out.println("==========================");
     }
 
     public int filterTutorMenu() {
         filterTutorHeader();
-        System.out.println("1. Filter By Status\n"
-                + "2. Find By Email\n"
+        System.out.println("1. Full-Time\n"
+                + "2. Part-Time\n"
+                + "3. Resigned\n"
+                + "4. Retired\n"
                 + "0. Quit");
         System.out.println("==========================");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 4);
 
         return choice;
     }
 
     public void generateTutorReportHeader() {
-        System.out.println("        Generate Tutor Report      ");
-        System.out.println("===================================");
+        System.out.println("\n                   Page Controller      ");
+        System.out.println("=====================================================");
     }
 
     public String generateTutorReportMenu() {
         generateTutorReportHeader();
-        System.out.println("[|<] [<] [>] [>|]");
-        System.out.println("==========================");
+        System.out.println(" Enter command below to perform the following tasks.");
+        System.out.println(" [  |< ]  Go to first page.");
+        System.out.println(" [  <  ]  Go to previous page.");
+        System.out.println(" [  >  ]  Go to next page.");
+        System.out.println(" [  >| ]  Go to last page.");
+        System.out.println(" You can also enter number of the page.");
+        MessageUI.displayInfoMessage(" Enter \"exit\" to go previous process.");
+        System.out.println("=====================================================");
 
         String command = cScan.inputString("Enter action command > ");
         return command;

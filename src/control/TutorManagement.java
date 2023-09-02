@@ -9,6 +9,7 @@ import adt.ListInterface;
 import boundary.TutorManagementUI;
 import dao.*;
 import entity.Tutor;
+import java.awt.Choice;
 import java.util.Iterator;
 import utility.*;
 
@@ -310,10 +311,22 @@ public class TutorManagement {
 
     private void generateReportUI() {
         String choice;
-        Paginator page = new Paginator(tutorList, 10);
+        Paginator page = new Paginator(tutorList, 7);
         String currentPage = getPageContent(page.jumpTo(0));
         do {
+
+            if (currentPage == "") {
+                currentPage = getPageContent(page.jumpTo(page.currentPage));
+            }
+
             tutorUI.displayAllTutor(currentPage, false);
+
+            System.out.printf("Page No: %-73d < 1 .. %d >\n",
+                    page.currentPage + 1, page.pageNumber);
+            if (page.isEndOfPage()) {
+                MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
+            }
+
             choice = tutorUI.generateTutorReportMenu().toLowerCase();
             switch (choice) {
                 case ">":
@@ -322,20 +335,39 @@ public class TutorManagement {
                 case ">|":
                     currentPage = getPageContent(page.toEnd());
                     break;
+                case "<":
+                    currentPage = getPageContent(page.prevPage());
+                    break;
+                case "|<":
+                    currentPage = getPageContent(page.toStart());
+                    break;
+                default:
+                    if (choice.matches("[0-9]+")) { // is integer
+                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
+                    }else if (!choice.equals("exit")) {
+                        System.err.println("Invalid command.");
+                        GeneralUtil.systemPause();
+                    }
+                    break;
             }
+
         } while (!choice.equals("exit"));
     }
 
     private String getPageContent(ListInterface<Tutor> list) {
         String outputStr = "";
-        int number
-                = tutorList.indexOf(list.getFirstEntry()) + 1;
-        Iterator<Tutor> it = list.getIterator();
-        while (it.hasNext()) {
-            outputStr += String.format("%2d.  ", ++number)
-                    + it.next() + "\n";
+        try {
+            int number = tutorList.indexOf(list.getFirstEntry());
+            Iterator<Tutor> it = list.getIterator();
+            while (it.hasNext()) {
+                outputStr += String.format("%2d.  ", ++number)
+                        + it.next() + "\n";
 
+            }
+        } catch (Exception e) {
+            GeneralUtil.systemPause();
         }
+
         return outputStr;
     }
 }
