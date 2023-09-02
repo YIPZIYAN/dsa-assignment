@@ -321,12 +321,25 @@ public class TutorManagementUI {
         filterTutorHeader();
         System.out.println("1. Filter By Status\n"
                 + "2. Find By Email\n"
-                + "3. Find By Tutor ID\n"
                 + "0. Quit");
         System.out.println("==========================");
 
         int choice = cScan.inputInt("Enter Selection > ", 0, 3);
 
         return choice;
+    }
+
+    public void generateTutorReportHeader() {
+        System.out.println("        Generate Tutor Report      ");
+        System.out.println("===================================");
+    }
+
+    public String generateTutorReportMenu() {
+        generateTutorReportHeader();
+        System.out.println("[|<] [<] [>] [>|]");
+        System.out.println("==========================");
+
+        String command = cScan.inputString("Enter action command > ");
+        return command;
     }
 }

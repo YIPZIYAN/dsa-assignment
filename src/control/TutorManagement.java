@@ -7,12 +7,10 @@ package control;
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import boundary.TutorManagementUI;
-import dao.DAO;
-import dao.TutorSeeder;
+import dao.*;
 import entity.Tutor;
 import java.util.Iterator;
-import utility.GeneralUtil;
-import utility.MessageUI;
+import utility.*;
 
 /**
  *
@@ -53,6 +51,10 @@ public class TutorManagement {
                     break;
                 case 5:
                     filterTutorUI();
+                    break;
+                case 6:
+                    generateReportUI();
+                    break;
                 case 0:
                     MessageUI.displayExitMessage();
             }
@@ -304,5 +306,36 @@ public class TutorManagement {
 
             }
         } while (choice != 0);
+    }
+
+    private void generateReportUI() {
+        String choice;
+        Paginator page = new Paginator(tutorList, 10);
+        String currentPage = getPageContent(page.jumpTo(0));
+        do {
+            tutorUI.displayAllTutor(currentPage, false);
+            choice = tutorUI.generateTutorReportMenu().toLowerCase();
+            switch (choice) {
+                case ">":
+                    currentPage = getPageContent(page.nextPage());
+                    break;
+                case ">|":
+                    currentPage = getPageContent(page.toEnd());
+                    break;
+            }
+        } while (!choice.equals("exit"));
+    }
+
+    private String getPageContent(ListInterface<Tutor> list) {
+        String outputStr = "";
+        int number
+                = tutorList.indexOf(list.getFirstEntry()) + 1;
+        Iterator<Tutor> it = list.getIterator();
+        while (it.hasNext()) {
+            outputStr += String.format("%2d.  ", ++number)
+                    + it.next() + "\n";
+
+        }
+        return outputStr;
     }
 }

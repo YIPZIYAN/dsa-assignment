@@ -242,11 +242,11 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         }
 
         //add until end index
-        for (int i = beginIndex; i < endIndex; i++) {
+        for (int i = beginIndex; i <= endIndex; i++) {
             subList.add(currentNode.data);
             currentNode = currentNode.next;
         }
-        
+
         return subList;
     }
 
@@ -279,7 +279,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             return currentElement;
         }
 
-    }
+ }
 
     private class Node implements Serializable {
 

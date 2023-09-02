@@ -93,7 +93,7 @@ public class TestCircularDoublyLinkedList {
         System.out.println("\nGet entry");
         System.out.println(list.getEntry(0));
         System.out.println(list.getEntry(2));
-        
+
         System.out.println("\nReplace");
         list.replace(3, 99);
         System.out.println(list);
@@ -109,11 +109,12 @@ public class TestCircularDoublyLinkedList {
 //        System.out.println("Get entry");
 //        System.out.println(list.getEntry(0));
 //        System.out.println(list.getEntry(2));
+        System.out.println(list);
+        System.out.println(list.subList(0, 2));
+        Paginator page = new Paginator(list, 3);
+        
+        
+        System.out.println(page.jumpTo(0));
 
-        
-        Paginator page = new Paginator(list,3);
-        System.out.println(page.pages);
-        
- 
     }
 }
