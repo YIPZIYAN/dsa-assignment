@@ -11,7 +11,7 @@ import entity.Programme;
 
 /**
  *
- * @author Cy
+ * @author Goh Chun Yen
  */
 public class ProgrammeSeeder {
 

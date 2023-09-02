@@ -303,25 +303,83 @@ public class CourseManagementUI {
         return cScan.inputString("Enter Course Code > ");
 
     }
-    
+
     public String getRemoveProgrammeCode() {
         return cScan.inputString("Enter Programme Code > ");
     }
 
-    public void displayRmvProgrammeMsg(int situation) {
-        switch (situation) {
-            case 1:
-                System.out.println("Programme has successfully removed from the course.");
-                break;
-            case 2:
-                System.err.println("Programme not found in the current course.");
-                break;
-            case 3:
-                System.err.println("The course do not have any programme.");
-                break;
-               
+    public void displayCourseInfo(Course courseFound) {
+        System.out.println("Course Information");
+        System.out.println("==================");
+        System.out.println("Course Code      : " + courseFound.getCourseCode());
+        System.out.println("Course Name      : " + courseFound.getCourseName());
+        System.out.println("Credit Hours     : " + courseFound.getCourseCreditHours());
+        System.out.println("Course Department: " + courseFound.getCourseDepartment());
+        System.out.println("Course Fees      : " + String.format("%.2f", courseFound.getCourseFees()));
+
+    }
+
+    public void displayRmvProgrammeMsg(boolean isSuccess) {
+        if (isSuccess) {
+            System.out.println("Programme has successfully removed from the course.");
+        } else {
+            System.err.println("Programme not found in the current course.");
         }
 
+    }
+
+    //8. GENERATE REPORT
+    public int reportMenu() {
+        GeneralUtil.clearScreen();
+        System.out.println("Generate Report");
+        System.out.println("---------------");
+        System.out.println("1. Course Report");
+        System.out.println("2. Programme Report");
+        return cScan.inputInt("Enter your choice > ", 1, 2);
+    }
+
+    public int courseReportMenu() {
+        System.out.println("Course Report");
+        System.out.println("-------------");
+        System.out.println("1. With Course Code Sorting");
+        System.out.println("2. With Course Name Sorting");
+        return cScan.inputInt("Enter your choice > ", 1, 2);
+    }
+
+    public void displayAllCourse(String outputStr, boolean displayOnly) {
+        GeneralUtil.clearScreen();
+        System.out.println("Course List");
+        displayCourseTableHeader();
+        System.out.println(outputStr);
+        if (displayOnly) {
+            GeneralUtil.systemPause();
+        }
+    }
+
+    public void displayCourseTableHeader() {
+        System.out.println("============================================================================================");
+        System.out.println("No  Course Code Name                                         Credit Hours Department Fees");
+        System.out.println("============================================================================================");
+    }
+
+    public void generateCourseReportHeader() {
+        System.out.println("\n                   Page Controller      ");
+        System.out.println("=====================================================");
+    }
+
+    public String generateCourseReportMenu() {
+        generateCourseReportHeader();
+        System.out.println(" Enter command below to perform the following tasks.");
+        System.out.println(" [  |< ]  Go to first page.");
+        System.out.println(" [  <  ]  Go to previous page.");
+        System.out.println(" [  >  ]  Go to next page.");
+        System.out.println(" [  >| ]  Go to last page.");
+        System.out.println(" You can also enter number of the page.");
+        MessageUI.displayInfoMessage(" Enter \"exit\" to go previous process.");
+        System.out.println("=====================================================");
+
+        String command = cScan.inputString("Enter action command > ");
+        return command;
     }
 
     //OTHERS FUNCTION

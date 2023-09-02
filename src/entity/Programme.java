@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Cy
+ * @author Goh Chun Yen
  */
 public class Programme implements Serializable{
     private String programmeCode;

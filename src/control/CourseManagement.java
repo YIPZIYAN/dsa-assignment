@@ -8,10 +8,13 @@ package control;
 import boundary.CourseManagementUI;
 import utility.MessageUI;
 import adt.*;
+import adt.exampleAdt.SortedListInterface;
+import adt.exampleAdt.SortedLinkedList;
 import dao.*;
 import entity.*;
 import java.util.Iterator;
 import utility.GeneralUtil;
+import utility.Paginator;
 
 /**
  *
@@ -24,9 +27,11 @@ public class CourseManagement {
     private CourseManagementUI courseUI = new CourseManagementUI();
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
+    CourseSeeder cSeeder = new CourseSeeder();
     ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
     public CourseManagement() {
+        dAO.saveToFile(cSeeder.getCourseList());
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }
@@ -62,6 +67,9 @@ public class CourseManagement {
                     break;
                 case 7:
                     removeProgrammeFromCourse();
+                    break;
+                case 8:
+                    generateReportMenu();
                     break;
                 case 0:
                     MessageUI.displayExitMessage();
@@ -413,40 +421,37 @@ public class CourseManagement {
                 boolean isRepeat;
                 do {
                     isRepeat = false;
+
                     courseUI.displayCourseInformation(courseFound);
-                    if (!courseFound.getProgrammes().isEmpty()) {
-                        courseUI.displayOriProgrammeInCourse(courseFound);
-                        String programmeCode = courseUI.getRemoveProgrammeCode();
-                        Iterator<Programme> it = courseFound.getProgrammes().getIterator();
-                        boolean isExist = false;
-                        while (it.hasNext()) {
-                            if (it.next().getProgrammeCode().equals(programmeCode)) {
-                                isExist = true;
-                            }
+                    courseUI.displayOriProgrammeInCourse(courseFound);
+                    String programmeCode = courseUI.getRemoveProgrammeCode();
+                    Iterator<Programme> it = courseFound.getProgrammes().getIterator();
+                    boolean isExist = false;
+                    while (it.hasNext()) {
+                        if (it.next().getProgrammeCode().equals(programmeCode)) {
+                            isExist = true;
                         }
-                        if (isExist) {
-                            if (courseUI.repeatAction("Are you sure to remove the programme from the course? [Y|N] > ")) {
+                    }
+                    if (isExist) {
+                        if (courseUI.repeatAction("Are you sure to remove the programme from the course? [Y|N] > ")) {
 
-                                for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
-                                    if (courseFound.getProgrammes().getEntry(i).getProgrammeCode().equals(programmeCode)) {
-                                        courseFound.getProgrammes().remove(courseFound.getProgrammes().getEntry(i));
-                                        dAO.saveToFile(courseList);
-                                        break;
-                                    }
+                            for (int i = 0; i < courseFound.getProgrammes().getNumberOfEntries(); i++) {
+                                if (courseFound.getProgrammes().getEntry(i).getProgrammeCode().equals(programmeCode)) {
+                                    courseFound.getProgrammes().remove(courseFound.getProgrammes().getEntry(i));
+                                    dAO.saveToFile(courseList);
+                                    break;
                                 }
-
-                                courseUI.displayRmvProgrammeMsg(1); //remove successfully
                             }
-                        } else {
-                            courseUI.displayRmvProgrammeMsg(2); //programme code not in the course
-                        }
 
-                        isRepeat = courseUI.repeatAction("Anymore programme to remove? [Y|N] > ");
-                        if (isRepeat) {
-                            GeneralUtil.clearScreen();
+                            courseUI.displayRmvProgrammeMsg(true);
                         }
                     } else {
-                        courseUI.displayRmvProgrammeMsg(3); //course don't have any programme
+                        courseUI.displayRmvProgrammeMsg(false);
+                    }
+
+                    isRepeat = courseUI.repeatAction("Anymore programme to remove? [Y|N] > ");
+                    if (isRepeat) {
+                        GeneralUtil.clearScreen();
                     }
 
                 } while (isRepeat);
@@ -456,6 +461,87 @@ public class CourseManagement {
             }
         } while (courseUI.repeatAction("Anymore course to remove programme? [Y|N] > "));
 
+    }
+
+    private void generateReportMenu() {
+        int choice = courseUI.reportMenu();
+        if (choice == 1) {
+            int sortingChoice = courseUI.courseReportMenu();
+            switch (sortingChoice) {
+                case 1:
+                    SortedListInterface<Course> sortedList = new SortedLinkedList<>();
+                    Iterator<Course> it = courseList.getIterator();
+                    while (it.hasNext()) {
+                        sortedList.add(it.next());
+                    }
+                    generateReport((ListInterface<Course>) sortedList);
+                    GeneralUtil.systemPause();
+            }
+        } else {
+
+        }
+    }
+
+    private void generateReport(ListInterface<Course> courseList) {
+        Paginator page = new Paginator(courseList, 7);
+        String currentPage = getPageContent(page.jumpTo(0));
+        String choice;
+        do {
+
+            if (currentPage == "") {
+                currentPage = getPageContent(page.jumpTo(page.currentPage));
+            }
+
+            courseUI.displayAllCourse(currentPage, false);
+
+            System.out.printf("Page No: %-73d < 1 .. %d >\n",
+                    page.currentPage + 1, page.pageNumber);
+            if (page.isEndOfPage()) {
+                MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
+            }
+
+            choice = courseUI.generateCourseReportMenu().toLowerCase();
+            switch (choice) {
+                case ">":
+                    currentPage = getPageContent(page.nextPage());
+                    break;
+                case ">|":
+                    currentPage = getPageContent(page.toEnd());
+                    break;
+                case "<":
+                    currentPage = getPageContent(page.prevPage());
+                    break;
+                case "|<":
+                    currentPage = getPageContent(page.toStart());
+                    break;
+                default:
+                    if (choice.matches("[0-9]+")) { // is integer
+                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
+                    } else if (!choice.equals("exit")) {
+                        System.err.println("Invalid command.");
+                        GeneralUtil.systemPause();
+                    }
+                    break;
+            }
+
+        } while (!choice.equals("exit"));
+    }
+
+    private String getPageContent(ListInterface<Course> list) {
+        String outputStr = "";
+        try {
+            int number = courseList.indexOf(list.getFirstEntry());
+            Iterator<Course> it = list.getIterator();
+            while (it.hasNext()) {
+                outputStr += String.format("%2d. ", ++number)
+                        + it.next() + "\n\n";
+
+            }
+        } catch (Exception e) {
+            GeneralUtil.systemPause();
+        }
+
+        return outputStr;
     }
 
     private boolean courseIsExist(String input) {
