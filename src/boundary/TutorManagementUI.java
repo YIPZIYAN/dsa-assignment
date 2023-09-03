@@ -332,21 +332,24 @@ public class TutorManagementUI {
         System.out.println("==================================================");
     }
 
-    public int filterTutorMenu(boolean isEmpty) {
+    public int filterTutorMenu(String selected) {
         GeneralUtil.clearScreen();
         filterTutorHeader();
         System.out.println("You can select multiple criterias to filter");
-        System.out.println("1. Full-Time\n"
-                + "2. Part-Time\n"
-                + "3. Resigned\n"
-                + "4. Retired");
+        System.out.println("1. Full-Time\t[FT]\n"
+                + "2. Part-Time\t[PT]\n"
+                + "3. Resigned\t[RS]\n"
+                + "4. Retired\t[RT]");
 
-        System.out.print(!isEmpty ? "5. Undo\n6. Done\n" : "");
+        System.out.print(!selected.equals("") ? "5. Undo\n6. Done\n" : "");
         System.out.println("0. Quit");
+        if (!selected.equals("")) {
+            System.out.println("\nFilter: " + selected);
+        }
         System.out.println("==================================================");
 
         int choice = cScan.inputInt("Enter Selection > ", 0,
-                isEmpty ? 4 : 6);
+                selected.equals("") ? 4 : 6);
 
         return choice;
     }

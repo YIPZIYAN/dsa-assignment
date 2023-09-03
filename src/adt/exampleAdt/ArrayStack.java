@@ -11,60 +11,84 @@ import adt.exampleAdt.StackInterface;
  */
 public class ArrayStack<T> implements StackInterface<T> {
 
-  private T[] array;
-  private int topIndex; // index of top entry
-  private static final int DEFAULT_CAPACITY = 50;
+    private T[] array;
+    private int topIndex; // index of top entry
+    private static final int DEFAULT_CAPACITY = 50;
 
-  public ArrayStack() {
-    this(DEFAULT_CAPACITY);
-  }
-
-  public ArrayStack(int initialCapacity) {
-    array = (T[]) new Object[initialCapacity];
-    topIndex = -1;
-  }
-
-  @Override
-  public void push(T newEntry) {
-    topIndex++;
-
-    if (topIndex < array.length) {
-      array[topIndex] = newEntry;
-    }
-  }
-
-  @Override
-  public T peek() {
-    T top = null;
-
-    if (!isEmpty()) {
-      top = array[topIndex];
+    public ArrayStack() {
+        this(DEFAULT_CAPACITY);
     }
 
-    return top;
-  } 
+    public ArrayStack(int initialCapacity) {
+        array = (T[]) new Object[initialCapacity];
+        topIndex = -1;
+    }
 
-  @Override
-  public T pop() {
-    T top = null;
-    if (!isEmpty()) {
-      top = array[topIndex];
-      array[topIndex] = null;
-      topIndex--;
-      
-     
-    } // end if
-    
-    return top;
-  } 
+    @Override
+    public void push(T newEntry) {
+        if (!isDuplicate(newEntry)) {
+                    topIndex++;
+            if (topIndex < array.length) {
+                array[topIndex] = newEntry;
+            }
+        }
+        
+    }
 
-  @Override
-  public boolean isEmpty() {
-    return topIndex < 0;
-  } 
+    @Override
+    public T peek() {
+        T top = null;
 
-  public void clear() {
-    topIndex = -1;
-  } 
-  
-} 
+        if (!isEmpty()) {
+            top = array[topIndex];
+        }
+
+        return top;
+    }
+
+    @Override
+    public T pop() {
+        T top = null;
+        if (!isEmpty()) {
+            top = array[topIndex];
+            array[topIndex] = null;
+            topIndex--;
+
+        } // end if
+
+        return top;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return topIndex < 0;
+    }
+
+    public void clear() {
+        topIndex = -1;
+    }
+
+    @Override
+    public String toString() {
+        String output = "";
+        if (!isEmpty()) {
+            for (int i = 0; i <= topIndex; i++) {
+                output += array[i] + " ";
+            }
+        }
+
+        return output;
+    }
+
+    private boolean isDuplicate(T anEntry) {
+        boolean isDuplicated = false;
+        if (!isEmpty()) {
+            for (int i = 0; i <= topIndex; i++) {
+                if (array[i].equals(anEntry)) {
+                    isDuplicated = true;
+                }
+            }
+        }
+        return isDuplicated;
+    }
+}

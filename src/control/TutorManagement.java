@@ -10,7 +10,6 @@ import adt.exampleAdt.*;
 import boundary.TutorManagementUI;
 import dao.*;
 import entity.Tutor;
-import java.awt.Choice;
 import java.util.Iterator;
 import utility.*;
 
@@ -314,7 +313,8 @@ public class TutorManagement {
         StackInterface<String> filter = new ArrayStack<>();
 
         do {
-            choice = tutorUI.filterTutorMenu(filter.isEmpty());
+            
+            choice = tutorUI.filterTutorMenu(filter.toString());
             switch (choice) {
                 case 1:
                     filter.push("FT");
