@@ -110,24 +110,35 @@ public class Course implements Serializable, Comparable<Course> {
         }
         return true;
     }
-    
+
+    public String toProgrammeReportString() {
+        String outputStr = String.format("%-12s%-45s", courseCode, courseName);
+
+        return outputStr;
+
+    }
+
     @Override
     public String toString() {
         String outputStr = String.format("%-12s%-45s%-13d%-11s%-8.2f", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
         if (programmes.isEmpty()) {
             return outputStr;
         }
-        
+
         outputStr += "\n    Programme List: ";
         for (int i = 0; i < programmes.getNumberOfEntries(); i++) {
-            outputStr +=  String.format("\n\t%-4s%-50s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
+            outputStr += String.format("\n\t%-4s%-50s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
         }
         return outputStr;
-               
+
     }
 
     @Override
     public int compareTo(Course o) {
+        return this.courseCode.compareTo(o.getCourseCode());
+    }
+
+    public int compareToByCourseName(Course o) {
         return this.courseName.compareTo(o.getCourseName());
     }
 

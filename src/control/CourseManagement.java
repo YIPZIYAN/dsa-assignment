@@ -250,6 +250,8 @@ public class CourseManagement {
             outputStr += String.format("%2d. ", ++i) + it.next() + "\n\n";
         }
 
+        outputStr += "TOTAL SEARCH RESULTS > " + searchResults.getNumberOfEntries() + "\n";
+
         return outputStr;
 
     }
@@ -464,25 +466,50 @@ public class CourseManagement {
     }
 
     private void generateReportMenu() {
-        int choice = courseUI.reportMenu();
-        if (choice == 1) {
-            int sortingChoice = courseUI.courseReportMenu();
-            switch (sortingChoice) {
+        int sortingChoice = -1;
+        boolean loop;
+        do {
+            loop = false;
+            int choice = courseUI.reportMenu();
+            switch (choice) {
                 case 1:
-                    SortedListInterface<Course> sortedList = new SortedLinkedList<>();
-                    Iterator<Course> it = courseList.getIterator();
-                    while (it.hasNext()) {
-                        sortedList.add(it.next());
+                    sortingChoice = courseUI.courseReportMenu();
+                    switch (sortingChoice) {
+                        case 1:
+                            SortedListInterface<Course> sortedList = new SortedLinkedList<>();
+                            Iterator<Course> it = courseList.getIterator();
+                            while (it.hasNext()) {
+                                sortedList.add(it.next());
+                            }
+                            ListInterface<Course> castSortedList = new CircularDoublyLinkedList<>();
+                            it = sortedList.getIterator();
+                            while (it.hasNext()) {
+                                castSortedList.add(it.next());
+                            }
+                            generateCourseReport(castSortedList);
+                            break;
+                        case 2:
+                            generateCourseReport(sortByCourseName());
+                            break;
+                        case 3:
+                            break;
                     }
-                    generateReport((ListInterface<Course>) sortedList);
-                    GeneralUtil.systemPause();
+                    break;
+                case 2:
+                    courseUI.printProgrammeReport(generateProgrammeReport());
+                    break;
+                case 0:
+                    return;
             }
-        } else {
+            if (sortingChoice != 0) {
+                loop = courseUI.repeatAction("Anymore report to generate? [Y|N] > ");
+            }
 
-        }
+        } while (loop || sortingChoice == 0);
+
     }
 
-    private void generateReport(ListInterface<Course> courseList) {
+    private void generateCourseReport(ListInterface<Course> courseList) {
         Paginator page = new Paginator(courseList, 7);
         String currentPage = getPageContent(page.jumpTo(0));
         String choice;
@@ -497,6 +524,7 @@ public class CourseManagement {
             System.out.printf("Page No: %-73d < 1 .. %d >\n",
                     page.currentPage + 1, page.pageNumber);
             if (page.isEndOfPage()) {
+                courseUI.displayCourseTotal(courseList.getNumberOfEntries());
                 MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
             }
 
@@ -530,16 +558,73 @@ public class CourseManagement {
     private String getPageContent(ListInterface<Course> list) {
         String outputStr = "";
         try {
-            int number = courseList.indexOf(list.getFirstEntry());
             Iterator<Course> it = list.getIterator();
             while (it.hasNext()) {
-                outputStr += String.format("%2d. ", ++number)
-                        + it.next() + "\n\n";
+                Course course = it.next();
+                outputStr += String.format("%2d. ", courseList.indexOf(course) + 1)
+                        + course + "\n\n";
 
             }
         } catch (Exception e) {
             GeneralUtil.systemPause();
         }
+
+        return outputStr;
+    }
+
+    private ListInterface<Course> sortByCourseName() {
+        int n = courseList.getNumberOfEntries();
+        boolean swapped;
+        ListInterface<Course> sortedByCourseName = new CircularDoublyLinkedList<>();
+        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
+            sortedByCourseName.add(courseList.getEntry(i));
+        }
+        do {
+            swapped = false;
+            for (int i = 1; i < n; i++) {
+                Course curCourse = sortedByCourseName.getEntry(i);
+                Course preCourse = sortedByCourseName.getEntry(i - 1);
+
+                if (curCourse.compareToByCourseName(preCourse) < 0) {
+                    sortedByCourseName.setEntry(i, preCourse);
+                    sortedByCourseName.setEntry(i - 1, curCourse);
+                    swapped = true;
+                }
+            }
+            n--;
+        } while (swapped);
+        return sortedByCourseName;
+    }
+
+    private String generateProgrammeReport() {
+        String outputStr = "";
+        Iterator<Programme> pIt = programmeList.getIterator();
+        int num;
+        while (pIt.hasNext()) {
+            num = 0;
+            Programme programme = pIt.next();
+            outputStr += programme.toString() + "\n";
+            Iterator<Course> cIt = courseList.getIterator();
+            outputStr += "\t" + "Course List:\n";
+            while (cIt.hasNext()) {
+                Course course = cIt.next();
+                Iterator<Programme> inIt = course.getProgrammes().getIterator();
+
+                while (inIt.hasNext()) {
+                    if (programme.getProgrammeCode().equals(inIt.next().getProgrammeCode())) {
+                        outputStr += "\t" + course.toProgrammeReportString() + "\n";
+                        num++;
+                    }
+                }
+
+            }
+
+            outputStr += "\tTOTAL COURSE > " + num + "\n";
+            outputStr += "\n";
+
+        }
+
+        outputStr += "TOTAL PROGRAMME > " + programmeList.getNumberOfEntries() + "\n";
 
         return outputStr;
     }

@@ -335,15 +335,18 @@ public class CourseManagementUI {
         System.out.println("---------------");
         System.out.println("1. Course Report");
         System.out.println("2. Programme Report");
-        return cScan.inputInt("Enter your choice > ", 1, 2);
+        System.out.println("0. Back");
+        return cScan.inputInt("Enter your choice > ", 0, 2);
     }
 
     public int courseReportMenu() {
+        GeneralUtil.clearScreen();
         System.out.println("Course Report");
         System.out.println("-------------");
         System.out.println("1. With Course Code Sorting");
         System.out.println("2. With Course Name Sorting");
-        return cScan.inputInt("Enter your choice > ", 1, 2);
+        System.out.println("0. Back");
+        return cScan.inputInt("Enter your choice > ", 0, 2);
     }
 
     public void displayAllCourse(String outputStr, boolean displayOnly) {
@@ -380,6 +383,19 @@ public class CourseManagementUI {
 
         String command = cScan.inputString("Enter action command > ");
         return command;
+    }
+
+    public void displayCourseTotal(int total) {
+        System.out.println("TOTAL COURSE > " + total);
+    }
+
+    public void printProgrammeReport(String outputStr) {
+        GeneralUtil.clearScreen();
+        System.out.println(
+                "Programme List\n"
+                + "=================================================================================");
+        System.out.printf("%-15s%-50s%-20s\n", "Programme Code", "Programme Name", "Programme Type");
+        System.out.println("=================================================================================\n" + outputStr);
     }
 
     //OTHERS FUNCTION

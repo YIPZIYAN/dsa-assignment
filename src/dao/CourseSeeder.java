@@ -3,6 +3,7 @@ package dao;
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.Course;
+import entity.Programme;
 
 /**
  *
@@ -10,6 +11,8 @@ import entity.Course;
  */
 public class CourseSeeder {
 
+    ProgrammeSeeder pSeeder = new ProgrammeSeeder();
+    ListInterface<Programme> pList = pSeeder.getProgrammeList();
     ListInterface<Course> courseList = new CircularDoublyLinkedList<>();
 
     public CourseSeeder() {
@@ -29,7 +32,23 @@ public class CourseSeeder {
         courseList.add(new Course("BHPY2023", "Organisational Behaviour", 3, "FSSH", 500.00));
         courseList.add(new Course("FPCH1024", "Physical And Inorganic Chemistry", 4, "CPUS", 700.00));
         courseList.add(new Course("FPMA1024", "Quantitative Methods", 4, "CPUS", 700.00));
-
+        courseList.getEntry(0).getProgrammes().add(pList.getEntry(0));
+        courseList.getEntry(0).getProgrammes().add(pList.getEntry(1));
+        courseList.getEntry(0).getProgrammes().add(pList.getEntry(2));
+        courseList.getEntry(1).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(1).getProgrammes().add(pList.getEntry(4));
+        courseList.getEntry(1).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(2).getProgrammes().add(pList.getEntry(6));
+        courseList.getEntry(2).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(2).getProgrammes().add(pList.getEntry(0));
+        courseList.getEntry(3).getProgrammes().add(pList.getEntry(1));
+        courseList.getEntry(4).getProgrammes().add(pList.getEntry(2));
+        courseList.getEntry(4).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(5).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(5).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(6).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(6).getProgrammes().add(pList.getEntry(7));
+        
     }
 
     public ListInterface<Course> getCourseList() {
