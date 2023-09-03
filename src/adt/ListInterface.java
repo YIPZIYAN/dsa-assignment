@@ -88,13 +88,6 @@ public interface ListInterface<T> {
     public boolean isEmpty();
 
     /**
-     * Task: Sees whether the list is full.
-     *
-     * @return true if the list is full, or false if not
-     */
-    public boolean isFull();
-
-    /**
      * Task: Get anEntry’s index in the list.
      *
      * @param anEntry
@@ -103,7 +96,7 @@ public interface ListInterface<T> {
     public int indexOf(T anEntry);
 
     /**
-     * Task: Add a set of entries in the list.
+     * Task: Add an array of entries to the list.
      *
      * @param entries
      * @return true if the addition is successful, or false if not.
@@ -111,7 +104,7 @@ public interface ListInterface<T> {
     public boolean addAll(T[] entries);
 
     /**
-     * Task: Set anEntry to the position index entry in the list.
+     * Task: Set newEntry to the position index entry in the list.
      *
      * @param index
      * @param newEntry
@@ -119,12 +112,29 @@ public interface ListInterface<T> {
      */
     public boolean setEntry(int index, T newEntry);
 
-    public Iterator<T> getIterator();
-
+    /**
+     * Task: Get the first entry in the list.
+     *
+     * @return the first entry in the list.
+     */
     public T getFirstEntry();
 
+    /**
+     * Task: Get the last entry in the list.
+     *
+     * @return the last entry in the list.
+     */
     public T getLastEntry();
-    
+
+    /**
+     * Task: Get a list of entries between the position beginIndex and position endIndex.
+     *
+     * @param beginIndex
+     * @param endIndex
+     * @return the list of entries between the position beginIndex and position endIndex.
+     */
     public ListInterface<T> subList(int beginIndex, int endIndex);
+
+    public Iterator<T> getIterator();
 
 }
