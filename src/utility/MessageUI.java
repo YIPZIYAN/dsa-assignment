@@ -14,10 +14,6 @@ public class MessageUI {
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
 
-    public static void displayInvalidChoiceMessage() {
-        System.out.println("\nInvalid choice");
-    }
-
     public static void displayExitMessage() {
         System.out.println(PURPLE + "\n     TARUMT      " + RESET);
         System.out.println(CYAN + "Beyond Education!\n" + RESET);

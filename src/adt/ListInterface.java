@@ -3,7 +3,7 @@ package adt;
 import java.util.Iterator;
 
 /**
- * @author Goh Chun Yen, Yip Zi Yan
+ * @author Goh Chun Yen & Yip Zi Yan
  */
 public interface ListInterface<T> {
 
@@ -120,4 +120,11 @@ public interface ListInterface<T> {
     public boolean setEntry(int index, T newEntry);
 
     public Iterator<T> getIterator();
+
+    public T getFirstEntry();
+
+    public T getLastEntry();
+    
+    public ListInterface<T> subList(int beginIndex, int endIndex);
+
 }

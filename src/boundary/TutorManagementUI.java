@@ -7,6 +7,7 @@ package boundary;
 import adt.exampleAdt.ArrayList;
 import adt.exampleAdt.ListInterface;
 import entity.Tutor;
+import java.time.LocalDate;
 import utility.*;
 
 /**
@@ -20,8 +21,8 @@ public class TutorManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("Tutor Management System");
-        System.out.println("--------------------------");
+        System.out.println("         Tutor Management System          ");
+        System.out.println("------------------------------------------");
         System.out.println("1. Tutor List\n"
                 + "2. Add Tutor\n"
                 + "3. Find Tutor\n"
@@ -29,7 +30,7 @@ public class TutorManagementUI {
                 + "5. Filter Tutor\n"
                 + "6. Generate Report\n"
                 + "0. Quit");
-        System.out.println("--------------------------");
+        System.out.println("------------------------------------------");
 
         int choice = cScan.inputInt("Enter Selection > ", 0, 6);
 
@@ -51,13 +52,14 @@ public class TutorManagementUI {
         System.out.println("=================================");
     }
 
-    public Tutor addTutor() {
+    public Tutor addTutor(int currentId) {
 
         GeneralUtil.clearScreen();
         displayAddTutorHeader();
 
         // var to store data
         String name, email;
+        double salary;
         char gender, status;
 
         // constraint
@@ -72,7 +74,9 @@ public class TutorManagementUI {
         displayStatusSelection();
         status = cScan.inputChar("Enter Status > ", "Please enter [F] or [P] only.", checkStatus);
 
-        Tutor pendingTutor = new Tutor(name, gender, status);
+        salary = cScan.inputDouble("Enter Monthly Salary > RM ", 0, 999999.99);
+
+        Tutor pendingTutor = new Tutor(name, gender, status, salary, currentId);
 
         GeneralUtil.clearScreen();
         displayAddTutorHeader();
@@ -122,9 +126,9 @@ public class TutorManagementUI {
     }
 
     public void displayTutorTableHeader() {
-        System.out.println("==============================================================================================");
-        System.out.printf("%-4s %-8s %-26s %-10s %-32s %s\n", "No.", "ID", "Name", "Gender", "Email", "Status");
-        System.out.println("==============================================================================================");
+        System.out.println("========================================================================================================================================================");
+        System.out.printf("%-4s %-8s %-26s %-10s %-32s %-11s %-12s %-22s %s\n", "No.", "ID", "Name", "Gender", "Email", "Salary", "Status", "Created At", "Updated At");
+        System.out.println("========================================================================================================================================================");
     }
 
     private void displayTutorDetails(Tutor pendingTutor) {
@@ -132,6 +136,7 @@ public class TutorManagementUI {
         System.out.println("Gender                 : " + pendingTutor.getGenderStr());
         System.out.println("Email (auto-generated) : " + pendingTutor.getEmail());
         System.out.println("Status                 : " + pendingTutor.getStatusStr());
+        System.out.printf("Salary (RM)            : %.2f\n", pendingTutor.getSalary());
     }
 
     public int findTutorMenu() {
@@ -217,10 +222,11 @@ public class TutorManagementUI {
         System.out.println(selectedTutor.getGender() == 'M'
                 ? "Female" : "Male");
         System.out.println("3. Change Status");
-        System.out.println("4. REMOVE Tutor");
+        System.out.println("4. Change Salary");
+        System.out.println("5. REMOVE Tutor");
         System.out.println("0. Exit");
         MessageUI.displayInfoMessage("Please note that the email will change when the name is edited \nor the status is updated from full-time to part-time, or vice versa");
-        int choice = cScan.inputInt("Enter Selection > ", 0, 4);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 5);
 
         return choice;
     }
@@ -242,6 +248,16 @@ public class TutorManagementUI {
         str += "? [Y|N] > ";
 
         return cScan.confimation(str);
+    }
+
+    public double updateTutorSalary() {
+        double newSalary = cScan.inputDouble("Enter Salary > RM ", 0, 999999.99);
+
+        if (cScan.confimation("Are You Sure? [Y|N] > ")) {
+            return newSalary;
+        }
+
+        return -1;
     }
 
     public String updateTutorStatus(String currentStatus) {
@@ -310,5 +326,106 @@ public class TutorManagementUI {
         MessageUI.displayInfoMessage("Removed successfully."
                 + "\nPlease note that system will return back to previous screen since this tutor had been removed.");
         GeneralUtil.systemPause();
+    }
+
+    public void filterTutorHeader() {
+        System.out.println("              Filter Tutor By Status              ");
+        System.out.println("==================================================");
+    }
+
+    public int filterTutorMenu(String selected) {
+        GeneralUtil.clearScreen();
+        filterTutorHeader();
+        System.out.println("You can select multiple criterias to filter");
+        System.out.println("1. Full-Time\t[FT]\n"
+                + "2. Part-Time\t[PT]\n"
+                + "3. Resigned\t[RS]\n"
+                + "4. Retired\t[RT]");
+
+        System.out.print(!selected.equals("") ? "5. Undo\n6. Done\n" : "");
+        System.out.println("0. Quit");
+        if (!selected.equals("")) {
+            System.out.println("\nFilter: " + selected);
+        }
+        System.out.println("==================================================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0,
+                selected.equals("") ? 4 : 6);
+
+        return choice;
+    }
+
+    public void displayFilteredTutor(String outputStr) {
+        GeneralUtil.clearScreen();
+        System.out.printf("\n%66s\n", "Filtered Tutor List");
+        displayTutorTableHeader();
+        if (outputStr.equals("")) {
+            MessageUI.displayNoResultMessage();
+        } else {
+            System.out.println(outputStr);
+        }
+        GeneralUtil.systemPause();
+    }
+
+    public int generateTutorReportMenu() {
+        GeneralUtil.clearScreen();
+        generateTutorReportHeader();
+        System.out.println("1. Monthly Tutor Salary Report\n"
+                + "2. Monthly Tutor Recruitment Report");
+        System.out.println("0. Quit");
+        System.out.println("==================================================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 2);
+
+        return choice;
+    }
+
+    private void generateTutorReportHeader() {
+        System.out.println("                  Generate Report                 ");
+        System.out.println("==================================================");
+    }
+
+    public int getReportYear() {
+        return cScan.inputInt("Enter Year > ", 2000, LocalDate.now().getYear() + 5);
+    }
+
+    public int getReportMonth() {
+        return cScan.inputInt("Enter Month > ", 1, 12);
+    }
+
+    public int getPageSize(int maxSize) {
+        System.out.println("The report contains "+maxSize+" of tutor(s).");
+        return cScan.inputInt("Enter Report Page Size > ", 1, maxSize);
+    }
+
+    public int sortSelection() {
+        GeneralUtil.clearScreen();
+        generateTutorReportHeader();
+        System.out.println("1. Sort By Name\n"
+                + "2. Sort By Id\n"
+                + "3. Sort By Salary (Lowest To Highest)\n"
+                + "4. Sort By Salary (Highest To Lowest)");
+        System.out.println("0. Quit");
+        System.out.println("==================================================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+
+        return choice;
+    }
+
+    public String pageController() {
+        System.out.println("\n\n                   Page Controller      ");
+        System.out.println("=====================================================");
+        System.out.println(" Enter command below to perform the following tasks.");
+        System.out.println(" [  |< ]  Go to first page.");
+        System.out.println(" [  <  ]  Go to previous page.");
+        System.out.println(" [  >  ]  Go to next page.");
+        System.out.println(" [  >| ]  Go to last page.");
+        System.out.println(" You can also enter number of the page.");
+        MessageUI.displayInfoMessage(" Enter \"exit\" to go previous process.");
+        System.out.println("=====================================================");
+
+        String command = cScan.inputString("Enter action command > ");
+        return command;
     }
 }
