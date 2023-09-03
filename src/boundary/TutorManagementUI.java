@@ -7,6 +7,7 @@ package boundary;
 import adt.exampleAdt.ArrayList;
 import adt.exampleAdt.ListInterface;
 import entity.Tutor;
+import java.time.LocalDate;
 import utility.*;
 
 /**
@@ -366,13 +367,55 @@ public class TutorManagementUI {
         GeneralUtil.systemPause();
     }
 
-    public void generateTutorReportHeader() {
-        System.out.println("\n                   Page Controller      ");
-        System.out.println("=====================================================");
+    public int generateTutorReportMenu() {
+        GeneralUtil.clearScreen();
+        generateTutorReportHeader();
+        System.out.println("1. Monthly Tutor Salary Report\n"
+                + "2. Monthly Tutor Recruitment Report");
+        System.out.println("0. Quit");
+        System.out.println("==================================================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 2);
+
+        return choice;
     }
 
-    public String generateTutorReportMenu() {
+    private void generateTutorReportHeader() {
+        System.out.println("                  Generate Report                 ");
+        System.out.println("==================================================");
+    }
+
+    public int getReportYear() {
+        return cScan.inputInt("Enter Year > ", 2000, LocalDate.now().getYear() + 5);
+    }
+
+    public int getReportMonth() {
+        return cScan.inputInt("Enter Month > ", 1, 12);
+    }
+
+    public int getPageSize(int maxSize) {
+        System.out.println("The report contains "+maxSize+" of tutor(s).");
+        return cScan.inputInt("Enter Report Page Size > ", 1, maxSize);
+    }
+
+    public int sortSelection() {
+        GeneralUtil.clearScreen();
         generateTutorReportHeader();
+        System.out.println("1. Sort By Name\n"
+                + "2. Sort By Id\n"
+                + "3. Sort By Salary (Lowest To Highest)\n"
+                + "4. Sort By Salary (Highest To Lowest)");
+        System.out.println("0. Quit");
+        System.out.println("==================================================");
+
+        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+
+        return choice;
+    }
+
+    public String pageController() {
+        System.out.println("\n\n                   Page Controller      ");
+        System.out.println("=====================================================");
         System.out.println(" Enter command below to perform the following tasks.");
         System.out.println(" [  |< ]  Go to first page.");
         System.out.println(" [  <  ]  Go to previous page.");

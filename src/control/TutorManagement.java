@@ -10,6 +10,9 @@ import adt.exampleAdt.*;
 import boundary.TutorManagementUI;
 import dao.*;
 import entity.Tutor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Iterator;
 import utility.*;
 
@@ -313,7 +316,7 @@ public class TutorManagement {
         StackInterface<String> filter = new ArrayStack<>();
 
         do {
-            
+
             choice = tutorUI.filterTutorMenu(filter.toString());
             switch (choice) {
                 case 1:
@@ -364,40 +367,136 @@ public class TutorManagement {
     }
 
     private void generateReportUI() {
+        int choice;
+        int year, month;
+        do {
+            choice = tutorUI.generateTutorReportMenu();
+
+            switch (choice) {
+                case 1:
+                    generateSalaryReport();
+                    break;
+                case 2:
+                    break;
+
+            }
+        } while (choice != 0);
+    }
+
+    private void generateSalaryReport() {
+        int year = tutorUI.getReportYear();
+        int month = tutorUI.getReportMonth();
+        int pageSize;
+        double totalSalary = 0.0;
+
+        Iterator<Tutor> it = tutorList.getIterator();
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDateTime selectedDate = yearMonth
+                .atEndOfMonth().atTime(23, 59, 59);
+
+        ListInterface<Tutor> validTutor = new CircularDoublyLinkedList<>();
+
+        while (it.hasNext()) {
+            Tutor next = it.next();
+            if (isValidTutor(next, selectedDate)) {
+                validTutor.add(next);
+                totalSalary += next.getSalary();
+            }
+        }
+
+        if (validTutor.isEmpty()) {
+            System.err.println("No Tutor In Selected Date.");
+            GeneralUtil.systemPause();
+            return;
+        }
+
+        int choice;
+        do {
+            choice = tutorUI.sortSelection();
+            switch (choice) {
+                case 1:
+                    ListInterface<Tutor> tutorReportList
+                            = sortByName(validTutor, year, month);
+                    pageSize = tutorUI
+                            .getPageSize(tutorReportList.getNumberOfEntries());
+                    reportPreview(tutorReportList, pageSize, totalSalary);
+                    break;
+                case 2:
+                    pageSize = tutorUI
+                            .getPageSize(validTutor.getNumberOfEntries());
+                    reportPreview(validTutor, pageSize, totalSalary);
+
+                    break;
+            }
+
+        } while (choice != 0);
+    }
+
+    private ListInterface<Tutor> sortByName(ListInterface<Tutor> validTutor, int year, int month) {
+        Iterator<Tutor> it = validTutor.getIterator();
+
+        SortedLinkedList<Tutor> sortedTutor = new SortedLinkedList<>();
+
+        while (it.hasNext()) {
+            sortedTutor.add(it.next());
+        }
+
+        ListInterface<Tutor> convertedList = new CircularDoublyLinkedList<>();
+        Iterator<Tutor> sortedIt = sortedTutor.getIterator();
+        while (sortedIt.hasNext()) {
+            convertedList.add(sortedIt.next());
+        }
+
+        return convertedList;
+
+    }
+
+    private static boolean isValidTutor(Tutor tutor, LocalDateTime selectedDate) {
+        return !tutor.getCreated_at().isAfter(selectedDate) && (tutor.isWorking());
+    }
+
+    private void generateRecuitmentReport() {
+
+    }
+
+    private void reportPreview(ListInterface<Tutor> report, int pageSize, double totalSalary) {
         String choice;
-        Paginator page = new Paginator(tutorList, 7);
-        String currentPage = getPageContent(page.jumpTo(0));
+        Paginator page = new Paginator(report, pageSize);
+        String currentPage = getPageContent(page.jumpTo(0), report);
         do {
 
             if (currentPage == "") {
-                currentPage = getPageContent(page.jumpTo(page.currentPage));
+                currentPage = getPageContent(page.jumpTo(page.currentPage), report);
             }
 
             tutorUI.displayAllTutor(currentPage, false);
 
-            System.out.printf("Page No: %-73d < 1 .. %d >\n",
+            System.out.printf("Page No: %-130d < 1 .. %d >\n",
                     page.currentPage + 1, page.pageNumber);
+            if (totalSalary > 0) {
+                System.out.printf("Total Salary To Pay: RM %,.2f\n\n", totalSalary);
+            }
             if (page.isEndOfPage()) {
-                MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
+                MessageUI.displayInfoMessage(String.format("%88s", "END OF PAGES"));
             }
 
-            choice = tutorUI.generateTutorReportMenu().toLowerCase();
+            choice = tutorUI.pageController().toLowerCase();
             switch (choice) {
                 case ">":
-                    currentPage = getPageContent(page.nextPage());
+                    currentPage = getPageContent(page.nextPage(), report);
                     break;
                 case ">|":
-                    currentPage = getPageContent(page.toEnd());
+                    currentPage = getPageContent(page.toEnd(), report);
                     break;
                 case "<":
-                    currentPage = getPageContent(page.prevPage());
+                    currentPage = getPageContent(page.prevPage(), report);
                     break;
                 case "|<":
-                    currentPage = getPageContent(page.toStart());
+                    currentPage = getPageContent(page.toStart(), report);
                     break;
                 default:
                     if (choice.matches("[0-9]+")) { // is integer
-                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
+                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1), report);
                     } else if (!choice.equals("exit")) {
                         System.err.println("Invalid command.");
                         GeneralUtil.systemPause();
@@ -408,10 +507,10 @@ public class TutorManagement {
         } while (!choice.equals("exit"));
     }
 
-    private String getPageContent(ListInterface<Tutor> list) {
+    private String getPageContent(ListInterface<Tutor> list, ListInterface<Tutor> original) {
         String outputStr = "";
         try {
-            int number = tutorList.indexOf(list.getFirstEntry());
+            int number = original.indexOf(list.getFirstEntry());
             Iterator<Tutor> it = list.getIterator();
             while (it.hasNext()) {
                 outputStr += String.format("%2d.  ", ++number)
@@ -424,4 +523,5 @@ public class TutorManagement {
 
         return outputStr;
     }
+
 }

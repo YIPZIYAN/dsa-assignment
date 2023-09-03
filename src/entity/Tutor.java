@@ -13,7 +13,7 @@ import java.util.Objects;
  *
  * @author Yip Zi Yan
  */
-public class Tutor implements Serializable {
+public class Tutor implements Serializable, Comparable<Tutor> {
 
     private String tutorId; // auto generate
     private String tutorName;
@@ -139,8 +139,8 @@ public class Tutor implements Serializable {
         this.updated_at = LocalDateTime.now();
     }
 
-    private boolean isWorking() {
-        return this.status == "PT" || this.status == "FT";
+    public boolean isWorking() {
+        return this.status.equals("PT") || this.status.equals("FT");
     }
 
     @Override
@@ -202,6 +202,11 @@ public class Tutor implements Serializable {
 
     public boolean isFemale() {
         return gender == 'F' ? true : false;
+    }
+
+    @Override
+    public int compareTo(Tutor o) {
+        return this.tutorName.compareTo(o.getTutorName());
     }
 
 }
