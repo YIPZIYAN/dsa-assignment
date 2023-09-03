@@ -165,11 +165,6 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public boolean isFull() { //linked list can grow infinitely
-        return false;
-    }
-
-    @Override
     public int indexOf(T anEntry) {
         Node currentNode = startNode;
         int index = 0;

@@ -27,11 +27,12 @@ public class CourseManagement {
     private CourseManagementUI courseUI = new CourseManagementUI();
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
-    CourseSeeder cSeeder = new CourseSeeder();
+    //initialize fake data for testing
+    //CourseSeeder cSeeder = new CourseSeeder();
     ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
     public CourseManagement() {
-        dAO.saveToFile(cSeeder.getCourseList());
+        //dAO.saveToFile(cSeeder.getCourseList());
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }
@@ -78,6 +79,7 @@ public class CourseManagement {
 
     }
 
+    //1. COURSE LIST
     private void getAllCourses() {
         String outputStr = "";
 
@@ -91,6 +93,7 @@ public class CourseManagement {
         courseUI.listAllCourses(outputStr);
     }
 
+    //2. ADD COURSE
     private void addNewCourse() {
         do {
 
@@ -107,6 +110,7 @@ public class CourseManagement {
 
     }
 
+    //3. FIND COURSE
     private void findCourse() {
         ListInterface<Course> searchResults;
         do {
@@ -256,6 +260,7 @@ public class CourseManagement {
 
     }
 
+    //4. EDIT COURSE
     private void editCourse() {
 
         do {
@@ -347,6 +352,7 @@ public class CourseManagement {
 
     }
 
+    //5. REMOVE COURSE
     private void removeCourse() {
         do {
             String courseCode = courseUI.removeCourse();
@@ -367,6 +373,7 @@ public class CourseManagement {
 
     }
 
+    //6. ADD PROGRAMME
     private void addProgrammeToCourse() {
         do {
             String courseCode = courseUI.addProgrammeToCourse();
@@ -414,6 +421,7 @@ public class CourseManagement {
 
     }
 
+    //7. REMOVE PROGRAMME
     private void removeProgrammeFromCourse() {
         do {
             String courseCode = courseUI.removeProgrammeFromCourse();
@@ -465,6 +473,7 @@ public class CourseManagement {
 
     }
 
+    //8. GENERATE REPORT
     private void generateReportMenu() {
         int sortingChoice = -1;
         boolean loop;
@@ -629,6 +638,7 @@ public class CourseManagement {
         return outputStr;
     }
 
+    //OTHER FUNCTIONS
     private boolean courseIsExist(String input) {
         Iterator<Course> it = courseList.getIterator();
         while (it.hasNext()) {
