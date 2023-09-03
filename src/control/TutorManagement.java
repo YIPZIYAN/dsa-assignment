@@ -6,6 +6,7 @@ package control;
 
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
+import adt.exampleAdt.*;
 import boundary.TutorManagementUI;
 import dao.*;
 import entity.Tutor;
@@ -237,6 +238,9 @@ public class TutorManagement {
                     updateTutorStatus(updateTutor);
                     break;
                 case 4:
+                    updateSalary(updateTutor);
+                    break;
+                case 5:
                     isRemove = removeTutor(updateTutor);
                     break;
             }
@@ -272,6 +276,17 @@ public class TutorManagement {
 
     }
 
+    private void updateSalary(Tutor updateTutor) {
+        double newSalary = tutorUI.updateTutorSalary();
+        if (newSalary == -1) {
+            return;
+        }
+
+        updateTutor.setSalary(newSalary);
+        tutorDAO.saveToFile(tutorList);
+
+    }
+
     private void updateTutorStatus(Tutor updateTutor) {
         String newStatus = tutorUI
                 .updateTutorStatus(updateTutor.getStatus());
@@ -296,17 +311,56 @@ public class TutorManagement {
 
     private void filterTutorUI() {
         int choice;
+        StackInterface<String> filter = new ArrayStack<>();
+
         do {
-            tutorUI.displayAllTutor(getAllTutor(), false);
-            choice = tutorUI.filterTutorMenu();
+            choice = tutorUI.filterTutorMenu(filter.isEmpty());
             switch (choice) {
                 case 1:
+                    filter.push("FT");
                     break;
                 case 2:
+                    filter.push("PT");
                     break;
-
+                case 3:
+                    filter.push("RS");
+                    break;
+                case 4:
+                    filter.push("RT");
+                    break;
+                case 5:
+                    filter.pop();
+                    break;
+                case 6:
+                    filterTutor(filter);
+                    break;
             }
+
         } while (choice != 0);
+    }
+
+    private void filterTutor(StackInterface<String> selectedFilter) {
+        adt.exampleAdt.ListInterface<String> filter = new ArrayList<>();
+        int number = 0;
+        String output = "";
+
+        while (!selectedFilter.isEmpty()) {
+            filter.add(selectedFilter.pop());
+        }
+
+        for (int i = filter.getNumberOfEntries(); i > 0; i--) {
+            Iterator<Tutor> it = tutorList.getIterator();
+            while (it.hasNext()) {
+                Tutor matchTutor = it.next();
+                if (matchTutor.getStatus().equals(filter.getEntry(i))) {
+                    output += String.format("%2d.  ", ++number)
+                            + matchTutor + "\n";
+                }
+            }
+        }
+
+        tutorUI.displayFilteredTutor(output);
+
     }
 
     private void generateReportUI() {
@@ -344,7 +398,7 @@ public class TutorManagement {
                 default:
                     if (choice.matches("[0-9]+")) { // is integer
                         currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
-                    }else if (!choice.equals("exit")) {
+                    } else if (!choice.equals("exit")) {
                         System.err.println("Invalid command.");
                         GeneralUtil.systemPause();
                     }
