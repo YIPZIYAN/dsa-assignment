@@ -60,8 +60,11 @@ public class TutorManagement {
                 case 6:
                     generateReportUI();
                     break;
+                case 7:
+                    return;
                 case 0:
                     MessageUI.displayExitMessage();
+                    System.exit(0);
             }
         } while (choice != 0);
 

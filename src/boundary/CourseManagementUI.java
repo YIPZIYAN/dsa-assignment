@@ -23,7 +23,7 @@ public class CourseManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("Course Management");
+        System.out.println("       Course Management");
         System.out.println("-------------------------------");
         System.out.println(
                 "1. Course List\n"
@@ -34,10 +34,11 @@ public class CourseManagementUI {
                 + "6. Add Programme to Course\n"
                 + "7. Remove Programme from Course\n"
                 + "8. Generate Reports\n"
+                + "9. Back\n"
                 + "0. Quit");
         System.out.println("-------------------------------");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 8);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 9);
         return choice;
     }
 

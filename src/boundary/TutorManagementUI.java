@@ -21,18 +21,19 @@ public class TutorManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("         Tutor Management System          ");
-        System.out.println("------------------------------------------");
+        System.out.println("           Tutor Management          ");
+        System.out.println("--------------------------------------");
         System.out.println("1. Tutor List\n"
                 + "2. Add Tutor\n"
                 + "3. Find Tutor\n"
                 + "4. Edit / Remove Tutor Details\n"
                 + "5. Filter Tutor\n"
                 + "6. Generate Report\n"
+                + "7. Back\n"
                 + "0. Quit");
-        System.out.println("------------------------------------------");
+        System.out.println("--------------------------------------");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 6);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 7);
 
         return choice;
     }

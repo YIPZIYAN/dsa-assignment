@@ -8,10 +8,9 @@ package control;
 import boundary.CourseManagementUI;
 import utility.MessageUI;
 import adt.*;
-import adt.exampleAdt.SortedListInterface;
-import adt.exampleAdt.SortedLinkedList;
 import dao.*;
 import entity.*;
+import java.util.Comparator;
 import java.util.Iterator;
 import utility.GeneralUtil;
 import utility.Paginator;
@@ -72,8 +71,11 @@ public class CourseManagement {
                 case 8:
                     generateReportMenu();
                     break;
+                case 9:
+                    return;
                 case 0:
                     MessageUI.displayExitMessage();
+                    System.exit(0);
             }
         } while (choice != 0);
 
@@ -655,41 +657,18 @@ public class CourseManagement {
     }
 
     private ListInterface<Course> sortByCourseCode() {
-        SortedListInterface<Course> sortedList = new SortedLinkedList<>();
-        Iterator<Course> it = courseList.getIterator();
-        while (it.hasNext()) {
-            sortedList.add(it.next());
-        }
         ListInterface<Course> sortedByCourseCode = new CircularDoublyLinkedList<>();
-        it = sortedList.getIterator();
-        while (it.hasNext()) {
-            sortedByCourseCode.add(it.next());
-        }
+        sortedByCourseCode.addAll(courseList);
+        sortedByCourseCode.sortBy(Comparator.comparing(Course::getCourseCode), true);
+
         return sortedByCourseCode;
 
     }
 
     private ListInterface<Course> sortByCourseName() {
-        int n = courseList.getNumberOfEntries();
-        boolean swapped;
         ListInterface<Course> sortedByCourseName = new CircularDoublyLinkedList<>();
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            sortedByCourseName.add(courseList.getEntry(i));
-        }
-        do {
-            swapped = false;
-            for (int i = 1; i < n; i++) {
-                Course curCourse = sortedByCourseName.getEntry(i);
-                Course preCourse = sortedByCourseName.getEntry(i - 1);
-
-                if (curCourse.compareToByCourseName(preCourse) < 0) {
-                    sortedByCourseName.setEntry(i, preCourse);
-                    sortedByCourseName.setEntry(i - 1, curCourse);
-                    swapped = true;
-                }
-            }
-            n--;
-        } while (swapped);
+        sortedByCourseName.addAll(courseList);
+        sortedByCourseName.sortBy(Comparator.comparing(Course::getCourseName), true);
         return sortedByCourseName;
     }
 
