@@ -129,16 +129,25 @@ public interface ListInterface<T> {
     public T getLastEntry();
 
     /**
-     * Task: Get a list of entries between the position beginIndex and position endIndex.
+     * Task: Get a list of entries between the position beginIndex and position
+     * endIndex.
      *
      * @param beginIndex
      * @param endIndex
-     * @return the list of entries between the position beginIndex and position endIndex.
+     * @return the list of entries between the position beginIndex and position
+     * endIndex.
      */
     public ListInterface<T> subList(int beginIndex, int endIndex);
 
-    public void sortBy(Comparator<T> comparator,boolean isAscending);
-    
+    /**
+     * Task: Sort the list based on the criteria given by the comparator in
+     * either ascending or descending order.
+     *
+     * @param comparator
+     * @param isAscending
+     */
+    public void sortBy(Comparator<T> comparator, boolean isAscending);
+
     public Iterator<T> getIterator();
 
 }

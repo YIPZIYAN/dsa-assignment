@@ -115,16 +115,18 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     @Override
     public boolean replace(int index, T newEntry) {
 
+        if (index < 0 || index >= numberOfEntries || newEntry == null) {
+            return false;
+        }
+
         Node currentNode = startNode;
 
-        if (index >= 0 && index < numberOfEntries) {
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            currentNode.data = newEntry;
-            return true;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
-        return false;
+        currentNode.data = newEntry;
+        return true;
+
     }
 
     @Override
@@ -181,7 +183,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             return false;
         }
         Iterator<T> it = listOfEntries.getIterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             add(it.next());
         }
         return true;
@@ -189,7 +191,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public boolean setEntry(int index, T newEntry) {
-        if (index < 0 || index >= numberOfEntries) {
+        if (index < 0 || index >= numberOfEntries || newEntry == null) {
             return false;
         }
         Node currentNode = startNode;
@@ -239,7 +241,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         if (isEmpty()) {
             return;
         }
-        
+
         Node currentNode = startNode;
         Node index = null;
         T temp;
@@ -249,7 +251,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             while (index != startNode) {
                 int val = comparator.compare(currentNode.data, index.data);
 
-                if (isAscending? val > 0 : val < 0) {
+                if (isAscending ? val > 0 : val < 0) {
                     temp = currentNode.data;
                     currentNode.data = index.data;
                     index.data = temp;
