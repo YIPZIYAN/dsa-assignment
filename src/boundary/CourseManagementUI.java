@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package boundary;
 
-import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.*;
 import java.util.Iterator;
@@ -177,6 +171,14 @@ public class CourseManagementUI {
 
     }
 
+    public void displayProgrammeSearchResults(String outputStr) {
+        System.out.println("Search Results:");
+        System.out.println("=================================================================================");
+        System.out.printf("%-15s%-50s%-20s\n", "Programme Code", "Programme Name", "Programme Type");
+        System.out.println("=================================================================================");
+        System.out.println(outputStr);
+    }
+
     //4. EDIT COURSE
     public String editCourseMenu() {
         GeneralUtil.clearScreen();
@@ -187,6 +189,7 @@ public class CourseManagementUI {
 
     public int getEditChoice(boolean courseIsExist, Course course) {
         if (courseIsExist) {
+            GeneralUtil.clearScreen();
             displayCourseInformation(course);
             displayOriProgrammeInCourse(course);
             String outputStr = "";
@@ -346,13 +349,16 @@ public class CourseManagementUI {
         System.out.println("-------------");
         System.out.println("1. With Course Code Sorting");
         System.out.println("2. With Course Name Sorting");
+        System.out.println("3. With Credit Hours Sorting");
+        System.out.println("4. With Course Fees Sorting");
+        System.out.println("5. With Course Department Sorting");
         System.out.println("0. Back");
-        return cScan.inputInt("Enter your choice > ", 0, 2);
+        return cScan.inputInt("Enter your choice > ", 0, 5);
     }
 
     public void displayAllCourse(String outputStr, boolean displayOnly) {
         GeneralUtil.clearScreen();
-        System.out.println("Course List");
+        System.out.println("Course Report");
         displayCourseTableHeader();
         System.out.println(outputStr);
         if (displayOnly) {
@@ -362,7 +368,7 @@ public class CourseManagementUI {
 
     public void displayAllProgramme(String outputStr, boolean displayOnly) {
         GeneralUtil.clearScreen();
-        System.out.println("Programme List");
+        System.out.println("Programme Report");
         displayProgrammeTableHeader();
         System.out.println(outputStr);
         if (displayOnly) {
@@ -445,7 +451,7 @@ public class CourseManagementUI {
 
     }
 
-    private int getCreditHour(String courseCode) {
+    public int getCreditHour(String courseCode) {
         int creditHour = courseCode.charAt(7);
         if (Character.isUpperCase(courseCode.charAt(7))) {
             creditHour = creditHour - 'A' + 10;

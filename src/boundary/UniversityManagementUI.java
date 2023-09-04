@@ -5,7 +5,7 @@ import utility.GeneralUtil;
 
 /**
  *
- * @author Cy
+ * @author Goh Chun Yen & Yip Zi Yan
  */
 public class UniversityManagementUI {
     

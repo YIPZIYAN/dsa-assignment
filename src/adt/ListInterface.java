@@ -3,7 +3,8 @@ package adt;
 import java.util.Comparator;
 import java.util.Iterator;
 
-/**
+/*
+ *
  * @author Goh Chun Yen & Yip Zi Yan
  */
 public interface ListInterface<T> {
