@@ -136,7 +136,7 @@ public interface ListInterface<T> {
      */
     public ListInterface<T> subList(int beginIndex, int endIndex);
 
-    public void sortBy(Comparator<T> comparator);
+    public void sortBy(Comparator<T> comparator,boolean isAscending);
     
     public Iterator<T> getIterator();
 

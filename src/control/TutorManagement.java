@@ -13,6 +13,7 @@ import entity.Tutor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Comparator;
 import java.util.Iterator;
 import utility.*;
 
@@ -396,6 +397,7 @@ public class TutorManagement {
 
         ListInterface<Tutor> validTutor = new CircularDoublyLinkedList<>();
 
+        //get tutor in date range and calculate salary
         while (it.hasNext()) {
             Tutor next = it.next();
             if (isValidTutor(next, selectedDate)) {
@@ -415,17 +417,19 @@ public class TutorManagement {
             choice = tutorUI.sortSelection();
             switch (choice) {
                 case 1:
-                    ListInterface<Tutor> tutorReportList
-                            = sortByName(validTutor, year, month);
+                    validTutor.sortBy(Comparator.comparing(Tutor::getTutorName),false);
                     pageSize = tutorUI
-                            .getPageSize(tutorReportList.getNumberOfEntries());
-                    reportPreview(tutorReportList, pageSize, totalSalary);
+                            .getPageSize(validTutor.getNumberOfEntries());
+                    reportPreview(validTutor, pageSize, totalSalary);
                     break;
                 case 2:
                     pageSize = tutorUI
                             .getPageSize(validTutor.getNumberOfEntries());
                     reportPreview(validTutor, pageSize, totalSalary);
-
+                    break;
+                case 3:
+                    break;
+                case 4:
                     break;
             }
 

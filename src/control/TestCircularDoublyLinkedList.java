@@ -22,19 +22,19 @@ public class TestCircularDoublyLinkedList {
         ListInterface<Course> list = new CircularDoublyLinkedList<>();
         CourseSeeder seeder = new CourseSeeder();
         list = seeder.getCourseList();
-        list.sortBy(Comparator.comparing(Course::getCourseCode));
+        list.sortBy(Comparator.comparing(Course::getCourseCode),true);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseCode());
         }
-        list.sortBy(Comparator.comparing(Course::getCourseName));
+        list.sortBy(Comparator.comparing(Course::getCourseName),true);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseName());
         }
-        list.sortBy(Comparator.comparing(Course::getCourseCreditHours));
+        list.sortBy(Comparator.comparing(Course::getCourseCreditHours),true);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseCreditHours());
         }
-                list.sortBy(Comparator.comparing(Course::getCourseFees));
+                list.sortBy(Comparator.comparing(Course::getCourseFees),true);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseFees());
         }

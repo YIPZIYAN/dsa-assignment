@@ -236,21 +236,23 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
         return subList;
     }
-    
+
     @Override
-    public void sortBy(Comparator<T> comparator) {
+    public void sortBy(Comparator<T> comparator, boolean isAscending) {
         if (isEmpty()) {
             return;
         }
-        
+
         Node currentNode = startNode;
         Node index = null;
         T temp;
-        
+
         do {
             index = currentNode.next;
             while (index != startNode) {
-                if (comparator.compare(currentNode.data, index.data) > 0) {
+                int val = comparator.compare(currentNode.data, index.data);
+
+                if (isAscending? val > 0 : val < 0) {
                     temp = currentNode.data;
                     currentNode.data = index.data;
                     index.data = temp;
@@ -259,7 +261,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             }
             currentNode = currentNode.next;
         } while (currentNode != startNode);
-        
+
     }
 
     @Override
