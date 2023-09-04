@@ -1,5 +1,6 @@
 package adt;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -135,6 +136,8 @@ public interface ListInterface<T> {
      */
     public ListInterface<T> subList(int beginIndex, int endIndex);
 
+    public void sortBy(Comparator<T> comparator);
+    
     public Iterator<T> getIterator();
 
 }

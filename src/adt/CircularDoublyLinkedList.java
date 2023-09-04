@@ -5,6 +5,7 @@
 package adt;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -234,6 +235,31 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         }
 
         return subList;
+    }
+    
+    @Override
+    public void sortBy(Comparator<T> comparator) {
+        if (isEmpty()) {
+            return;
+        }
+        
+        Node currentNode = startNode;
+        Node index = null;
+        T temp;
+        
+        do {
+            index = currentNode.next;
+            while (index != startNode) {
+                if (comparator.compare(currentNode.data, index.data) > 0) {
+                    temp = currentNode.data;
+                    currentNode.data = index.data;
+                    index.data = temp;
+                }
+                index = index.next;
+            }
+            currentNode = currentNode.next;
+        } while (currentNode != startNode);
+        
     }
 
     @Override
