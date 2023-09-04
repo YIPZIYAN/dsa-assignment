@@ -28,11 +28,11 @@ public class CourseManagement {
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
     //initialize fake data for testing
-    //CourseSeeder cSeeder = new CourseSeeder();
+    CourseSeeder cSeeder = new CourseSeeder();
     ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
     public CourseManagement() {
-        //dAO.saveToFile(cSeeder.getCourseList());
+        dAO.saveToFile(cSeeder.getCourseList());
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }
@@ -485,17 +485,7 @@ public class CourseManagement {
                     sortingChoice = courseUI.courseReportMenu();
                     switch (sortingChoice) {
                         case 1:
-                            SortedListInterface<Course> sortedList = new SortedLinkedList<>();
-                            Iterator<Course> it = courseList.getIterator();
-                            while (it.hasNext()) {
-                                sortedList.add(it.next());
-                            }
-                            ListInterface<Course> castSortedList = new CircularDoublyLinkedList<>();
-                            it = sortedList.getIterator();
-                            while (it.hasNext()) {
-                                castSortedList.add(it.next());
-                            }
-                            generateCourseReport(castSortedList);
+                            generateCourseReport(sortByCourseCode());
                             break;
                         case 2:
                             generateCourseReport(sortByCourseName());
@@ -505,7 +495,7 @@ public class CourseManagement {
                     }
                     break;
                 case 2:
-                    courseUI.printProgrammeReport(generateProgrammeReport());
+                    generateProgrammeReport();
                     break;
                 case 0:
                     return;
@@ -519,13 +509,13 @@ public class CourseManagement {
     }
 
     private void generateCourseReport(ListInterface<Course> courseList) {
-        Paginator page = new Paginator(courseList, 7);
-        String currentPage = getPageContent(page.jumpTo(0));
+        Paginator page = new Paginator(courseList, 10);
+        String currentPage = getPageContent(page.jumpTo(0), courseList);
         String choice;
         do {
 
             if (currentPage == "") {
-                currentPage = getPageContent(page.jumpTo(page.currentPage));
+                currentPage = getPageContent(page.jumpTo(page.currentPage), courseList);
             }
 
             courseUI.displayAllCourse(currentPage, false);
@@ -540,20 +530,20 @@ public class CourseManagement {
             choice = courseUI.generateCourseReportMenu().toLowerCase();
             switch (choice) {
                 case ">":
-                    currentPage = getPageContent(page.nextPage());
+                    currentPage = getPageContent(page.nextPage(), courseList);
                     break;
                 case ">|":
-                    currentPage = getPageContent(page.toEnd());
+                    currentPage = getPageContent(page.toEnd(), courseList);
                     break;
                 case "<":
-                    currentPage = getPageContent(page.prevPage());
+                    currentPage = getPageContent(page.prevPage(), courseList);
                     break;
                 case "|<":
-                    currentPage = getPageContent(page.toStart());
+                    currentPage = getPageContent(page.toStart(), courseList);
                     break;
                 default:
                     if (choice.matches("[0-9]+")) { // is integer
-                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
+                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1), courseList);
                     } else if (!choice.equals("exit")) {
                         System.err.println("Invalid command.");
                         GeneralUtil.systemPause();
@@ -564,14 +554,14 @@ public class CourseManagement {
         } while (!choice.equals("exit"));
     }
 
-    private String getPageContent(ListInterface<Course> list) {
+    private String getPageContent(ListInterface<Course> list, ListInterface<Course> original) {
         String outputStr = "";
         try {
+            int number = original.indexOf(list.getFirstEntry());
             Iterator<Course> it = list.getIterator();
             while (it.hasNext()) {
-                Course course = it.next();
-                outputStr += String.format("%2d. ", courseList.indexOf(course) + 1)
-                        + course + "\n\n";
+                outputStr += String.format("%2d. ", ++number)
+                        + it.next() + "\n\n";
 
             }
         } catch (Exception e) {
@@ -579,6 +569,104 @@ public class CourseManagement {
         }
 
         return outputStr;
+    }
+
+    private void generateProgrammeReport() {
+        Paginator page = new Paginator(programmeList, 5);
+        String currentPage = getProgrammeReportContent(page.jumpTo(0), programmeList);
+        String choice;
+        do {
+
+            if (currentPage == "") {
+                currentPage = getProgrammeReportContent(page.jumpTo(page.currentPage), programmeList);
+            }
+
+            courseUI.displayAllProgramme(currentPage, false);
+
+            System.out.printf("Page No: %-73d < 1 .. %d >\n",
+                    page.currentPage + 1, page.pageNumber);
+            if (page.isEndOfPage()) {
+                courseUI.displayProgrammeTotal(programmeList.getNumberOfEntries());
+                MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
+            }
+
+            choice = courseUI.generateCourseReportMenu().toLowerCase();
+            switch (choice) {
+                case ">":
+                    currentPage = getProgrammeReportContent(page.nextPage(), programmeList);
+                    break;
+                case ">|":
+                    currentPage = getProgrammeReportContent(page.toEnd(), programmeList);
+                    break;
+                case "<":
+                    currentPage = getProgrammeReportContent(page.prevPage(), programmeList);
+                    break;
+                case "|<":
+                    currentPage = getProgrammeReportContent(page.toStart(), programmeList);
+                    break;
+                default:
+                    if (choice.matches("[0-9]+")) { // is integer
+                        currentPage = getProgrammeReportContent(page.jumpTo(Integer.parseInt(choice) - 1), programmeList);
+                    } else if (!choice.equals("exit")) {
+                        System.err.println("Invalid command.");
+                        GeneralUtil.systemPause();
+                    }
+                    break;
+            }
+
+        } while (!choice.equals("exit"));
+    }
+
+    private String getProgrammeReportContent(ListInterface<Programme> list, ListInterface<Programme> original) {
+        String outputStr = "";
+        int courseCount;
+        try {
+            int number = original.indexOf(list.getFirstEntry());
+            Iterator<Programme> pIt = list.getIterator();
+            while (pIt.hasNext()) {
+                courseCount = 0;
+                Programme programme = pIt.next();
+                outputStr += String.format("%2d. ", ++number) + programme + "\n";
+                Iterator<Course> cIt = courseList.getIterator();
+                outputStr += "\t" + "Course List:\n";
+                while (cIt.hasNext()) {
+                    Course course = cIt.next();
+                    Iterator<Programme> inIt = course.getProgrammes().getIterator();
+
+                    while (inIt.hasNext()) {
+                        if (programme.getProgrammeCode().equals(inIt.next().getProgrammeCode())) {
+                            outputStr += "\t" + course.toProgrammeReportString() + "\n";
+                            courseCount++;
+                        }
+                    }
+
+                }
+
+                outputStr += "\tTOTAL COURSE > " + courseCount + "\n";
+                outputStr += "\n";
+
+            }
+        } catch (Exception e) {
+            GeneralUtil.systemPause();
+        }
+
+        return outputStr;
+
+    }
+
+    private ListInterface<Course> sortByCourseCode() {
+        SortedListInterface<Course> sortedList = new SortedLinkedList<>();
+        Iterator<Course> it = courseList.getIterator();
+        while (it.hasNext()) {
+            sortedList.add(it.next());
+        }
+        ListInterface<Course> sortedByCourseCode = new CircularDoublyLinkedList<>();
+        it = sortedList.getIterator();
+        while (it.hasNext()) {
+            sortedByCourseCode.add(it.next());
+        }
+        return sortedByCourseCode;
+
     }
 
     private ListInterface<Course> sortByCourseName() {
@@ -605,6 +693,7 @@ public class CourseManagement {
         return sortedByCourseName;
     }
 
+    /*
     private String generateProgrammeReport() {
         String outputStr = "";
         Iterator<Programme> pIt = programmeList.getIterator();
@@ -637,7 +726,7 @@ public class CourseManagement {
 
         return outputStr;
     }
-
+     */
     //OTHER FUNCTIONS
     private boolean courseIsExist(String input) {
         Iterator<Course> it = courseList.getIterator();

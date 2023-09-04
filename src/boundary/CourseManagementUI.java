@@ -113,7 +113,7 @@ public class CourseManagementUI {
                 + "6. By Course Programmes\n"
                 + "0. Back\n";
         System.out.println(outputStr);
-        int choice = cScan.inputInt("Select edit choice > ", 0, 5);
+        int choice = cScan.inputInt("Select edit choice > ", 0, 6);
         return choice;
     }
 
@@ -359,10 +359,26 @@ public class CourseManagementUI {
         }
     }
 
+    public void displayAllProgramme(String outputStr, boolean displayOnly) {
+        GeneralUtil.clearScreen();
+        System.out.println("Programme List");
+        displayProgrammeTableHeader();
+        System.out.println(outputStr);
+        if (displayOnly) {
+            GeneralUtil.systemPause();
+        }
+    }
+
     public void displayCourseTableHeader() {
         System.out.println("============================================================================================");
         System.out.println("No  Course Code Name                                         Credit Hours Department Fees");
         System.out.println("============================================================================================");
+    }
+
+    public void displayProgrammeTableHeader() {
+        System.out.println("=====================================================================================");
+        System.out.printf("%-2s. %-15s%-50s%-20s\n", "No", "Programme Code", "Programme Name", "Programme Type");
+        System.out.println("=====================================================================================");
     }
 
     public void generateCourseReportHeader() {
@@ -389,13 +405,8 @@ public class CourseManagementUI {
         System.out.println("TOTAL COURSE > " + total);
     }
 
-    public void printProgrammeReport(String outputStr) {
-        GeneralUtil.clearScreen();
-        System.out.println(
-                "Programme List\n"
-                + "=================================================================================");
-        System.out.printf("%-15s%-50s%-20s\n", "Programme Code", "Programme Name", "Programme Type");
-        System.out.println("=================================================================================\n" + outputStr);
+    public void displayProgrammeTotal(int total) {
+        System.out.println("TOTAL PROGRAMME > " + total);
     }
 
     //OTHERS FUNCTION
