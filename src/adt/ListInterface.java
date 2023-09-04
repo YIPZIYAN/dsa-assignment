@@ -102,7 +102,7 @@ public interface ListInterface<T> {
      * @param entries
      * @return true if the addition is successful, or false if not.
      */
-    public boolean addAll(T[] entries);
+    public boolean addAll(ListInterface<T> listOfEntries);
 
     /**
      * Task: Set newEntry to the position index entry in the list.

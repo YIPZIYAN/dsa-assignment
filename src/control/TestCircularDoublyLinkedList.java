@@ -18,27 +18,38 @@ import utility.Paginator;
  */
 public class TestCircularDoublyLinkedList {
 
+    public static void sort(ListInterface<Course> list) {
+
+    }
+
     public static void main(String[] args) {
         ListInterface<Course> list = new CircularDoublyLinkedList<>();
+        ListInterface<Course> newList = new CircularDoublyLinkedList<>();
         CourseSeeder seeder = new CourseSeeder();
         list = seeder.getCourseList();
-        list.sortBy(Comparator.comparing(Course::getCourseCode),true);
+        newList.addAll(list);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseCode());
         }
-        list.sortBy(Comparator.comparing(Course::getCourseName),true);
+        System.out.println("");
+
+        newList.sortBy(Comparator.comparing(Course::getCourseCode), true);
+        for (int i = 0; i < newList.getNumberOfEntries(); i++) {
+            System.out.println(newList.getEntry(i).getCourseCode());
+        }
+
+        System.out.println("");
+        for (int i = 0; i < list.getNumberOfEntries(); i++) {
+            System.out.println(list.getEntry(i).getCourseCode());
+        }
+
+        /*
+        list.sortBy(Comparator.comparing(Course::getCourseName), true);
         for (int i = 0; i < list.getNumberOfEntries(); i++) {
             System.out.println(list.getEntry(i).getCourseName());
         }
-        list.sortBy(Comparator.comparing(Course::getCourseCreditHours),true);
-        for (int i = 0; i < list.getNumberOfEntries(); i++) {
-            System.out.println(list.getEntry(i).getCourseCreditHours());
-        }
-                list.sortBy(Comparator.comparing(Course::getCourseFees),true);
-        for (int i = 0; i < list.getNumberOfEntries(); i++) {
-            System.out.println(list.getEntry(i).getCourseFees());
-        }
-
+        list.sortBy(comparator, true);
+         */
 //        list.clear();
 //        System.out.println("Get entry");
 //        System.out.println(list.getEntry(0));

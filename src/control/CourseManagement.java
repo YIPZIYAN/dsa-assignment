@@ -693,40 +693,6 @@ public class CourseManagement {
         return sortedByCourseName;
     }
 
-    /*
-    private String generateProgrammeReport() {
-        String outputStr = "";
-        Iterator<Programme> pIt = programmeList.getIterator();
-        int num;
-        while (pIt.hasNext()) {
-            num = 0;
-            Programme programme = pIt.next();
-            outputStr += programme.toString() + "\n";
-            Iterator<Course> cIt = courseList.getIterator();
-            outputStr += "\t" + "Course List:\n";
-            while (cIt.hasNext()) {
-                Course course = cIt.next();
-                Iterator<Programme> inIt = course.getProgrammes().getIterator();
-
-                while (inIt.hasNext()) {
-                    if (programme.getProgrammeCode().equals(inIt.next().getProgrammeCode())) {
-                        outputStr += "\t" + course.toProgrammeReportString() + "\n";
-                        num++;
-                    }
-                }
-
-            }
-
-            outputStr += "\tTOTAL COURSE > " + num + "\n";
-            outputStr += "\n";
-
-        }
-
-        outputStr += "TOTAL PROGRAMME > " + programmeList.getNumberOfEntries() + "\n";
-
-        return outputStr;
-    }
-     */
     //OTHER FUNCTIONS
     private boolean courseIsExist(String input) {
         Iterator<Course> it = courseList.getIterator();

@@ -180,12 +180,13 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public boolean addAll(T[] entries) {
-        if (entries == null || entries.length == 0) {
+    public boolean addAll(ListInterface<T> listOfEntries) {
+        if (listOfEntries.isEmpty()) {
             return false;
         }
-        for (T entry : entries) {
-            add(entry);
+        Iterator<T> it = listOfEntries.getIterator();
+        while(it.hasNext()) {
+            add(it.next());
         }
         return true;
     }
@@ -242,7 +243,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         if (isEmpty()) {
             return;
         }
-
+        
         Node currentNode = startNode;
         Node index = null;
         T temp;
