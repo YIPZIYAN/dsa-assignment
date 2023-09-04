@@ -190,20 +190,6 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public boolean setEntry(int index, T newEntry) {
-        if (index < 0 || index >= numberOfEntries || newEntry == null) {
-            return false;
-        }
-        Node currentNode = startNode;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-
-        currentNode.data = newEntry;
-        return true;
-    }
-
-    @Override
     public T getFirstEntry() {
         return startNode.data;
     }

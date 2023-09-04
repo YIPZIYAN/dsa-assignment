@@ -27,15 +27,14 @@ public interface ListInterface<T> {
      * entry
      * @param newEntry the object to be added as a new entry
      * @return true if the addition is successful, or false if either the list
-     * is full, newPosition < 1, or
-     *          newPosition > getNumberOfEntries()+1
+     * is full, newPosition < 1, or newPosition > getNumberOfEntries()+1
      */
     public boolean add(int index, T newEntry);
 
     /**
      * Task: Remove a specific entry from the list.
      *
-     * @param anEntry
+     * @param anEntry the object that is the desired entry
      * @return true if the specific entry has been removed from the list,
      * otherwise false.
      */
@@ -92,7 +91,7 @@ public interface ListInterface<T> {
     /**
      * Task: Get anEntry’s index in the list.
      *
-     * @param anEntry
+     * @param anEntry the object that is the desired entry
      * @return the index of anEntry in the list.
      */
     public int indexOf(T anEntry);
@@ -100,19 +99,10 @@ public interface ListInterface<T> {
     /**
      * Task: Add an array of entries to the list.
      *
-     * @param entries
+     * @param listOfEntries the list of object that is the desired list
      * @return true if the addition is successful, or false if not.
      */
     public boolean addAll(ListInterface<T> listOfEntries);
-
-    /**
-     * Task: Set newEntry to the position index entry in the list.
-     *
-     * @param index
-     * @param newEntry
-     * @return true if the set is successful, or false if not.
-     */
-    public boolean setEntry(int index, T newEntry);
 
     /**
      * Task: Get the first entry in the list.
@@ -132,8 +122,10 @@ public interface ListInterface<T> {
      * Task: Get a list of entries between the position beginIndex and position
      * endIndex.
      *
-     * @param beginIndex
-     * @param endIndex
+     * @param beginIndex an integer that indicates the position of the desired
+     * entry
+     * @param endIndex an integer that indicates the position of the desired
+     * entry
      * @return the list of entries between the position beginIndex and position
      * endIndex.
      */
@@ -143,11 +135,10 @@ public interface ListInterface<T> {
      * Task: Sort the list based on the criteria given by the comparator in
      * either ascending or descending order.
      *
-     * @param comparator
-     * @param isAscending
+     * @param comparator a desired sorting criteria to sort the list
+     * @param isAscending sort the list in ascending or descending order
      */
     public void sortBy(Comparator<T> comparator, boolean isAscending);
 
     public Iterator<T> getIterator();
-
 }
