@@ -140,5 +140,10 @@ public interface ListInterface<T> {
      */
     public void sortBy(Comparator<T> comparator, boolean isAscending);
 
+    /**
+     * Task: Traverse through the list beginning with the first entry.
+     *
+     *@return the iterator.
+     */
     public Iterator<T> getIterator();
 }
