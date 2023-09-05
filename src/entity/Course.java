@@ -21,7 +21,8 @@ public class Course implements Serializable {
     public Course() {
     }
 
-    public Course(String courseCode, String courseName, int courseCreditHours, String courseDepartment, double courseFees) {
+    public Course(String courseCode, String courseName, int courseCreditHours, 
+            String courseDepartment, double courseFees) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.courseCreditHours = courseCreditHours;
@@ -119,14 +120,17 @@ public class Course implements Serializable {
 
     @Override
     public String toString() {
-        String outputStr = String.format("%-12s%-45s%-13d%-11s%-8.2f", courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
+        String outputStr = String.format("%-12s%-45s%-13d%-11s%-8.2f", 
+                courseCode, courseName, courseCreditHours, courseDepartment, courseFees);
         if (programmes.isEmpty()) {
             return outputStr;
         }
 
         outputStr += "\n    Programme List: ";
         for (int i = 0; i < programmes.getNumberOfEntries(); i++) {
-            outputStr += String.format("\n\t%-4s%-50s", programmes.getEntry(i).getProgrammeCode(), programmes.getEntry(i).getProgrammeName());
+            outputStr += String.format("\n\t%-4s%-50s", 
+                    programmes.getEntry(i).getProgrammeCode(), 
+                    programmes.getEntry(i).getProgrammeName());
         }
         return outputStr;
 

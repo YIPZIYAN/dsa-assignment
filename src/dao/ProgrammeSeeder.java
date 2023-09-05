@@ -13,7 +13,7 @@ public class ProgrammeSeeder {
     ListInterface<Programme> programmeList = new CircularDoublyLinkedList<>();
 
     public ProgrammeSeeder() {
-        programmeList.add(new Programme("RSD", "Bachelor of Computer Science in Data Science", "Bachelor Degree"));
+        programmeList.add(new Programme("RDS", "Bachelor of Computer Science in Data Science", "Bachelor Degree"));
         programmeList.add(new Programme("DCS", "Diploma in Computer Science", "Diploma"));
         programmeList.add(new Programme("RAC", "Bachelor of Accounting", "Bachelor Degree"));
         programmeList.add(new Programme("REE", "Bachelor of Electronics Engineering Technology", "Bachelor Degree"));
