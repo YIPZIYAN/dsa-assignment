@@ -36,7 +36,7 @@ public class CustomScanner {
                     }
                 }
                 char lastChar = courseCode.charAt(7);
-                if (!Character.isDigit(lastChar) && !Character.isUpperCase(lastChar)) {
+                if (Character.getNumericValue(lastChar) == 0 || !Character.isDigit(lastChar) && !Character.isUpperCase(lastChar)) {
 
                     error = true;
 

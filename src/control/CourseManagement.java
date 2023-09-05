@@ -21,11 +21,11 @@ public class CourseManagement {
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
     //initialize fake data for testing
-    CourseSeeder cSeeder = new CourseSeeder();
+    //CourseSeeder cSeeder = new CourseSeeder();
     ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
     public CourseManagement() {
-        dAO.saveToFile(cSeeder.getCourseList());
+        //dAO.saveToFile(cSeeder.getCourseList());
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }

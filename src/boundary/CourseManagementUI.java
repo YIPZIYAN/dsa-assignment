@@ -55,7 +55,10 @@ public class CourseManagementUI {
 
         System.out.println("Add Course");
         System.out.println("----------");
-        return cScan.inputCourseCode("Enter Course Code > ", "Invalid course code format. [Eg: AACS1234]");
+        return cScan.inputCourseCode("Enter Course Code > ", 
+                "Invalid course code format or "
+              + "last character indicate credit hour should not be 0. "
+              + "[Eg: AACS1234]");
     }
 
     public Course addCourse(boolean courseIsExist, String courseCode) {
@@ -79,6 +82,8 @@ public class CourseManagementUI {
             }
         } while (loop);
 
+        //credit hours defined by last character of course code
+        //Eg: AACS1239 = 9 c.h, AACS123A = 10 c.h
         courseCreditHours = getCreditHour(courseCode);
 
         courseFees = cScan.inputDouble("Enter Course Fees > ", 0.00, 9999.99);
@@ -452,11 +457,14 @@ public class CourseManagementUI {
     }
 
     public int getCreditHour(String courseCode) {
-        int creditHour = courseCode.charAt(7);
-        if (Character.isUpperCase(courseCode.charAt(7))) {
-            creditHour = creditHour - 'A' + 10;
+        char lastChar = courseCode.charAt(7);
+        if (Character.isDigit(lastChar)) {
+            return Character.getNumericValue(lastChar);
         }
-        return creditHour - '0';
+        else if (Character.isUpperCase(lastChar)) {
+            return lastChar - 'A' + 10;
+        }
+        return -1;
     }
 
     private String getCourseDept() {

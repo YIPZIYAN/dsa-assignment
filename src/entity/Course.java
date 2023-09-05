@@ -1,7 +1,6 @@
 package entity;
 
-import adt.CircularDoublyLinkedList;
-import adt.ListInterface;
+import adt.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -9,7 +8,7 @@ import java.util.Objects;
  *
  * @author Goh Chun Yen
  */
-public class Course implements Serializable, Comparable<Course> {
+public class Course implements Serializable {
 
     private String courseCode;
     private String courseName;
@@ -131,15 +130,6 @@ public class Course implements Serializable, Comparable<Course> {
         }
         return outputStr;
 
-    }
-
-    @Override
-    public int compareTo(Course o) {
-        return this.courseCode.compareTo(o.getCourseCode());
-    }
-
-    public int compareToByCourseName(Course o) {
-        return this.courseName.compareTo(o.getCourseName());
     }
 
 }
