@@ -45,8 +45,7 @@ public class DAO<T>{
         } catch (FileNotFoundException ex) {
             System.out.println("\nNo such file.");
         } catch (IOException ex) {
-                        System.out.println(ex);
-
+            System.out.println(ex);
             System.out.println("\nCannot read from file.");
         } catch (ClassNotFoundException ex) {
             System.out.println("\nClass not found.");
