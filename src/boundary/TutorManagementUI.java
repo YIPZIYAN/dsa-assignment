@@ -1,7 +1,6 @@
 package boundary;
 
-import adt.exampleAdt.ArrayList;
-import adt.exampleAdt.ListInterface;
+import adt.exampleAdt.*;
 import entity.Tutor;
 import java.time.LocalDate;
 import utility.*;
