@@ -15,7 +15,6 @@ public class DAO<T>{
     public DAO() {
     }
 
-    
     public DAO(String fileName) {
         this.fileName = fileName;
     }
