@@ -398,14 +398,15 @@ public class TutorManagementUI {
     public int sortSelection() {
         GeneralUtil.clearScreen();
         generateTutorReportHeader();
-        System.out.println("1. Sort By Name\n"
-                + "2. Sort By Id\n"
-                + "3. Sort By Salary (Lowest To Highest)\n"
-                + "4. Sort By Salary (Highest To Lowest)");
+        System.out.println("1. Sort By Name (A-Z)\n"
+                + "2. Sort By Name (Z-A)\n"
+                + "3. Sort By Id\n"
+                + "4. Sort By Salary (Lowest To Highest)\n"
+                + "5. Sort By Salary (Highest To Lowest)");
         System.out.println("0. Quit");
         System.out.println("==================================================");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 5);
 
         return choice;
     }
