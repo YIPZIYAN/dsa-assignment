@@ -22,7 +22,8 @@ public class DAO<T>{
     public void saveToFile(ListInterface<T> dataList) {
         File file = new File(fileName);
         try {
-            ObjectOutputStream ooStream = new ObjectOutputStream(new FileOutputStream(file));
+            ObjectOutputStream ooStream = 
+                    new ObjectOutputStream(new FileOutputStream(file));
             ooStream.writeObject(dataList);
             ooStream.close();
         } catch (FileNotFoundException ex) {
@@ -37,7 +38,8 @@ public class DAO<T>{
         File file = new File(fileName);
         ListInterface<T> dataList = new CircularDoublyLinkedList<>();
         try {
-            ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
+            ObjectInputStream oiStream = 
+                    new ObjectInputStream(new FileInputStream(file));
             dataList = (CircularDoublyLinkedList<T>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {

@@ -47,8 +47,29 @@ public class CourseSeeder {
         courseList.getEntry(5).getProgrammes().add(pList.getEntry(3));
         courseList.getEntry(5).getProgrammes().add(pList.getEntry(5));
         courseList.getEntry(6).getProgrammes().add(pList.getEntry(7));
-        courseList.getEntry(6).getProgrammes().add(pList.getEntry(7));
-        
+        courseList.getEntry(6).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(7).getProgrammes().add(pList.getEntry(0));
+        courseList.getEntry(7).getProgrammes().add(pList.getEntry(1));
+        courseList.getEntry(7).getProgrammes().add(pList.getEntry(2));
+        courseList.getEntry(7).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(8).getProgrammes().add(pList.getEntry(4));
+        courseList.getEntry(9).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(9).getProgrammes().add(pList.getEntry(6));
+        courseList.getEntry(10).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(10).getProgrammes().add(pList.getEntry(0));
+        courseList.getEntry(10).getProgrammes().add(pList.getEntry(1));
+        courseList.getEntry(11).getProgrammes().add(pList.getEntry(2));
+        courseList.getEntry(11).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(12).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(13).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(13).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(14).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(14).getProgrammes().add(pList.getEntry(3));
+        courseList.getEntry(14).getProgrammes().add(pList.getEntry(2));
+        courseList.getEntry(15).getProgrammes().add(pList.getEntry(5));
+        courseList.getEntry(15).getProgrammes().add(pList.getEntry(7));
+        courseList.getEntry(15).getProgrammes().add(pList.getEntry(4));
+
     }
 
     public ListInterface<Course> getCourseList() {
