@@ -377,7 +377,7 @@ public class TutorManagement {
                     generateSalaryReport();
                     break;
                 case 2:
-                    generateRecuitmentReport();
+                    generateRecruitmentReport();
                     break;
             }
         } while (choice != 0);
@@ -422,11 +422,11 @@ public class TutorManagement {
         return false;
     }
 
-    private void generateRecuitmentReport() {
+    private void generateRecruitmentReport() {
         int year = tutorUI.getReportYear();
         int month = tutorUI.getReportMonth();
         String reportHeader = String.format("%s %d/%02d",
-                "Monthly Tutor Recuitment Report", year, month);
+                "Monthly Tutor Recruitment Report", year, month);
 
         Iterator<Tutor> it = tutorList.getIterator();
 
