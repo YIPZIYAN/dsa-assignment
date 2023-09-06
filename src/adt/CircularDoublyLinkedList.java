@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package adt;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -43,12 +40,8 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
 
     @Override
     public boolean add(int index, T newEntry) {
-        if (index < 0 || index > numberOfEntries || newEntry == null) {
+        if (index < 0 || index >= numberOfEntries || newEntry == null) {
             return false;
-        }
-
-        if (isEmpty() || index == numberOfEntries) {
-            return add(newEntry);
         }
 
         Node newNode = new Node(newEntry);
@@ -122,16 +115,18 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     @Override
     public boolean replace(int index, T newEntry) {
 
+        if (index < 0 || index >= numberOfEntries || newEntry == null) {
+            return false;
+        }
+
         Node currentNode = startNode;
 
-        if (index >= 0 && index < numberOfEntries) {
-            for (int i = 0; i < index; i++) {
-                currentNode = currentNode.next;
-            }
-            currentNode.data = newEntry;
-            return true;
+        for (int i = 0; i < index; i++) {
+            currentNode = currentNode.next;
         }
-        return false;
+        currentNode.data = newEntry;
+        return true;
+
     }
 
     @Override
@@ -165,11 +160,6 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public boolean isFull() { //linked list can grow infinitely
-        return false;
-    }
-
-    @Override
     public int indexOf(T anEntry) {
         Node currentNode = startNode;
         int index = 0;
@@ -188,32 +178,14 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
     }
 
     @Override
-    public Iterator<T> getIterator() {
-        return new LinkedIterator();
-    }
-
-    @Override
-    public boolean addAll(T[] entries) {
-        if (entries == null || entries.length == 0) {
+    public boolean addAll(ListInterface<T> listOfEntries) {
+        if (listOfEntries.isEmpty()) {
             return false;
         }
-        for (T entry : entries) {
-            add(entry);
+        Iterator<T> it = listOfEntries.getIterator();
+        while (it.hasNext()) {
+            add(it.next());
         }
-        return true;
-    }
-
-    @Override
-    public boolean setEntry(int index, T newEntry) {
-        if (index < 0 || index >= numberOfEntries) {
-            return false;
-        }
-        Node currentNode = startNode;
-        for (int i = 0; i < index; i++) {
-            currentNode = currentNode.next;
-        }
-
-        currentNode.data = newEntry;
         return true;
     }
 
@@ -250,6 +222,38 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
         return subList;
     }
 
+    @Override
+    public void sortBy(Comparator<T> comparator, boolean isAscending) {
+        if (isEmpty()) {
+            return;
+        }
+
+        Node currentNode = startNode;
+        Node index = null;
+        T temp;
+
+        do {
+            index = currentNode.next;
+            while (index != startNode) {
+                int val = comparator.compare(currentNode.data, index.data);
+
+                if (isAscending ? val > 0 : val < 0) {
+                    temp = currentNode.data;
+                    currentNode.data = index.data;
+                    index.data = temp;
+                }
+                index = index.next;
+            }
+            currentNode = currentNode.next;
+        } while (currentNode != startNode);
+
+    }
+
+    @Override
+    public Iterator<T> getIterator() {
+        return new LinkedIterator();
+    }
+
     private class LinkedIterator implements Iterator<T> {
 
         private Node currentNode;
@@ -279,7 +283,7 @@ public class CircularDoublyLinkedList<T> implements ListInterface<T>, Serializab
             return currentElement;
         }
 
- }
+    }
 
     private class Node implements Serializable {
 

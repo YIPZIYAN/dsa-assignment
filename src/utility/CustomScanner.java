@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package utility;
 
 import java.util.*;
@@ -40,7 +36,7 @@ public class CustomScanner {
                     }
                 }
                 char lastChar = courseCode.charAt(7);
-                if (!Character.isDigit(lastChar) && !Character.isUpperCase(lastChar)) {
+                if (Character.getNumericValue(lastChar) == 0 || !Character.isDigit(lastChar) && !Character.isUpperCase(lastChar)) {
 
                     error = true;
 

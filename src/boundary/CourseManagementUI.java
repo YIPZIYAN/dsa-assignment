@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package boundary;
 
-import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.*;
 import java.util.Iterator;
@@ -23,7 +17,7 @@ public class CourseManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("Course Management");
+        System.out.println("       Course Management");
         System.out.println("-------------------------------");
         System.out.println(
                 "1. Course List\n"
@@ -34,10 +28,11 @@ public class CourseManagementUI {
                 + "6. Add Programme to Course\n"
                 + "7. Remove Programme from Course\n"
                 + "8. Generate Reports\n"
+                + "9. Back\n"
                 + "0. Quit");
         System.out.println("-------------------------------");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 8);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 9);
         return choice;
     }
 
@@ -60,7 +55,10 @@ public class CourseManagementUI {
 
         System.out.println("Add Course");
         System.out.println("----------");
-        return cScan.inputCourseCode("Enter Course Code > ", "Invalid course code format. [Eg: AACS1234]");
+        return cScan.inputCourseCode("Enter Course Code > ", 
+                "Invalid course code format or "
+              + "last character indicate credit hour should not be 0. "
+              + "[Eg: AACS1234]");
     }
 
     public Course addCourse(boolean courseIsExist, String courseCode) {
@@ -84,6 +82,8 @@ public class CourseManagementUI {
             }
         } while (loop);
 
+        //credit hours defined by last character of course code
+        //Eg: AACS1239 = 9 c.h, AACS123A = 10 c.h
         courseCreditHours = getCreditHour(courseCode);
 
         courseFees = cScan.inputDouble("Enter Course Fees > ", 0.00, 9999.99);
@@ -113,7 +113,7 @@ public class CourseManagementUI {
                 + "6. By Course Programmes\n"
                 + "0. Back\n";
         System.out.println(outputStr);
-        int choice = cScan.inputInt("Select edit choice > ", 0, 5);
+        int choice = cScan.inputInt("Select edit choice > ", 0, 6);
         return choice;
     }
 
@@ -176,6 +176,14 @@ public class CourseManagementUI {
 
     }
 
+    public void displayProgrammeSearchResults(String outputStr) {
+        System.out.println("Search Results:");
+        System.out.println("=================================================================================");
+        System.out.printf("%-15s%-50s%-20s\n", "Programme Code", "Programme Name", "Programme Type");
+        System.out.println("=================================================================================");
+        System.out.println(outputStr);
+    }
+
     //4. EDIT COURSE
     public String editCourseMenu() {
         GeneralUtil.clearScreen();
@@ -186,6 +194,7 @@ public class CourseManagementUI {
 
     public int getEditChoice(boolean courseIsExist, Course course) {
         if (courseIsExist) {
+            GeneralUtil.clearScreen();
             displayCourseInformation(course);
             displayOriProgrammeInCourse(course);
             String outputStr = "";
@@ -345,14 +354,27 @@ public class CourseManagementUI {
         System.out.println("-------------");
         System.out.println("1. With Course Code Sorting");
         System.out.println("2. With Course Name Sorting");
+        System.out.println("3. With Credit Hours Sorting");
+        System.out.println("4. With Course Fees Sorting");
+        System.out.println("5. With Course Department Sorting");
         System.out.println("0. Back");
-        return cScan.inputInt("Enter your choice > ", 0, 2);
+        return cScan.inputInt("Enter your choice > ", 0, 5);
     }
 
     public void displayAllCourse(String outputStr, boolean displayOnly) {
         GeneralUtil.clearScreen();
-        System.out.println("Course List");
+        System.out.println("Course Report");
         displayCourseTableHeader();
+        System.out.println(outputStr);
+        if (displayOnly) {
+            GeneralUtil.systemPause();
+        }
+    }
+
+    public void displayAllProgramme(String outputStr, boolean displayOnly) {
+        GeneralUtil.clearScreen();
+        System.out.println("Programme Report");
+        displayProgrammeTableHeader();
         System.out.println(outputStr);
         if (displayOnly) {
             GeneralUtil.systemPause();
@@ -363,6 +385,12 @@ public class CourseManagementUI {
         System.out.println("============================================================================================");
         System.out.println("No  Course Code Name                                         Credit Hours Department Fees");
         System.out.println("============================================================================================");
+    }
+
+    public void displayProgrammeTableHeader() {
+        System.out.println("=====================================================================================");
+        System.out.printf("%-2s. %-15s%-50s%-20s\n", "No", "Programme Code", "Programme Name", "Programme Type");
+        System.out.println("=====================================================================================");
     }
 
     public void generateCourseReportHeader() {
@@ -389,13 +417,8 @@ public class CourseManagementUI {
         System.out.println("TOTAL COURSE > " + total);
     }
 
-    public void printProgrammeReport(String outputStr) {
-        GeneralUtil.clearScreen();
-        System.out.println(
-                "Programme List\n"
-                + "=================================================================================");
-        System.out.printf("%-15s%-50s%-20s\n", "Programme Code", "Programme Name", "Programme Type");
-        System.out.println("=================================================================================\n" + outputStr);
+    public void displayProgrammeTotal(int total) {
+        System.out.println("TOTAL PROGRAMME > " + total);
     }
 
     //OTHERS FUNCTION
@@ -433,12 +456,15 @@ public class CourseManagementUI {
 
     }
 
-    private int getCreditHour(String courseCode) {
-        int creditHour = courseCode.charAt(7);
-        if (Character.isUpperCase(courseCode.charAt(7))) {
-            creditHour = creditHour - 'A' + 10;
+    public int getCreditHour(String courseCode) {
+        char lastChar = courseCode.charAt(7);
+        if (Character.isDigit(lastChar)) {
+            return Character.getNumericValue(lastChar);
         }
-        return creditHour - '0';
+        else if (Character.isUpperCase(lastChar)) {
+            return lastChar - 'A' + 10;
+        }
+        return -1;
     }
 
     private String getCourseDept() {

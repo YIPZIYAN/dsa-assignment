@@ -1,17 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
-import entity.Product;
 import java.io.*;
 
 /**
  *
- * @author Yip Zi Yan
+ * @author Yip Zi Yan, Goh Chun Yen
  */
 public class DAO<T>{
 
@@ -20,7 +15,6 @@ public class DAO<T>{
     public DAO() {
     }
 
-    
     public DAO(String fileName) {
         this.fileName = fileName;
     }
@@ -28,7 +22,8 @@ public class DAO<T>{
     public void saveToFile(ListInterface<T> dataList) {
         File file = new File(fileName);
         try {
-            ObjectOutputStream ooStream = new ObjectOutputStream(new FileOutputStream(file));
+            ObjectOutputStream ooStream = 
+                    new ObjectOutputStream(new FileOutputStream(file));
             ooStream.writeObject(dataList);
             ooStream.close();
         } catch (FileNotFoundException ex) {
@@ -43,7 +38,8 @@ public class DAO<T>{
         File file = new File(fileName);
         ListInterface<T> dataList = new CircularDoublyLinkedList<>();
         try {
-            ObjectInputStream oiStream = new ObjectInputStream(new FileInputStream(file));
+            ObjectInputStream oiStream = 
+                    new ObjectInputStream(new FileInputStream(file));
             dataList = (CircularDoublyLinkedList<T>) (oiStream.readObject());
             oiStream.close();
         } catch (FileNotFoundException ex) {

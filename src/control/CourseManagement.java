@@ -1,20 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package control;
 
 import boundary.CourseManagementUI;
-import utility.MessageUI;
+import utility.*;
 import adt.*;
-import adt.exampleAdt.SortedListInterface;
-import adt.exampleAdt.SortedLinkedList;
 import dao.*;
 import entity.*;
+import java.util.Comparator;
 import java.util.Iterator;
-import utility.GeneralUtil;
-import utility.Paginator;
 
 /**
  *
@@ -27,11 +19,12 @@ public class CourseManagement {
     private CourseManagementUI courseUI = new CourseManagementUI();
 
     ProgrammeSeeder pSeeder = new ProgrammeSeeder();
-    CourseSeeder cSeeder = new CourseSeeder();
+    //initialize fake data for testing
+    //CourseSeeder cSeeder = new CourseSeeder();
     ListInterface<Programme> programmeList = pSeeder.getProgrammeList();
 
     public CourseManagement() {
-        dAO.saveToFile(cSeeder.getCourseList());
+        //dAO.saveToFile(cSeeder.getCourseList());
         courseList = dAO.retrieveFromFile();
         Course.setTotalCourse(courseList.getNumberOfEntries());
     }
@@ -71,13 +64,17 @@ public class CourseManagement {
                 case 8:
                     generateReportMenu();
                     break;
+                case 9:
+                    return;
                 case 0:
                     MessageUI.displayExitMessage();
+                    System.exit(0);
             }
         } while (choice != 0);
 
     }
 
+    //1. COURSE LIST
     private void getAllCourses() {
         String outputStr = "";
 
@@ -91,6 +88,7 @@ public class CourseManagement {
         courseUI.listAllCourses(outputStr);
     }
 
+    //2. ADD COURSE
     private void addNewCourse() {
         do {
 
@@ -107,6 +105,7 @@ public class CourseManagement {
 
     }
 
+    //3. FIND COURSE
     private void findCourse() {
         ListInterface<Course> searchResults;
         do {
@@ -116,6 +115,7 @@ public class CourseManagement {
                 case 1:
                     do {
                         searchResults = findStringResults(courseUI.findByCourseCode(), choice);
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseCode), true);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course code? [Y|N] > "));
                     break;
@@ -123,6 +123,7 @@ public class CourseManagement {
                 case 2:
                     do {
                         searchResults = findStringResults(courseUI.findByCourseName(), choice);
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseName), true);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course name? [Y|N] > "));
                     break;
@@ -130,6 +131,7 @@ public class CourseManagement {
                 case 3:
                     do {
                         searchResults = findIntResults(courseUI.findByCreditHours());
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseName), true);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course credit hours? [Y|N] > "));
                     break;
@@ -137,21 +139,26 @@ public class CourseManagement {
                 case 4:
                     do {
                         searchResults = findDoubleResults(courseUI.findByCourseFees());
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseFees), true);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course fees? [Y|N] > "));
                     break;
+
                 case 5:
 
                     do {
                         searchResults = findStringResults(courseUI.findByCourseDept(), choice);
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseName), true);
                         courseUI.displaySearchResults(getAllSearchResults(searchResults));
                     } while (courseUI.repeatAction("Continue to find by course department? [Y|N] > "));
                     break;
 
                 case 6:
                     do {
-                        searchResults = findStringResults(courseUI.findByProgramme(programmeList), choice);
-                        courseUI.displaySearchResults(getAllSearchResults(searchResults));
+                        String programmeCodeInput = courseUI.findByProgramme(programmeList);
+                        searchResults = findStringResults(programmeCodeInput, choice);
+                        searchResults.sortBy(Comparator.comparing(Course::getCourseName), true);
+                        courseUI.displayProgrammeSearchResults(getProgrammeSearchResults(searchResults, programmeCodeInput));
                     } while (courseUI.repeatAction("Continue to find by programme? [Y|N] > "));
 
                     break;
@@ -201,24 +208,25 @@ public class CourseManagement {
         }
 
         while (it.hasNext()) {
+            Course course = it.next();
             switch (choice) {
                 case 1: //course code
-                    if (it.next().getCourseCode().contains(input)) {
-                        searchResults.add(it.next());
+                    if (course.getCourseCode().contains(input)) {
+                        searchResults.add(course);
                     }
                     break;
                 case 2: //course name
-                    if (it.next().getCourseName().contains(input)) {
-                        searchResults.add(it.next());
+                    if (course.getCourseName().contains(input)) {
+                        searchResults.add(course);
                     }
                     break;
                 case 5: //course department
-                    if (it.next().getCourseDepartment().contains(input)) {
-                        searchResults.add(it.next());
+                    if (course.getCourseDepartment().contains(input)) {
+                        searchResults.add(course);
                     }
                     break;
                 case 6: //course programme
-                    Iterator<Programme> pIt = it.next().getProgrammes().getIterator();
+                    Iterator<Programme> pIt = course.getProgrammes().getIterator();
                     boolean isExist = false;
                     while (pIt.hasNext()) {
                         if (pIt.next().getProgrammeCode().equals(input)) {
@@ -226,7 +234,7 @@ public class CourseManagement {
                         }
                     }
                     if (isExist) {
-                        searchResults.add(it.next());
+                        searchResults.add(course);
                     }
                     break;
             }
@@ -256,6 +264,34 @@ public class CourseManagement {
 
     }
 
+    private String getProgrammeSearchResults(ListInterface<Course> searchResults, String programmeCodeInput) {
+        String outputStr = "";
+
+        if (searchResults.isEmpty()) {
+            return null;
+        }
+
+        Iterator<Programme> it = programmeList.getIterator();
+        while (it.hasNext()) {
+            Programme programme = it.next();
+            if (programme.getProgrammeCode().equals(programmeCodeInput)) {
+                outputStr += programme;
+                break;
+            }
+        }
+
+        outputStr += "\n\tCourse List: \n";
+        Iterator<Course> cIt = searchResults.getIterator();
+        while (cIt.hasNext()) {
+            outputStr += "\t" + cIt.next().toProgrammeReportString() + "\n";
+        }
+
+        outputStr += "\nTOTAL SEARCH RESULTS > " + searchResults.getNumberOfEntries() + "\n";
+
+        return outputStr;
+    }
+
+    //4. EDIT COURSE
     private void editCourse() {
 
         do {
@@ -263,90 +299,98 @@ public class CourseManagement {
             boolean loop;
             Course curCourse = new Course();
             String courseCode = courseUI.editCourseMenu();
-            choice = courseUI.getEditChoice(courseIsExist(courseCode), getCourse(courseCode));
-            if (choice != -1 || choice != 0) {
-                curCourse = getCourse(courseCode);
-            }
+            do {
+                loop = false;
+                choice = courseUI.getEditChoice(courseIsExist(courseCode), getCourse(courseCode));
+                if (choice != -1 || choice != 0) {
+                    curCourse = getCourse(courseCode);
+                }
 
-            switch (choice) {
-                case 0:
-                    return;
-                case 1:
-                    do {
-                        loop = false;
-                        String editCourseCode = courseUI.getEditString(choice);
+                switch (choice) {
+                    case 0:
+                        return;
+                    case 1:
+                        do {
+                            loop = false;
+                            String editCourseCode = courseUI.getEditString(choice);
 
-                        if (courseIsExist(editCourseCode) || editCourseCode.equals(curCourse.getCourseCode())) {
-                            loop = courseUI.displayEditErrMsg(choice);
-                        } else {
-                            if (courseUI.repeatAction("Are you sure to edit the course code? [Y|N] > ")) {
-                                courseUI.displayEditSucMsg(choice);
-                                curCourse.setCourseCode(editCourseCode);
-                                dAO.saveToFile(courseList);
+                            if (courseIsExist(editCourseCode) || editCourseCode.equals(curCourse.getCourseCode())) {
+                                loop = courseUI.displayEditErrMsg(choice);
+                            } else {
+                                if (courseUI.repeatAction("Are you sure to edit the course code? [Y|N] > ")) {
+                                    courseUI.displayEditSucMsg(choice);
+                                    curCourse.setCourseCode(editCourseCode);
+                                    curCourse.setCourseCreditHours(courseUI.getCreditHour(curCourse.getCourseCode()));
+                                    dAO.saveToFile(courseList);
+                                }
                             }
-                        }
-                    } while (loop);
-                    break;
+                        } while (loop);
+                        break;
 
-                case 2:
-                    do {
-                        loop = false;
-                        String editCourseName = courseUI.getEditString(choice);
+                    case 2:
+                        do {
+                            loop = false;
+                            String editCourseName = courseUI.getEditString(choice);
 
-                        if (editCourseName.equals(curCourse.getCourseName())) {
-                            loop = courseUI.displayEditErrMsg(choice);
-                        } else {
-                            if (courseUI.repeatAction("Are you sure to edit the course name? [Y|N] > ")) {
-                                courseUI.displayEditSucMsg(choice);
-                                curCourse.setCourseName(editCourseName);
-                                dAO.saveToFile(courseList);
+                            if (editCourseName.equals(curCourse.getCourseName())) {
+                                loop = courseUI.displayEditErrMsg(choice);
+                            } else {
+                                if (courseUI.repeatAction("Are you sure to edit the course name? [Y|N] > ")) {
+                                    courseUI.displayEditSucMsg(choice);
+                                    curCourse.setCourseName(editCourseName);
+                                    dAO.saveToFile(courseList);
+                                }
                             }
-                        }
-                    } while (loop);
-                    break;
+                        } while (loop);
+                        break;
 
-                case 3:
-                    do {
-                        loop = false;
-                        double editCourseFees = courseUI.getEditDouble();
+                    case 3:
+                        do {
+                            loop = false;
+                            double editCourseFees = courseUI.getEditDouble();
 
-                        if (editCourseFees == curCourse.getCourseFees()) {
-                            loop = courseUI.displayEditErrMsg(choice);
-                        } else {
-                            if (courseUI.repeatAction("Are you sure to edit the course fees? [Y|N] > ")) {
-                                courseUI.displayEditSucMsg(choice);
-                                curCourse.setCourseFees(editCourseFees);
-                                dAO.saveToFile(courseList);
+                            if (editCourseFees == curCourse.getCourseFees()) {
+                                loop = courseUI.displayEditErrMsg(choice);
+                            } else {
+                                if (courseUI.repeatAction("Are you sure to edit the course fees? [Y|N] > ")) {
+                                    courseUI.displayEditSucMsg(choice);
+                                    curCourse.setCourseFees(editCourseFees);
+                                    dAO.saveToFile(courseList);
+                                }
                             }
-                        }
-                    } while (loop);
-                    break;
+                        } while (loop);
+                        break;
 
-                case 4:
-                    do {
-                        loop = false;
-                        String editCourseDept = courseUI.getEditString(choice);
+                    case 4:
+                        do {
+                            loop = false;
+                            String editCourseDept = courseUI.getEditString(choice);
 
-                        if (editCourseDept.equals(curCourse.getCourseDepartment())) {
-                            loop = courseUI.displayEditErrMsg(choice);
-                        } else {
-                            if (courseUI.repeatAction("Are you sure to edit the course department? [Y|N] > ")) {
-                                courseUI.displayEditSucMsg(choice);
-                                curCourse.setCourseName(editCourseDept);
-                                dAO.saveToFile(courseList);
+                            if (editCourseDept.equals(curCourse.getCourseDepartment())) {
+                                loop = courseUI.displayEditErrMsg(choice);
+                            } else {
+                                if (courseUI.repeatAction("Are you sure to edit the course department? [Y|N] > ")) {
+                                    courseUI.displayEditSucMsg(choice);
+                                    curCourse.setCourseDepartment(editCourseDept);
+                                    dAO.saveToFile(courseList);
+                                }
                             }
-                        }
-                    } while (loop);
-                    break;
+                        } while (loop);
+                        break;
 
-                case -1:
-                    break;
-            }
+                    case -1:
+                        break;
+                }
+                if (choice != 1) {
+                    loop = courseUI.repeatAction("Anymore edit for the current course? [Y|N] > ");
+                }
+            } while (loop);
 
         } while (courseUI.repeatAction("Anymore course to edit? [Y|N] > "));
 
     }
 
+    //5. REMOVE COURSE
     private void removeCourse() {
         do {
             String courseCode = courseUI.removeCourse();
@@ -367,6 +411,7 @@ public class CourseManagement {
 
     }
 
+    //6. ADD PROGRAMME
     private void addProgrammeToCourse() {
         do {
             String courseCode = courseUI.addProgrammeToCourse();
@@ -414,6 +459,7 @@ public class CourseManagement {
 
     }
 
+    //7. REMOVE PROGRAMME
     private void removeProgrammeFromCourse() {
         do {
             String courseCode = courseUI.removeProgrammeFromCourse();
@@ -465,6 +511,7 @@ public class CourseManagement {
 
     }
 
+    //8. GENERATE REPORT
     private void generateReportMenu() {
         int sortingChoice = -1;
         boolean loop;
@@ -476,27 +523,24 @@ public class CourseManagement {
                     sortingChoice = courseUI.courseReportMenu();
                     switch (sortingChoice) {
                         case 1:
-                            SortedListInterface<Course> sortedList = new SortedLinkedList<>();
-                            Iterator<Course> it = courseList.getIterator();
-                            while (it.hasNext()) {
-                                sortedList.add(it.next());
-                            }
-                            ListInterface<Course> castSortedList = new CircularDoublyLinkedList<>();
-                            it = sortedList.getIterator();
-                            while (it.hasNext()) {
-                                castSortedList.add(it.next());
-                            }
-                            generateCourseReport(castSortedList);
+                            generateCourseReport(sortByCourseCode());
                             break;
                         case 2:
                             generateCourseReport(sortByCourseName());
                             break;
                         case 3:
+                            generateCourseReport(sortByCreditHours());
+                            break;
+                        case 4:
+                            generateCourseReport(sortByCourseFees());
+                            break;
+                        case 5:
+                            generateCourseReport(sortByCourseDepartment());
                             break;
                     }
                     break;
                 case 2:
-                    courseUI.printProgrammeReport(generateProgrammeReport());
+                    generateProgrammeReport();
                     break;
                 case 0:
                     return;
@@ -510,13 +554,13 @@ public class CourseManagement {
     }
 
     private void generateCourseReport(ListInterface<Course> courseList) {
-        Paginator page = new Paginator(courseList, 7);
-        String currentPage = getPageContent(page.jumpTo(0));
+        Paginator page = new Paginator(courseList, 10);
+        String currentPage = getPageContent(page.jumpTo(0), courseList);
         String choice;
         do {
 
             if (currentPage == "") {
-                currentPage = getPageContent(page.jumpTo(page.currentPage));
+                currentPage = getPageContent(page.jumpTo(page.currentPage), courseList);
             }
 
             courseUI.displayAllCourse(currentPage, false);
@@ -531,20 +575,20 @@ public class CourseManagement {
             choice = courseUI.generateCourseReportMenu().toLowerCase();
             switch (choice) {
                 case ">":
-                    currentPage = getPageContent(page.nextPage());
+                    currentPage = getPageContent(page.nextPage(), courseList);
                     break;
                 case ">|":
-                    currentPage = getPageContent(page.toEnd());
+                    currentPage = getPageContent(page.toEnd(), courseList);
                     break;
                 case "<":
-                    currentPage = getPageContent(page.prevPage());
+                    currentPage = getPageContent(page.prevPage(), courseList);
                     break;
                 case "|<":
-                    currentPage = getPageContent(page.toStart());
+                    currentPage = getPageContent(page.toStart(), courseList);
                     break;
                 default:
                     if (choice.matches("[0-9]+")) { // is integer
-                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1));
+                        currentPage = getPageContent(page.jumpTo(Integer.parseInt(choice) - 1), courseList);
                     } else if (!choice.equals("exit")) {
                         System.err.println("Invalid command.");
                         GeneralUtil.systemPause();
@@ -555,14 +599,14 @@ public class CourseManagement {
         } while (!choice.equals("exit"));
     }
 
-    private String getPageContent(ListInterface<Course> list) {
+    private String getPageContent(ListInterface<Course> list, ListInterface<Course> original) {
         String outputStr = "";
         try {
+            int number = original.indexOf(list.getFirstEntry());
             Iterator<Course> it = list.getIterator();
             while (it.hasNext()) {
-                Course course = it.next();
-                outputStr += String.format("%2d. ", courseList.indexOf(course) + 1)
-                        + course + "\n\n";
+                outputStr += String.format("%2d. ", ++number)
+                        + it.next() + "\n\n";
 
             }
         } catch (Exception e) {
@@ -572,63 +616,130 @@ public class CourseManagement {
         return outputStr;
     }
 
-    private ListInterface<Course> sortByCourseName() {
-        int n = courseList.getNumberOfEntries();
-        boolean swapped;
-        ListInterface<Course> sortedByCourseName = new CircularDoublyLinkedList<>();
-        for (int i = 0; i < courseList.getNumberOfEntries(); i++) {
-            sortedByCourseName.add(courseList.getEntry(i));
-        }
+    private void generateProgrammeReport() {
+        Paginator page = new Paginator(programmeList, 5);
+        String currentPage = getProgrammeReportContent(page.jumpTo(0), programmeList);
+        String choice;
         do {
-            swapped = false;
-            for (int i = 1; i < n; i++) {
-                Course curCourse = sortedByCourseName.getEntry(i);
-                Course preCourse = sortedByCourseName.getEntry(i - 1);
 
-                if (curCourse.compareToByCourseName(preCourse) < 0) {
-                    sortedByCourseName.setEntry(i, preCourse);
-                    sortedByCourseName.setEntry(i - 1, curCourse);
-                    swapped = true;
-                }
+            if (currentPage == "") {
+                currentPage = getProgrammeReportContent(page.jumpTo(page.currentPage), programmeList);
             }
-            n--;
-        } while (swapped);
+
+            courseUI.displayAllProgramme(currentPage, false);
+
+            System.out.printf("Page No: %-73d < 1 .. %d >\n",
+                    page.currentPage + 1, page.pageNumber);
+            if (page.isEndOfPage()) {
+                courseUI.displayProgrammeTotal(programmeList.getNumberOfEntries());
+                MessageUI.displayInfoMessage(String.format("%52s", "END OF PAGES"));
+            }
+
+            choice = courseUI.generateCourseReportMenu().toLowerCase();
+            switch (choice) {
+                case ">":
+                    currentPage = getProgrammeReportContent(page.nextPage(), programmeList);
+                    break;
+                case ">|":
+                    currentPage = getProgrammeReportContent(page.toEnd(), programmeList);
+                    break;
+                case "<":
+                    currentPage = getProgrammeReportContent(page.prevPage(), programmeList);
+                    break;
+                case "|<":
+                    currentPage = getProgrammeReportContent(page.toStart(), programmeList);
+                    break;
+                default:
+                    if (choice.matches("[0-9]+")) { // is integer
+                        currentPage = getProgrammeReportContent(page.jumpTo(Integer.parseInt(choice) - 1), programmeList);
+                    } else if (!choice.equals("exit")) {
+                        System.err.println("Invalid command.");
+                        GeneralUtil.systemPause();
+                    }
+                    break;
+            }
+
+        } while (!choice.equals("exit"));
+    }
+
+    private String getProgrammeReportContent(ListInterface<Programme> list, ListInterface<Programme> original) {
+        String outputStr = "";
+        int courseCount;
+        try {
+            ListInterface<Programme> tempList = new CircularDoublyLinkedList<>();
+            tempList.addAll(list);
+            tempList.sortBy(Comparator.comparing(Programme::getProgrammeCode), true);
+            int number = original.indexOf(list.getFirstEntry());
+            Iterator<Programme> pIt = tempList.getIterator();
+            while (pIt.hasNext()) {
+                courseCount = 0;
+                Programme programme = pIt.next();
+                outputStr += String.format("%2d. ", ++number) + programme + "\n";
+                Iterator<Course> cIt = courseList.getIterator();
+                outputStr += "\t" + "Course List:\n";
+                while (cIt.hasNext()) {
+                    Course course = cIt.next();
+                    Iterator<Programme> inIt = course.getProgrammes().getIterator();
+
+                    while (inIt.hasNext()) {
+                        if (programme.getProgrammeCode().equals(inIt.next().getProgrammeCode())) {
+                            outputStr += "\t" + course.toProgrammeReportString() + "\n";
+                            courseCount++;
+                        }
+                    }
+
+                }
+
+                outputStr += "\tTOTAL COURSE > " + courseCount + "\n";
+                outputStr += "\n";
+
+            }
+        } catch (Exception e) {
+            GeneralUtil.systemPause();
+        }
+
+        return outputStr;
+
+    }
+
+    private ListInterface<Course> sortByCourseCode() {
+        ListInterface<Course> sortedByCourseCode = new CircularDoublyLinkedList<>();
+        sortedByCourseCode.addAll(courseList);
+        sortedByCourseCode.sortBy(Comparator.comparing(Course::getCourseCode), true);
+
+        return sortedByCourseCode;
+
+    }
+
+    private ListInterface<Course> sortByCourseName() {
+        ListInterface<Course> sortedByCourseName = new CircularDoublyLinkedList<>();
+        sortedByCourseName.addAll(courseList);
+        sortedByCourseName.sortBy(Comparator.comparing(Course::getCourseName), true);
         return sortedByCourseName;
     }
 
-    private String generateProgrammeReport() {
-        String outputStr = "";
-        Iterator<Programme> pIt = programmeList.getIterator();
-        int num;
-        while (pIt.hasNext()) {
-            num = 0;
-            Programme programme = pIt.next();
-            outputStr += programme.toString() + "\n";
-            Iterator<Course> cIt = courseList.getIterator();
-            outputStr += "\t" + "Course List:\n";
-            while (cIt.hasNext()) {
-                Course course = cIt.next();
-                Iterator<Programme> inIt = course.getProgrammes().getIterator();
-
-                while (inIt.hasNext()) {
-                    if (programme.getProgrammeCode().equals(inIt.next().getProgrammeCode())) {
-                        outputStr += "\t" + course.toProgrammeReportString() + "\n";
-                        num++;
-                    }
-                }
-
-            }
-
-            outputStr += "\tTOTAL COURSE > " + num + "\n";
-            outputStr += "\n";
-
-        }
-
-        outputStr += "TOTAL PROGRAMME > " + programmeList.getNumberOfEntries() + "\n";
-
-        return outputStr;
+    private ListInterface<Course> sortByCreditHours() {
+        ListInterface<Course> sortedByCreditHour = new CircularDoublyLinkedList<>();
+        sortedByCreditHour.addAll(courseList);
+        sortedByCreditHour.sortBy(Comparator.comparing(Course::getCourseCreditHours), true);
+        return sortedByCreditHour;
     }
 
+    private ListInterface<Course> sortByCourseFees() {
+        ListInterface<Course> sortedByCourseFees = new CircularDoublyLinkedList<>();
+        sortedByCourseFees.addAll(courseList);
+        sortedByCourseFees.sortBy(Comparator.comparing(Course::getCourseFees), true);
+        return sortedByCourseFees;
+    }
+
+    private ListInterface<Course> sortByCourseDepartment() {
+        ListInterface<Course> sortedByCourseDepartment = new CircularDoublyLinkedList<>();
+        sortedByCourseDepartment.addAll(courseList);
+        sortedByCourseDepartment.sortBy(Comparator.comparing(Course::getCourseDepartment), true);
+        return sortedByCourseDepartment;
+    }
+
+    //OTHER FUNCTIONS
     private boolean courseIsExist(String input) {
         Iterator<Course> it = courseList.getIterator();
         while (it.hasNext()) {

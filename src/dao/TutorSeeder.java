@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import adt.CircularDoublyLinkedList;
 import adt.ListInterface;
 import entity.Tutor;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -20,7 +17,7 @@ public class TutorSeeder {
     ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
 
     public TutorSeeder() {
-        tutorList.add(new Tutor("Yip Zi Yan",'M','P',10000));
+        tutorList.add(new Tutor("Yip Zi Yan",'M','P',10000,LocalDateTime.of(2022, 12, 14, 12, 14)));
         tutorList.add(new Tutor("Goh Chun Yen",'M','F',8800));
         tutorList.add(new Tutor("Chew Lip Sin",'M','F',8800));
         tutorList.add(new Tutor("Lim Yi Leong",'M','F',8800));

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
 import java.io.Serializable;
@@ -28,6 +24,7 @@ public class Tutor implements Serializable, Comparable<Tutor> {
     public Tutor() {
     }
 
+    //used for seeder only
     public Tutor(String tutorName, char gender, char status, double salary) {
 
         this.tutorId = String.format("T%04d", ++totalTutor);
@@ -43,6 +40,20 @@ public class Tutor implements Serializable, Comparable<Tutor> {
 
     }
 
+    //used for seeder only
+    public Tutor(String tutorName, char gender, char status, double salary, LocalDateTime created_at) {
+        this.tutorId = String.format("T%04d", ++totalTutor);
+        this.tutorName = tutorName;
+        this.gender = Character.toUpperCase(gender);
+        this.status = Character.toUpperCase(status)
+                == 'P' ? "PT" : "FT";
+        this.salary = salary;
+        this.created_at = created_at;
+        this.updated_at = created_at;
+
+        generateEmail();
+    }
+
     public Tutor(String tutorName, char gender, char status, double salary, int currentNumber) {
 
         this.tutorId = String.format("T%04d", currentNumber);
@@ -55,7 +66,6 @@ public class Tutor implements Serializable, Comparable<Tutor> {
         this.updated_at = LocalDateTime.now();
 
         generateEmail();
-
     }
 
     private void generateEmail() {

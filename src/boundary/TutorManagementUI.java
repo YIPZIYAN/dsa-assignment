@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package boundary;
 
-import adt.exampleAdt.ArrayList;
-import adt.exampleAdt.ListInterface;
+import adt.exampleAdt.*;
 import entity.Tutor;
 import java.time.LocalDate;
 import utility.*;
@@ -21,18 +16,19 @@ public class TutorManagementUI {
     public int getMenuChoice() {
 
         GeneralUtil.clearScreen();
-        System.out.println("         Tutor Management System          ");
-        System.out.println("------------------------------------------");
+        System.out.println("           Tutor Management          ");
+        System.out.println("--------------------------------------");
         System.out.println("1. Tutor List\n"
                 + "2. Add Tutor\n"
                 + "3. Find Tutor\n"
                 + "4. Edit / Remove Tutor Details\n"
                 + "5. Filter Tutor\n"
                 + "6. Generate Report\n"
+                + "7. Back\n"
                 + "0. Quit");
-        System.out.println("------------------------------------------");
+        System.out.println("--------------------------------------");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 6);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 7);
 
         return choice;
     }
@@ -114,12 +110,12 @@ public class TutorManagementUI {
         System.out.println("Enter [M] or [F]");
     }
 
-    public void displayAllTutor(String outputStr, boolean displayOnly) {
+    public void displayAllTutor(String header, String outputStr, boolean displayOnly, int headerSpacing) {
         GeneralUtil.clearScreen();
-        System.out.printf("\n%50s\n", "Tutor List");
+        String formatString = "\n%" + headerSpacing + "s\n";
+        System.out.printf(formatString, header);
         displayTutorTableHeader();
         System.out.println(outputStr);
-//        System.out.printf("%s\n\n", "Total Number of Tutor(s) = " + total);
         if (displayOnly) {
             GeneralUtil.systemPause();
         }
@@ -174,7 +170,7 @@ public class TutorManagementUI {
     public void displayFindResult(String str) {
         GeneralUtil.clearScreen();
 
-        System.out.printf("%50s\n", "Search Result");
+        System.out.printf("%80s\n", "Search Result");
         displayTutorTableHeader();
         if (str.equals("")) {
             MessageUI.displayNoResultMessage();
@@ -357,7 +353,7 @@ public class TutorManagementUI {
 
     public void displayFilteredTutor(String outputStr) {
         GeneralUtil.clearScreen();
-        System.out.printf("\n%66s\n", "Filtered Tutor List");
+        System.out.printf("\n%88s\n", "Filtered Tutor List");
         displayTutorTableHeader();
         if (outputStr.equals("")) {
             MessageUI.displayNoResultMessage();
@@ -394,21 +390,22 @@ public class TutorManagementUI {
     }
 
     public int getPageSize(int maxSize) {
-        System.out.println("The report contains "+maxSize+" of tutor(s).");
+        System.out.println("The report contains " + maxSize + " of tutor(s).");
         return cScan.inputInt("Enter Report Page Size > ", 1, maxSize);
     }
 
     public int sortSelection() {
         GeneralUtil.clearScreen();
         generateTutorReportHeader();
-        System.out.println("1. Sort By Name\n"
-                + "2. Sort By Id\n"
-                + "3. Sort By Salary (Lowest To Highest)\n"
-                + "4. Sort By Salary (Highest To Lowest)");
+        System.out.println("1. Sort By Name (A-Z)\n"
+                + "2. Sort By Name (Z-A)\n"
+                + "3. Sort By Id\n"
+                + "4. Sort By Salary (Lowest To Highest)\n"
+                + "5. Sort By Salary (Highest To Lowest)");
         System.out.println("0. Quit");
         System.out.println("==================================================");
 
-        int choice = cScan.inputInt("Enter Selection > ", 0, 3);
+        int choice = cScan.inputInt("Enter Selection > ", 0, 5);
 
         return choice;
     }
