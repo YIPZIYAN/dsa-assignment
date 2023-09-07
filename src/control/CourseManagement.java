@@ -212,19 +212,20 @@ public class CourseManagement {
 
         while (it.hasNext()) {
             Course course = it.next();
+            input = input.toLowerCase();
             switch (choice) {
                 case 1: //course code
-                    if (course.getCourseCode().contains(input)) {
+                    if (course.getCourseCode().toLowerCase().contains(input)) {
                         searchResults.add(course);
                     }
                     break;
                 case 2: //course name
-                    if (course.getCourseName().contains(input)) {
+                    if (course.getCourseName().toLowerCase().contains(input)) {
                         searchResults.add(course);
                     }
                     break;
                 case 5: //course department
-                    if (course.getCourseDepartment().contains(input)) {
+                    if (course.getCourseDepartment().toLowerCase().contains(input)) {
                         searchResults.add(course);
                     }
                     break;
@@ -232,7 +233,7 @@ public class CourseManagement {
                     Iterator<Programme> pIt = course.getProgrammes().getIterator();
                     boolean isExist = false;
                     while (pIt.hasNext()) {
-                        if (pIt.next().getProgrammeCode().equals(input)) {
+                        if (pIt.next().getProgrammeCode().toLowerCase().equals(input)) {
                             isExist = true;
                         }
                     }
@@ -302,7 +303,9 @@ public class CourseManagement {
             boolean loop;
             Course curCourse = new Course();
             String courseCode = courseUI.editCourseMenu();
+            boolean codeIsEdited;
             do {
+                codeIsEdited = false;
                 loop = false;
                 choice = courseUI.getEditChoice(courseIsExist(courseCode), getCourse(courseCode));
                 if (choice != -1 || choice != 0) {
@@ -321,10 +324,11 @@ public class CourseManagement {
                                 loop = courseUI.displayEditErrMsg(choice);
                             } else {
                                 if (courseUI.repeatAction("Are you sure to edit the course code? [Y|N] > ")) {
-                                    courseUI.displayEditSucMsg(choice);
                                     curCourse.setCourseCode(editCourseCode);
                                     curCourse.setCourseCreditHours(courseUI.getCreditHour(curCourse.getCourseCode()));
                                     dAO.saveToFile(courseList);
+                                    courseUI.displayEditChange(curCourse);
+                                    codeIsEdited = true;
                                 }
                             }
                         } while (loop);
@@ -339,9 +343,9 @@ public class CourseManagement {
                                 loop = courseUI.displayEditErrMsg(choice);
                             } else {
                                 if (courseUI.repeatAction("Are you sure to edit the course name? [Y|N] > ")) {
-                                    courseUI.displayEditSucMsg(choice);
                                     curCourse.setCourseName(editCourseName);
                                     dAO.saveToFile(courseList);
+                                    courseUI.displayEditChange(curCourse);
                                 }
                             }
                         } while (loop);
@@ -356,9 +360,9 @@ public class CourseManagement {
                                 loop = courseUI.displayEditErrMsg(choice);
                             } else {
                                 if (courseUI.repeatAction("Are you sure to edit the course fees? [Y|N] > ")) {
-                                    courseUI.displayEditSucMsg(choice);
                                     curCourse.setCourseFees(editCourseFees);
                                     dAO.saveToFile(courseList);
+                                    courseUI.displayEditChange(curCourse);
                                 }
                             }
                         } while (loop);
@@ -373,9 +377,9 @@ public class CourseManagement {
                                 loop = courseUI.displayEditErrMsg(choice);
                             } else {
                                 if (courseUI.repeatAction("Are you sure to edit the course department? [Y|N] > ")) {
-                                    courseUI.displayEditSucMsg(choice);
                                     curCourse.setCourseDepartment(editCourseDept);
                                     dAO.saveToFile(courseList);
+                                    courseUI.displayEditChange(curCourse);
                                 }
                             }
                         } while (loop);
@@ -384,9 +388,13 @@ public class CourseManagement {
                     case -1:
                         break;
                 }
-                if (choice != 1) {
+                if (codeIsEdited) {
+                    courseCode = curCourse.getCourseCode();
+                }
+                if (choice >= 1 && choice <= 4) {
                     loop = courseUI.repeatAction("Anymore edit for the current course? [Y|N] > ");
                 }
+                
             } while (loop);
 
         } while (courseUI.repeatAction("Anymore course to edit? [Y|N] > "));
@@ -443,10 +451,10 @@ public class CourseManagement {
                                 }
                             }
 
-                            courseUI.displayAddProgrammeMsg(true);
+                            courseUI.displayAddProgrammeMsg(true, courseFound);
                         }
                     } else {
-                        courseUI.displayAddProgrammeMsg(false);
+                        courseUI.displayAddProgrammeMsg(false, courseFound);
                     }
 
                     isRepeat = courseUI.repeatAction("Anymore programme to add? [Y|N] > ");
@@ -494,10 +502,10 @@ public class CourseManagement {
                                 }
                             }
 
-                            courseUI.displayRmvProgrammeMsg(true);
+                            courseUI.displayRmvProgrammeMsg(true, courseFound);
                         }
                     } else {
-                        courseUI.displayRmvProgrammeMsg(false);
+                        courseUI.displayRmvProgrammeMsg(false, courseFound);
                     }
 
                     isRepeat = courseUI.repeatAction("Anymore programme to remove? [Y|N] > ");
