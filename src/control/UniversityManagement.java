@@ -8,16 +8,16 @@ import utility.MessageUI;
  *
  * @author Yip Zi Yan, Goh Chun Yen
  */
-public class UniveristyManagement {
+public class UniversityManagement {
 
     private UniversityManagementUI universityUI = new UniversityManagementUI();
     
-    public UniveristyManagement() {
+    public UniversityManagement() {
     
     }
     
     public static void main(String[] args) {
-        UniveristyManagement universityCtrl = new UniveristyManagement();
+        UniversityManagement universityCtrl = new UniversityManagement();
         universityCtrl.startUI(args);
     }
     
