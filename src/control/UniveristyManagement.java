@@ -34,7 +34,6 @@ public class UniveristyManagement {
                     break;
                 case 0:
                     MessageUI.displayExitMessage();
-                    
             }
         } while (choice != 0);
         

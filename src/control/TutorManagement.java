@@ -6,9 +6,7 @@ import adt.exampleAdt.*;
 import boundary.TutorManagementUI;
 import dao.*;
 import entity.Tutor;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
+import java.time.*;
 import java.util.Comparator;
 import java.util.Iterator;
 import utility.*;
@@ -24,10 +22,10 @@ public class TutorManagement {
     TutorManagementUI tutorUI = new TutorManagementUI();
     ListInterface<Tutor> tutorList = new CircularDoublyLinkedList<>();
 
-    TutorSeeder seeder = new TutorSeeder();
-
+//    seeder(generate fake data)
+//    TutorSeeder seeder = new TutorSeeder();
     public TutorManagement() {
-        tutorDAO.saveToFile(seeder.getTutorList());
+//        tutorDAO.saveToFile(seeder.getTutorList());
         tutorList = tutorDAO.retrieveFromFile();
         Tutor.setTotalTutor(tutorList.getNumberOfEntries());
     }
@@ -99,7 +97,8 @@ public class TutorManagement {
     }
 
     private void displayTutorList() {
-        tutorUI.displayAllTutor(getAllTutor(), true);
+        tutorUI.displayAllTutor("Tutor List", getAllTutor(),
+                true, 78);
     }
 
     private String getAllTutor() {
@@ -175,7 +174,8 @@ public class TutorManagement {
     private void updateTutorUI() {
         int choice;
         do {
-            tutorUI.displayAllTutor(getAllTutor(), false);
+            tutorUI.displayAllTutor("Tutor List", getAllTutor(),
+                    false, 78);
             choice = tutorUI.updateTutorMenu();
             switch (choice) {
                 case 1:
@@ -377,8 +377,8 @@ public class TutorManagement {
                     generateSalaryReport();
                     break;
                 case 2:
+                    generateRecruitmentReport();
                     break;
-
             }
         } while (choice != 0);
     }
@@ -386,7 +386,8 @@ public class TutorManagement {
     private void generateSalaryReport() {
         int year = tutorUI.getReportYear();
         int month = tutorUI.getReportMonth();
-        int pageSize;
+        String reportHeader = String.format("%s %d/%02d",
+                "Monthly Tutor Salary Report", year, month);
         double totalSalary = 0.0;
 
         Iterator<Tutor> it = tutorList.getIterator();
@@ -405,80 +406,115 @@ public class TutorManagement {
             }
         }
 
+        if (isEmptyTutorReport(validTutor)) {
+            return;
+        }
+        sortTutorList(validTutor, reportHeader, totalSalary);
+
+    }
+
+    private boolean isEmptyTutorReport(ListInterface<Tutor> validTutor) {
         if (validTutor.isEmpty()) {
             System.err.println("No Tutor In Selected Date.");
             GeneralUtil.systemPause();
+            return true;
+        }
+        return false;
+    }
+
+    private void generateRecruitmentReport() {
+        int year = tutorUI.getReportYear();
+        int month = tutorUI.getReportMonth();
+        String reportHeader = String.format("%s %d/%02d",
+                "Monthly Tutor Recruitment Report", year, month);
+
+        Iterator<Tutor> it = tutorList.getIterator();
+
+        ListInterface<Tutor> validTutor = new CircularDoublyLinkedList<>();
+
+        //get tutor in selected date
+        while (it.hasNext()) {
+            Tutor next = it.next();
+            if (isValidTutor(next, year, month)) {
+                validTutor.add(next);
+            }
+        }
+
+        if (isEmptyTutorReport(validTutor)) {
             return;
         }
 
+        sortTutorList(validTutor, reportHeader, -1);
+    }
+
+    private void sortTutorList(ListInterface<Tutor> validTutor, String reportHeader, double totalSalary) {
+        int pageSize;
         int choice;
         do {
             choice = tutorUI.sortSelection();
             switch (choice) {
                 case 1:
-                    validTutor.sortBy(Comparator.comparing(Tutor::getTutorName),false);
-                    pageSize = tutorUI
-                            .getPageSize(validTutor.getNumberOfEntries());
-                    reportPreview(validTutor, pageSize, totalSalary);
+                    validTutor.sortBy(Comparator.comparing(Tutor::getTutorName),
+                            true);
                     break;
                 case 2:
-                    pageSize = tutorUI
-                            .getPageSize(validTutor.getNumberOfEntries());
-                    reportPreview(validTutor, pageSize, totalSalary);
+                    validTutor.sortBy(Comparator.comparing(Tutor::getTutorName),
+                            false);
                     break;
                 case 3:
+                    validTutor.sortBy(Comparator.comparing(Tutor::getTutorId),
+                            true);
                     break;
                 case 4:
+                    validTutor.sortBy(Comparator.comparing(Tutor::getSalary),
+                            true);
                     break;
+                case 5:
+                    validTutor.sortBy(Comparator.comparing(Tutor::getSalary),
+                            false);
+                    break;
+            }
+
+            if (choice != 0) {
+                pageSize = tutorUI
+                        .getPageSize(validTutor.getNumberOfEntries());
+                reportPreview(validTutor, reportHeader, pageSize, totalSalary);
             }
 
         } while (choice != 0);
     }
 
-    private ListInterface<Tutor> sortByName(ListInterface<Tutor> validTutor, int year, int month) {
-        Iterator<Tutor> it = validTutor.getIterator();
-
-        SortedLinkedList<Tutor> sortedTutor = new SortedLinkedList<>();
-
-        while (it.hasNext()) {
-            sortedTutor.add(it.next());
-        }
-
-        ListInterface<Tutor> convertedList = new CircularDoublyLinkedList<>();
-        Iterator<Tutor> sortedIt = sortedTutor.getIterator();
-        while (sortedIt.hasNext()) {
-            convertedList.add(sortedIt.next());
-        }
-
-        return convertedList;
-
-    }
-
-    private static boolean isValidTutor(Tutor tutor, LocalDateTime selectedDate) {
+    private boolean isValidTutor(Tutor tutor, LocalDateTime selectedDate) {
         return !tutor.getCreated_at().isAfter(selectedDate) && (tutor.isWorking());
     }
 
-    private void generateRecuitmentReport() {
-
+    private boolean isValidTutor(Tutor tutor, int year, int month) {
+        return year == tutor.getCreated_at().getYear()
+                && month == tutor.getCreated_at().getMonthValue()
+                && (tutor.isWorking());
     }
 
-    private void reportPreview(ListInterface<Tutor> report, int pageSize, double totalSalary) {
+    private void reportPreview(ListInterface<Tutor> report, String reportHeader,
+            int pageSize, double totalSalary) {
         String choice;
         Paginator page = new Paginator(report, pageSize);
         String currentPage = getPageContent(page.jumpTo(0), report);
         do {
 
             if (currentPage == "") {
-                currentPage = getPageContent(page.jumpTo(page.currentPage), report);
+                currentPage = getPageContent(page.jumpTo(page.currentPage),
+                        report);
             }
 
-            tutorUI.displayAllTutor(currentPage, false);
+            tutorUI.displayAllTutor(reportHeader,
+                    currentPage, false, 90);
 
             System.out.printf("Page No: %-130d < 1 .. %d >\n",
                     page.currentPage + 1, page.pageNumber);
             if (totalSalary > 0) {
                 System.out.printf("Total Salary To Pay: RM %,.2f\n\n", totalSalary);
             }
+
             if (page.isEndOfPage()) {
                 MessageUI.displayInfoMessage(String.format("%88s", "END OF PAGES"));
             }
