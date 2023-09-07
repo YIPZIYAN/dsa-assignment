@@ -163,6 +163,9 @@ public class CourseManagement {
 
                     break;
             }
+            if (choice == 0) {
+                return;
+            }
         } while (courseUI.repeatAction("Anymore course to find? [Y|N] > "));
 
     }
