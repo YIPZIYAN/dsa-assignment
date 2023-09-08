@@ -490,8 +490,7 @@ public class TutorManagement {
 
     private boolean isValidTutor(Tutor tutor, int year, int month) {
         return year == tutor.getCreated_at().getYear()
-                && month == tutor.getCreated_at().getMonthValue()
-                && (tutor.isWorking());
+                && month == tutor.getCreated_at().getMonthValue();
     }
 
     private void reportPreview(ListInterface<Tutor> report, String reportHeader,

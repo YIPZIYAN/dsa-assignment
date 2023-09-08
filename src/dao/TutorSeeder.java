@@ -18,9 +18,9 @@ public class TutorSeeder {
 
     public TutorSeeder() {
         tutorList.add(new Tutor("Yip Zi Yan",'M','P',10000,LocalDateTime.of(2022, 12, 14, 12, 14)));
-        tutorList.add(new Tutor("Goh Chun Yen",'M','F',8800));
-        tutorList.add(new Tutor("Chew Lip Sin",'M','F',8800));
-        tutorList.add(new Tutor("Lim Yi Leong",'M','F',8800));
+        tutorList.add(new Tutor("Goh Chun Yen",'M','F',8800,LocalDateTime.of(2022, 12, 15, 3, 4)));
+        tutorList.add(new Tutor("Chew Lip Sin",'M','F',8800,LocalDateTime.of(2022, 12, 15, 5, 3)));
+        tutorList.add(new Tutor("Lim Yi Leong",'M','F',8800,LocalDateTime.of(2022, 12, 16, 1, 1)));
         tutorList.add(new Tutor("David Low",'M','F',8500));
         tutorList.add(new Tutor("Shoong Wai Kin",'M','F',8200));
         tutorList.add(new Tutor("Kok Wai Keong",'M','F',8550));
