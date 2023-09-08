@@ -55,10 +55,10 @@ public class CourseManagementUI {
 
         System.out.println("Add Course");
         System.out.println("----------");
-        return cScan.inputCourseCode("Enter Course Code > ", 
+        return cScan.inputCourseCode("Enter Course Code > ",
                 "Invalid course code format or "
-              + "last character indicate credit hour should not be 0. "
-              + "[Eg: AACS1234]");
+                + "last character indicate credit hour should not be 0. "
+                + "[Eg: AACS1234]");
     }
 
     public Course addCourse(boolean courseIsExist, String courseCode) {
@@ -211,8 +211,8 @@ public class CourseManagementUI {
             return choice;
         } else {
             System.err.println("Course not found.");
+            return -1;
         }
-        return -1;
     }
 
     public String getEditString(int choice) {
@@ -232,21 +232,11 @@ public class CourseManagementUI {
         return cScan.inputDouble("Enter new course fees > ", 0.00, 9999.99);
     }
 
-    public void displayEditSucMsg(int choice) {
-        switch (choice) {
-            case 1:
-                System.out.println("Course code has been successfully edited.");
-                break;
-            case 2:
-                System.out.println("Course name has been successfully edited.");
-                break;
-            case 3:
-                System.out.println("Course fees has been successfully edited.");
-                break;
-            case 4:
-                System.out.println("Course department has been successfully edited.");
-                break;
-        }
+    public void displayEditChange(Course course) {
+
+        GeneralUtil.clearScreen();
+        displayCourseInformation(course);
+        displayOriProgrammeInCourse(course);
     }
 
     public boolean displayEditErrMsg(int choice) {
@@ -296,9 +286,11 @@ public class CourseManagementUI {
 
     }
 
-    public void displayAddProgrammeMsg(boolean isSuccess) {
+    public void displayAddProgrammeMsg(boolean isSuccess, Course course) {
         if (isSuccess) {
-            System.out.println("Programme has successfully added in the course.");
+            GeneralUtil.clearScreen();
+            displayCourseInformation(course);
+            displayOriProgrammeInCourse(course);
         } else {
             System.err.println("Programme already in the current course.");
         }
@@ -328,9 +320,11 @@ public class CourseManagementUI {
 
     }
 
-    public void displayRmvProgrammeMsg(boolean isSuccess) {
+    public void displayRmvProgrammeMsg(boolean isSuccess, Course course) {
         if (isSuccess) {
-            System.out.println("Programme has successfully removed from the course.");
+            GeneralUtil.clearScreen();
+            displayCourseInformation(course);
+            displayOriProgrammeInCourse(course);
         } else {
             System.err.println("Programme not found in the current course.");
         }
@@ -460,8 +454,7 @@ public class CourseManagementUI {
         char lastChar = courseCode.charAt(7);
         if (Character.isDigit(lastChar)) {
             return Character.getNumericValue(lastChar);
-        }
-        else if (Character.isUpperCase(lastChar)) {
+        } else if (Character.isUpperCase(lastChar)) {
             return lastChar - 'A' + 10;
         }
         return -1;
